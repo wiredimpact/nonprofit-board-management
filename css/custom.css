@@ -7,6 +7,10 @@ table.widefat tr:hover .note-delete {
   visibility: visible;
 }
 
-table.widefat tr.deleting {
+#notes-list tr.deleting {
   background-color: #FAA;
+}
+
+#notes-list tr.adding {
+  background-color: #6C6
 }

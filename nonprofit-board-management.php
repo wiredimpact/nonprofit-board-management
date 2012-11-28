@@ -33,6 +33,7 @@ class wi_board_management {
         add_action( 'edit_user_profile_update', array( $this, 'save_user_note' ) );
         //Delete user note using AJAX
         add_action( 'wp_ajax_delete_note', array( $this, 'delete_user_note' ) );
+        add_action( 'wp_ajax_add_note', array( $this, 'save_user_note_ajax' ) );
         
         //Load CSS and JS
         add_action( 'admin_menu', array( $this, 'insert_css') );
@@ -113,9 +114,6 @@ class wi_board_management {
       $role = $user->roles[0];
       if( 'board_recruit' == $role || 'board_member' == $role ){ //Only show notes on recruits and board members 
       
-      //Get the note information
-      $notes = get_user_meta( $user->ID, 'note' );
-      $notes = array_reverse ( $notes );
       ?>
       <h3>Board Member Notes</h3>
 
@@ -125,7 +123,7 @@ class wi_board_management {
          <th><label for="note">Add Note</label></th>
 
          <td>
-          <textarea name="note" id="note" rows="5" cols="30" /></textarea><br />
+           <textarea name="note" id="note" rows="5" cols="30" data-user-id="<?php echo $user_id; ?>" /></textarea><input id="add-note" type="submit" class="button-primary" value="Add Note" /><br />
           <span class="description">Enter a new note for this board member or recruit.</span>
          </td>
         </tr>
@@ -134,7 +132,7 @@ class wi_board_management {
       <table class="form-table">
         
           <tr><th>Existing Notes</th>
-          <td><table class="widefat"><?php $this->show_user_notes( $notes, $user_id ); ?></table></td>
+          <td><table class="widefat" id="notes-list"><?php $this->show_user_notes( $user_id ); ?></table></td>
           </tr>
 
        </table>
@@ -144,28 +142,61 @@ class wi_board_management {
     /*
      * Show the individual notes for this user.
      */
-    public function show_user_notes( $notes, $user_id ){
-      foreach( $notes as $note ){
-        ?>
+    public function show_user_notes( $user_id ){
+      $notes = get_user_meta( $user_id, 'note' );
+      $notes_ordered = array_reverse ( $notes );
+      
+      foreach( $notes_ordered as $note ){
+        $this->create_note_row( $user_id, $note );
+      }
+    }
+    
+    private function create_note_row( $user_id, $note ){ ?>
       <tr><td>
         <div class="note" data-user-id="<?php echo $user_id; ?>"><?php echo esc_attr( $note[0] ); ?></div>
         <div class="note-date submitted-on" data-timestamp="<?php echo $note[1]; ?>">Added on <?php echo date('F d, Y, g:ia', $note[1]); ?></div>
         <div class="note-delete"><span class="trash"><a href="#">Delete Note</a></span></div>
       </td></tr>
-        <?php
-      }
-    }
+    <?php }
     
     /*
      * Save the new note for this user
      */
+    //TODO MAKE SURE THE USER ID WE'RE CHECKING FOR PERMISSIONS IS THE USER CURRENTLY WORKING ON THE SITE, NOT THE ONE BEING EDITED
     public function save_user_note( $user_id ){
       if ( !current_user_can( 'edit_user', $user_id ) ){
         return false;
       }
-
-      $note_data = array( $_POST['note'], current_time( 'timestamp' ) );
+      
+      $safe_note = esc_textarea( $_POST['note'] );
+      $note_data = array( $safe_note, current_time( 'timestamp' ) );
+      
       add_user_meta( $user_id, 'note', $note_data );
+    }
+    
+    /*
+     * Save the user note via Ajax.
+     */
+    //TODO MAKE SURE THE USER ID WE'RE CHECKING FOR PERMISSIONS IS THE USER CURRENTLY WORKING ON THE SITE, NOT THE ONE BEING EDITED
+    public function save_user_note_ajax(){
+      $user_id = intval( $_POST['user_id'] );
+      
+      if ( !current_user_can( 'edit_user', $user_id ) ){
+        return false;
+      }
+      
+      $safe_note = esc_textarea( $_POST['note'] );
+      $note_data = array( $safe_note, current_time( 'timestamp' ) );
+      
+      if( add_user_meta( $user_id, 'note', $note_data ) ){
+        //Send back the complete table row to be added to the table.
+        $this->create_note_row( $user_id, $note_data );
+      }
+      else {
+        echo FALSE;
+      }
+      
+      die(); //Required to avoid errors
     }
     
     /*
@@ -184,7 +215,7 @@ class wi_board_management {
        echo 'We failed to delete that note.  Please try again.';
       }
       
-      die(); // this is required so we don't get a ton of errors.
+      die(); //Required to avoid errors
     }
      
 } //end class board_management
