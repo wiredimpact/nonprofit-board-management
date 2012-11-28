@@ -1,4 +1,6 @@
 jQuery(document).ready(function(){  
+  
+  //Delete note through Ajax
   jQuery( '#notes-list' ).on( 'click', '.note-delete a', function(){    
     var $this = jQuery(this),
       parent_row = $this.closest( 'tr' ),
@@ -15,7 +17,8 @@ jQuery(document).ready(function(){
      };
 
      jQuery.post(ajaxurl, data, function( response ) {
-      if( 'deleted' == response ){
+      if( 'deleted' === response ){
+        //Remove row from notes-list table
         parent_row.addClass( 'deleting' );
         parent_row.fadeOut( 1000 );  //1 second fade out.
       }
@@ -27,7 +30,7 @@ jQuery(document).ready(function(){
      return false;
    });
    
-   //Add note through Ajax.
+   //Add note through Ajax
    jQuery( '#add-note' ).click(function(){    
     var $this = jQuery( this ),
       note_textarea = $this.siblings( '#note' ),
@@ -41,10 +44,14 @@ jQuery(document).ready(function(){
      };
 
      jQuery.post(ajaxurl, data, function( response ) {
-      if( false == response ){
+      if( false === response ){
         alert( 'Woops.  We failed to add your note.  Please try again.' ); 
       }
       else {
+        //Clear text from the textarea
+        note_textarea.val('');
+        
+        //Add new note to the notes list table
         var notes_list = jQuery( '#notes-list' ),
             new_note = jQuery( response );
         
