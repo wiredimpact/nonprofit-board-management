@@ -120,7 +120,7 @@ class wi_board_management {
          <th><label for="note">Add Note</label></th>
 
          <td>
-           <textarea name="note" id="note" rows="5" cols="30" data-user-id="<?php echo $user_id; ?>" /></textarea><input id="add-note" type="submit" class="button-primary" value="Add Note" /><br />
+           <textarea name="note" id="note" rows="5" cols="30" data-user-id="<?php echo $user_id; ?>" /></textarea><input id="add-note" type="submit" class="button secondary-button" value="Add Note" /><br />
           <span class="description">Enter a new note for this board member or recruit.</span>
          </td>
         </tr>

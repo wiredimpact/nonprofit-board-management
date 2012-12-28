@@ -33,6 +33,7 @@ jQuery(document).ready(function(){
    });
    
    //Add note through Ajax
+   //TODO Add checking to make sure the textarea isn't empty before saving.
    jQuery( '#add-note' ).click(function(){    
     var $this = jQuery( this ),
       note_textarea = $this.siblings( '#note' ),
