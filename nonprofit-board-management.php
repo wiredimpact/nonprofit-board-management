@@ -28,12 +28,9 @@ class wi_board_management {
         //Add user notes field
         add_action( 'show_user_profile', array( $this, 'user_notes' ) );
         add_action( 'edit_user_profile', array( $this, 'user_notes' ) );
-        //Save user note
-        add_action( 'personal_options_update', array( $this, 'save_user_note' ) );
-        add_action( 'edit_user_profile_update', array( $this, 'save_user_note' ) );
         //Delete user note using AJAX
         add_action( 'wp_ajax_delete_note', array( $this, 'delete_user_note' ) );
-        add_action( 'wp_ajax_add_note', array( $this, 'save_user_note_ajax' ) );
+        add_action( 'wp_ajax_add_note', array( $this, 'save_user_note' ) );
         
         //Load CSS and JS
         add_action( 'admin_menu', array( $this, 'insert_css') );
@@ -151,42 +148,41 @@ class wi_board_management {
       }
     }
     
-    private function create_note_row( $user_id, $note ){ ?>
-      <tr><td>
-        <div class="note" data-user-id="<?php echo $user_id; ?>"><?php echo esc_attr( $note[0] ); ?></div>
-        <div class="note-date submitted-on" data-timestamp="<?php echo $note[1]; ?>">Added on <?php echo date('F d, Y, g:ia', $note[1]); ?></div>
+    /*
+     * Display a single note in a table row.
+     */
+    private function create_note_row( $user_id, $note ){ 
+      $creator_data = get_userdata( $note['creator_id'] );
+      $creator_name = $creator_data->display_name;
+      ?>
+      <tr data-creator-id="<?php echo $note['creator_id']; ?>"><td>
+        <div class="note" data-user-id="<?php echo $user_id; ?>"><?php echo esc_attr( $note['note'] ); ?></div>
+        <div class="note-date submitted-on" data-timestamp="<?php echo $note['time']; ?>">Added on <?php echo date('F d, Y \a\t g:ia', $note['time']); ?> by <?php echo $creator_name ?></div>
         <div class="note-delete"><span class="trash"><a href="#">Delete Note</a></span></div>
       </td></tr>
     <?php }
     
     /*
-     * Save the new note for this user
-     */
-    //TODO MAKE SURE THE USER ID WE'RE CHECKING FOR PERMISSIONS IS THE USER CURRENTLY WORKING ON THE SITE, NOT THE ONE BEING EDITED
-    public function save_user_note( $user_id ){
-      if ( !current_user_can( 'edit_user', $user_id ) ){
-        return false;
-      }
-      
-      $safe_note = esc_textarea( $_POST['note'] );
-      $note_data = array( $safe_note, current_time( 'timestamp' ) );
-      
-      add_user_meta( $user_id, 'note', $note_data );
-    }
-    
-    /*
      * Save the user note via Ajax.
      */
-    //TODO MAKE SURE THE USER ID WE'RE CHECKING FOR PERMISSIONS IS THE USER CURRENTLY WORKING ON THE SITE, NOT THE ONE BEING EDITED
-    public function save_user_note_ajax(){
+    public function save_user_note(){
+      //TODO Add check_ajax_referer for security purposes.
       $user_id = intval( $_POST['user_id'] );
+      $current_user = wp_get_current_user();
       
       if ( !current_user_can( 'edit_user', $user_id ) ){
         return false;
       }
       
       $safe_note = esc_textarea( $_POST['note'] );
-      $note_data = array( $safe_note, current_time( 'timestamp' ) );
+      $creator_id = $current_user->ID;
+      $timestamp = current_time( 'timestamp' );
+      
+      $note_data = array(
+          'note' => $safe_note,
+          'creator_id' => $creator_id,
+          'time' => $timestamp
+          );
       
       if( add_user_meta( $user_id, 'note', $note_data ) ){
         //Send back the complete table row to be added to the table.
@@ -206,7 +202,11 @@ class wi_board_management {
       //TODO Add check_ajax_referer for security purposes.
       $user_id = intval( $_POST['user_id'] );
       $meta_key = esc_html( $_POST['meta_key'] );
-      $meta_value = array( esc_html( $_POST['note'] ), intval( $_POST['note_timestamp'] ) );
+      $meta_value = array(
+          'note' => esc_textarea( $_POST['note'] ),
+          'creator_id' => intval( $_POST['creator_id'] ),
+          'time' => floatval( $_POST['note_timestamp'] )
+          );
       
       if( delete_user_meta( $user_id, $meta_key, $meta_value ) ){
        echo 'deleted'; 

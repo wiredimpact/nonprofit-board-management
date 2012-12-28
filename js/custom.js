@@ -6,14 +6,16 @@ jQuery(document).ready(function(){
       parent_row = $this.closest( 'tr' ),
       user_id = parent_row.find( 'div.note' ).attr( 'data-user-id' ),
       note = parent_row.find( 'div.note' ).text(),
-      note_timestamp = parent_row.find( '.note-date' ).attr( 'data-timestamp' );
+      note_timestamp = parent_row.find( '.note-date' ).attr( 'data-timestamp' ),
+      creator_id = parent_row.attr( 'data-creator-id' );
     
     var data = {
       action: 'delete_note',
       user_id: user_id,
       meta_key: 'note',
       note: note,
-      note_timestamp: note_timestamp
+      note_timestamp: note_timestamp,
+      creator_id: creator_id
      };
 
      jQuery.post(ajaxurl, data, function( response ) {
