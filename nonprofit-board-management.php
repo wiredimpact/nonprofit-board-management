@@ -2,7 +2,7 @@
 /*
 Plugin Name: Nonprofit Board Management
 Plugin URI: WIRED IMPACT URL GOES HERE
-Description: DESCRIPTION GOES HERE
+Description: Manage your board of directors or young friends board directly from WordPress.
 Version: 0.1
 Author: Wired Impact
 Author URI: http://wiredimpact.com/
@@ -38,21 +38,45 @@ class wi_board_management {
     }
     
     /*
-     * Add the board roles when the plugin is first acticated.
+     * Add the board roles when the plugin is first activated.
      */
-    public function add_board_roles(){
-      // Create the board member role.
-      add_role( 'board_member', 'Board Member', array( 'read' ) );
+    public function add_board_roles(){   
+      //TODO Combine roll creation with a for loop.
+      //Create the board member role.
+      add_role( 
+              'board_member',
+              'Board Member', 
+              array( 
+                  'read' => true,
+                  'view_board_content' => true,
+                  'contain_board_info' => true
+                  )
+              );
       
-      // Create the board recruit role.
-      add_role( 'board_recruit', 'Board Recruit', array( 'read' ) );
+      //Create the board recruit role.
+      add_role(
+              'board_recruit',
+              'Board Recruit',
+              array(
+                  'read' => true,
+                  'view_board_content' => true,
+                  'contain_board_info' => true
+                  )
+              ); 
+      
+      //Give admin access to view all board content.
+      $role =& get_role( 'administrator' );
+      if ( !empty( $role ) ){
+        $role->add_cap( 'view_board_content' );
+      }
     }
     
     /*
      * Remove the board roles when the plugin is deactivated.
      */
     public function remove_board_roles(){
-      // Delete the board member role if no user has it.
+      //Delete the board member role if no user has it.
+      //TODO Combine removal of both roles with a for loop.
       $member_users = get_users( array( 'role' => 'board_member', 'number' => 1 ) );
       if( empty( $member_users ) ){
         remove_role( 'board_member' );
@@ -62,6 +86,12 @@ class wi_board_management {
       $recruit_users = get_users( array( 'role' => 'board_recruit', 'number' => 1 ) );
       if( empty( $recruit_users ) ){
         remove_role( 'board_recruit' );
+      }
+      
+      //Remove admin capability if the plugin is deactivated.
+      $role =& get_role( 'administrator' );
+      if ( !empty( $role ) ){
+        $role->remove_cap( 'view_board_content' );
       }
     }
     
@@ -108,11 +138,11 @@ class wi_board_management {
      */
     public function user_notes( $user ){ 
       $user_id = $user->ID;
-      $role = $user->roles[0];
-      if( 'board_recruit' == $role || 'board_member' == $role ){ //Only show notes on recruits and board members 
+      
+      if( user_can( $user_id, 'contain_board_info' ) && current_user_can( 'view_board_content' ) ){ //Only show notes on that can hold board information 
       
       ?>
-      <h3>Board Member Notes</h3>
+      <h3>Board Members</h3>
 
       <table class="form-table">
 
