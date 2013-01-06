@@ -58,7 +58,7 @@ class WI_Board_Notes {
     /*
      * Show the individual notes for this user.
      */
-    public function show_user_notes( $user_id ){
+    private function show_user_notes( $user_id ){
       $notes = get_user_meta( $user_id, 'note' );
       $notes_ordered = array_reverse ( $notes );
       
@@ -87,7 +87,9 @@ class WI_Board_Notes {
      * Save the user note via Ajax.
      */
     public function save_user_note(){
-      //TODO Add check_ajax_referer for security purposes.
+      //Use nonce passed through wp_localize_script for added security.
+      check_ajax_referer( 'save_note_nonce', 'security' );
+      
       $user_id = intval( $_POST['user_id'] );
       $current_user = wp_get_current_user();
       
@@ -110,7 +112,7 @@ class WI_Board_Notes {
         $this->create_note_row( $user_id, $note_data );
       }
       else {
-        echo FALSE;
+        echo 'error';
       }
       
       die(); //Required to avoid errors
@@ -121,7 +123,9 @@ class WI_Board_Notes {
      * Delete user note using Ajax
      */
     public function delete_user_note(){      
-      //TODO Add check_ajax_referer for security purposes.
+      //Use nonce passed through wp_localize_script for added security.
+      check_ajax_referer( 'delete_note_nonce', 'security' );
+      
       $user_id = intval( $_POST['user_id'] );
       $meta_key = esc_html( $_POST['meta_key'] );
       $meta_value = array(
@@ -131,10 +135,10 @@ class WI_Board_Notes {
           );
       
       if( delete_user_meta( $user_id, $meta_key, $meta_value ) ){
-       echo 'deleted'; 
+       _e( 'deleted' ); 
       }
       else {
-       echo 'We failed to delete that note.  Please try again.';
+       _e( 'We failed to delete that note.  Please try again.' );
       }
       
       die(); //Required to avoid errors

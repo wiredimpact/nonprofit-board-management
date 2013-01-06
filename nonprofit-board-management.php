@@ -107,6 +107,15 @@ class WI_Board_Management {
      */
     public function insert_js(){
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
+      
+      //wp_localize_script allows us to send PHP info to JS
+      wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
+        // generate a nonces that can be checked later on save and delete
+        'save_note_nonce' => wp_create_nonce( 'save_note_nonce' ),  
+        'delete_note_nonce' => wp_create_nonce( 'delete_note_nonce' ),
+        'error_deleting_note' => _( 'Woops.  We failed to add your note.  Please try again.' )
+        )
+       );
     }
     
     

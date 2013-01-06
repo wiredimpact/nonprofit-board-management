@@ -15,7 +15,8 @@ jQuery(document).ready(function(){
       meta_key: 'note',
       note: note,
       note_timestamp: note_timestamp,
-      creator_id: creator_id
+      creator_id: creator_id,
+      security: wi_board_mgmt.delete_note_nonce
      };
 
      jQuery.post(ajaxurl, data, function( response ) {
@@ -33,22 +34,28 @@ jQuery(document).ready(function(){
    });
    
    //Add note through Ajax
-   //TODO Add checking to make sure the textarea isn't empty before saving.
    jQuery( '#add-note' ).click(function(){    
     var $this = jQuery( this ),
       note_textarea = $this.siblings( '#note' ),
       user_id = note_textarea.attr( 'data-user-id' ),
       note = note_textarea.val();
     
+    //If the note textarea is empty then don't save the note.
+    if( note == '' ){
+      alert( 'You need to add some text for the note first.' );
+      return false;
+    }
+    
     var data = {
       action: 'add_note',
       user_id: user_id,
-      note: note
+      note: note,
+      security: wi_board_mgmt.save_note_nonce
      };
 
      jQuery.post(ajaxurl, data, function( response ) {
-      if( false === response ){
-        alert( 'Woops.  We failed to add your note.  Please try again.' ); 
+      if( 'error' === response ){
+        alert( wi_board_mgmt.error_deleting_note ); 
       }
       else {
         //Clear text from the textarea
