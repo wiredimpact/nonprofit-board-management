@@ -30,7 +30,9 @@ class WI_Board_Management {
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
         
         //Setup menu
-        add_action( 'admin_menu', array( $this, 'create_menu' ) ); 
+        //We set the priority to 9 so the page will appear even when adding
+        //the board events custom post type to our menu.
+        add_action( 'admin_menu', array( $this, 'create_menu' ), 9 ); 
         
         //Load CSS and JS
         add_action( 'admin_menu', array( $this, 'insert_css') );
@@ -100,12 +102,23 @@ class WI_Board_Management {
      */
     public function insert_css(){
       wp_enqueue_style( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/custom.css' );
+      //TODO Separate css for board events into its class.
+      wp_enqueue_style( 'jquery-ui-smoothness', 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css' );
     }
     
     /*
      * Enqueue JS
      */
     public function insert_js(){
+      //Call scripts for board events
+      //TODO Separate scripts for board events into its class.
+      wp_enqueue_script( 'jquery-ui-slider' );
+      wp_enqueue_script( 'jquery-ui-datepicker' );
+      wp_enqueue_script( 'jquery-timepicker',
+              BOARD_MANAGEMENT_PLUGINFULLURL . 'js/jquery-ui-timepicker.js',
+              array( 'jquery-ui-slider', 'jquery-ui-datepicker' )
+              );
+      
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
       
       //wp_localize_script allows us to send PHP info to JS
@@ -151,12 +164,16 @@ if( is_admin() ){
   define("BOARD_MANAGEMENT_PLUGINFULLPATH", WP_PLUGIN_DIR . BOARD_MANAGEMENT_PLUGINPATH);
   define("BOARD_MANAGEMENT_PLUGINFULLURL", WP_PLUGIN_URL . BOARD_MANAGEMENT_PLUGINPATH);
 
-  //Add board notes class
+  //Add board notes and board event classes
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-notes.php';
+  require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
 
   //Instantiate our board class
   $wi_board = new WI_Board_Management();
 
   //Instantiate our board notes class
   $wi_board_notes = new WI_Board_Notes();
+  
+  //Intstantiate our boar events class
+  $wi_board_events = new WI_Board_Events();
 }
