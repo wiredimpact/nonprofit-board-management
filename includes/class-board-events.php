@@ -123,6 +123,8 @@ class WI_Board_Events {
   public function display_board_event_details( $board_event ){
     //Get all the meta data
     $board_event_meta = $this->retrieve_board_event_meta( $board_event->ID );
+    $start_date_time = date( 'D, F d, Y h:i a', $board_event_meta['start_date_time'] );
+    $end_date_time = date( 'D, F d, Y h:i a', $board_event_meta['end_date_time'] );
     
     ?>
     <table>
@@ -143,12 +145,12 @@ class WI_Board_Events {
       
       <tr>
         <td><label for="start-date-time">Start Date & Time</label></td>
-        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $board_event_meta['start_date_time']; ?>" /></td>
+        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $start_date_time; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="end-date-time">End Date & Time</label></td>
-        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $board_event_meta['end_date_time']; ?>" /></td>
+        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $end_date_time; ?>" /></td>
       </tr>
       
     </table>
@@ -170,23 +172,25 @@ class WI_Board_Events {
     //Save all of our fields
     //Location
     if (isset($_REQUEST['location'])) {
-      update_post_meta($board_event_id, 'location', $_REQUEST['location']);
+      update_post_meta( $board_event_id, 'location', $_REQUEST['location'] );
     }
     //Street
     if (isset($_REQUEST['street'])) {
-      update_post_meta($board_event_id, 'street', $_REQUEST['street']);
+      update_post_meta( $board_event_id, 'street', $_REQUEST['street'] );
     }
     //Area
     if (isset($_REQUEST['area'])) {
-      update_post_meta($board_event_id, 'area', $_REQUEST['area']);
+      update_post_meta( $board_event_id, 'area', $_REQUEST['area'] );
     }
-    //Start Date & Time
+    //Start Date & Time stored as UNIX timestamp
     if (isset($_REQUEST['start-date-time'])) {
-      update_post_meta($board_event_id, 'start_date_time', $_REQUEST['start-date-time']);
+      $start_date_time = strtotime( $_REQUEST['start-date-time'] );
+      update_post_meta( $board_event_id, 'start_date_time', $start_date_time );
     }
-    //End Date & Time
+    //End Date & Time stored as UNIX timestamp
     if (isset($_REQUEST['end-date-time'])) {
-      update_post_meta($board_event_id, 'end_date_time', $_REQUEST['end-date-time']);
+      $end_date_time = strtotime( $_REQUEST['end-date-time'] );
+      update_post_meta( $board_event_id, 'end_date_time', $end_date_time );
     }
   }
   
