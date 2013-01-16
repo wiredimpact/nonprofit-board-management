@@ -18,6 +18,10 @@ class WI_Board_Events {
     add_action( 'init', array( $this, 'create_board_events_type' ) );
     add_action( 'admin_init', array( $this, 'create_board_events_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_events_meta' ), 10, 2 );
+    
+    //Adjust the columns and content shown when viewing the board events post type list.
+    add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
+    add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );    
   }
   
   
@@ -114,43 +118,37 @@ class WI_Board_Events {
   }
   
   /*
-   * Display the meta fields and values for volunteer apps when in the admin
+   * Display the meta fields and values for boad events when in the admin
    */
   public function display_board_event_details( $board_event ){
     //Get all the meta data
-    $board_event_meta = get_post_custom( $board_event->ID );
-    $location = ( isset( $board_event_meta['location'] ) ) ? $board_event_meta['location'][0] : '';
-    $street = ( isset( $board_event_meta['street'] ) ) ? $board_event_meta['street'][0] : '';
-    $area = ( isset( $board_event_meta['area'] ) ) ? $board_event_meta['area'][0] : '';
-    $date = ( isset( $board_event_meta['date'] ) ) ? $board_event_meta['date'][0] : '';
-    $start_date_time = ( isset( $board_event_meta['start_date_time'] ) ) ? $board_event_meta['start_date_time'][0] : '';
-    $end_date_time = ( isset( $board_event_meta['end_date_time'] ) ) ? $board_event_meta['end_date_time'][0] : '';
+    $board_event_meta = $this->retrieve_board_event_meta( $board_event->ID );
     
     ?>
     <table>
       <tr>
         <td><label for="location">Location Name</label></td>
-        <td><input type="text" id="location" name="location" class="regular-text" value="<?php echo $location ?>" /></td>
+        <td><input type="text" id="location" name="location" class="regular-text" value="<?php echo $board_event_meta['location']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="street">Street Address</label></td>
-        <td><input type="text" id="street" name="street" class="regular-text" value="<?php echo $street ?>" /></td>
+        <td><input type="text" id="street" name="street" class="regular-text" value="<?php echo $board_event_meta['street']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="area">City, State Zip</label></td>
-        <td><input type="text" id="area" name="area" class="regular-text" value="<?php echo $area ?>" /></td>
+        <td><input type="text" id="area" name="area" class="regular-text" value="<?php echo $board_event_meta['area']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="start-date-time">Start Date & Time</label></td>
-        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $start_date_time ?>" /></td>
+        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $board_event_meta['start_date_time']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="end-date-time">End Date & Time</label></td>
-        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $end_date_time ?>" /></td>
+        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $board_event_meta['end_date_time']; ?>" /></td>
       </tr>
       
     </table>
@@ -158,7 +156,7 @@ class WI_Board_Events {
   }
   
   /*
-   * Save the meta data fields for volunteer opps
+   * Save the meta data fields for board events
    */
   public function save_board_events_meta( $board_event_id, $board_event ){
     
@@ -192,7 +190,94 @@ class WI_Board_Events {
     }
   }
   
+  
+  /*
+   * Display who has RSVPed for each event including who's coming, 
+   * who's not, and who hasn't responded yet.
+   */
   public function display_board_event_rsvps(){
     echo '<p>Here we will show each person that is coming, not coming, and hasn\'t responded.</p>';
   }
-}
+  
+  /*
+   * Retrieve all the board event meta data and place it in an array.
+   */
+  private function retrieve_board_event_meta( $post_id ){
+    $board_event_meta_raw = get_post_custom( $post_id );
+    $board_event_meta = array();
+    
+    $board_event_meta['location'] = ( isset( $board_event_meta_raw['location'] ) ) ? $board_event_meta_raw['location'][0] : '';
+    $board_event_meta['street'] = ( isset( $board_event_meta_raw['street'] ) ) ? $board_event_meta_raw['street'][0] : '';
+    $board_event_meta['area'] = ( isset( $board_event_meta_raw['area'] ) ) ? $board_event_meta_raw['area'][0] : '';
+    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['start_date_time'] ) ) ? $board_event_meta_raw['start_date_time'][0] : '';
+    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['end_date_time'] ) ) ? $board_event_meta_raw['end_date_time'][0] : '';
+    
+    return $board_event_meta;
+  }
+  
+  
+ /*
+  * Add custom columns the board events content type.
+  */
+ public function edit_board_events_columns( $columns ) {
+
+   $columns = array(
+     'cb' => '<input type="checkbox" />',
+     'title' => __( 'Title' ),
+     'location' => __( 'Location' ),
+     'date_time' => __( 'Date & Time' ),
+     'description' => __( 'Description' ),
+     'attending' => __( 'Who\'s Coming?' ),
+     'rsvp' => __( 'RSVP' ),
+   );
+
+   return $columns;
+ }
+ 
+ 
+ /*
+  * Show content for custom columns for board events.
+  */
+ public function show_board_event_columns( $column, $post_id ){
+   global $post;
+   $board_event_meta = $this->retrieve_board_event_meta( $post_id );
+   
+   switch( $column ){
+     
+     case 'location':
+       
+       echo $board_event_meta['location'] . '<br />';
+       echo $board_event_meta['street'] . '<br />';;
+       echo $board_event_meta['area'];
+       
+       break;
+     
+     case 'date_time':
+       
+       echo $board_event_meta['start_date_time'];
+       echo ' - ';
+       echo $board_event_meta['end_date_time'];
+       
+       break;
+    
+     case 'description':
+       
+       //TODO Make this handle strings of all lengths.  Don't add ... to short strings or strings that end in a period.
+       echo substr( $post->post_content, 0, 50 ) . '...';
+       
+       break;
+     
+     case 'attending':
+       
+       echo '';
+       
+       break;
+     
+     case 'rsvp':
+       
+       echo '';
+       
+       break;
+   }
+ }
+}//WI_Board_Events
