@@ -10,11 +10,16 @@ class WI_Board_Events {
     //Flush rewrite rules 
     register_activation_hook( __FILE__, array( $this, 'flush_slugs' ) ); 
     
+    //Load CSS and JS
+    add_action( 'admin_menu', array( $this, 'insert_css') );
+    add_action( 'admin_menu', array( $this, 'insert_js') );
+
     //Create our board events custom post type
     add_action( 'init', array( $this, 'create_board_events_type' ) );
     add_action( 'admin_init', array( $this, 'create_board_events_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_events_meta' ), 10, 2 );
   }
+  
   
   /*
    * So our new post type's URLs will work out of the box
@@ -24,6 +29,28 @@ class WI_Board_Events {
     $this->create_board_events_type();
     flush_rewrite_rules();
   }
+  
+  
+  /*
+   * Enqueue CSS
+   */
+  public function insert_css(){
+    wp_enqueue_style( 'board-events', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/board-events.css' );
+    wp_enqueue_style( 'jquery-ui-smoothness', 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css' );
+  }
+
+  
+  /*
+   * Enqueue JS
+   */
+  public function insert_js(){
+    wp_enqueue_script( 'jquery-ui-slider' );
+    wp_enqueue_script( 'jquery-ui-datepicker' );
+    wp_enqueue_script( 'jquery-timepicker', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/jquery-ui-timepicker.js', array( 'jquery-ui-slider', 'jquery-ui-datepicker' ) );
+
+    wp_enqueue_script( 'board-events', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/board-events.js', 'jquery' );
+  }
+  
   
   /*
    * Create our board events post type.
