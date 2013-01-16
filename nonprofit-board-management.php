@@ -148,10 +148,11 @@ class WI_Board_Management {
 
 if( is_admin() ){
   //Setup some constants for us to more easily work with files
-  define("BOARD_MANAGEMENT_BASENAME", plugin_basename(__FILE__) );
-  define("BOARD_MANAGEMENT_PLUGINPATH", "/" . plugin_basename(dirname(__FILE__)) . "/");
-  define("BOARD_MANAGEMENT_PLUGINFULLPATH", WP_PLUGIN_DIR . BOARD_MANAGEMENT_PLUGINPATH);
-  define("BOARD_MANAGEMENT_PLUGINFULLURL", WP_PLUGIN_URL . BOARD_MANAGEMENT_PLUGINPATH);
+  define( "BOARD_MANAGEMENT_BASENAME", plugin_basename(__FILE__) );
+  define( "BOARD_MANAGEMENT_PLUGINPATH", "/" . plugin_basename(dirname(__FILE__)) . "/" );
+  define( "BOARD_MANAGEMENT_PLUGINFULLPATH", WP_PLUGIN_DIR . BOARD_MANAGEMENT_PLUGINPATH );
+  define( "BOARD_MANAGEMENT_PLUGINFULLURL", WP_PLUGIN_URL . BOARD_MANAGEMENT_PLUGINPATH );
+  define( "BOARD_MANAGEMENT_FILEFULLPATH", BOARD_MANAGEMENT_PLUGINFULLPATH . 'nonprofit-board-management.php' );
 
   //Add board notes and board event classes
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-notes.php';

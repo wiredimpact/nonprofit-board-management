@@ -7,8 +7,12 @@
 class WI_Board_Events {
   
   public function __construct() {
+    //Add database table on activation for RSVP features
+    //We must use a constant instead of __FILE__ because this file is loaded using require_once.
+    register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
+    
     //Flush rewrite rules 
-    register_activation_hook( __FILE__, array( $this, 'flush_slugs' ) ); 
+    register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'flush_slugs' ) ); 
     
     //Load CSS and JS
     add_action( 'admin_menu', array( $this, 'insert_css') );
@@ -22,6 +26,34 @@ class WI_Board_Events {
     //Adjust the columns and content shown when viewing the board events post type list.
     add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
     add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );    
+    
+    //Save RSVPs for the events via ajax
+    add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
+  }
+  
+  /*
+   * Create the database table that will hold our board event RSVP information.
+   */
+  public function create_db_table(){
+    global $wpdb;
+    
+    $table_name = $wpdb->prefix . "board_rsvps";
+    
+    $sql = "CREATE TABLE $table_name (
+      id mediumint(9) NOT NULL AUTO_INCREMENT,
+      user_id bigint(20) NOT NULL,
+      post_id bigint(20) NOT NULL,
+      rsvp tinyint(2) NOT NULL,
+      time timestamp NOT NULL,
+      PRIMARY  KEY  (id),
+      UNIQUE KEY (user_id, post_id)
+    );";
+    
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+    
+    //We set a variable in options in case we need to update the database in the future.
+    add_option('board_rsvp_db_version', 0.1);
   }
   
   
@@ -123,8 +155,6 @@ class WI_Board_Events {
   public function display_board_event_details( $board_event ){
     //Get all the meta data
     $board_event_meta = $this->retrieve_board_event_meta( $board_event->ID );
-    $start_date_time = date( 'D, F d, Y h:i a', $board_event_meta['start_date_time'] );
-    $end_date_time = date( 'D, F d, Y h:i a', $board_event_meta['end_date_time'] );
     
     ?>
     <table>
@@ -145,12 +175,12 @@ class WI_Board_Events {
       
       <tr>
         <td><label for="start-date-time">Start Date & Time</label></td>
-        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $start_date_time; ?>" /></td>
+        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $board_event_meta['start_date_time'] ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="end-date-time">End Date & Time</label></td>
-        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $end_date_time; ?>" /></td>
+        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $board_event_meta['end_date_time'] ?>" /></td>
       </tr>
       
     </table>
@@ -169,6 +199,8 @@ class WI_Board_Events {
       return;
     }
     
+    //TODO sanitize the data first
+    //TODO Save all meta data with underscore first so it doesn't show as a custom field
     //Save all of our fields
     //Location
     if (isset($_REQUEST['location'])) {
@@ -213,8 +245,9 @@ class WI_Board_Events {
     $board_event_meta['location'] = ( isset( $board_event_meta_raw['location'] ) ) ? $board_event_meta_raw['location'][0] : '';
     $board_event_meta['street'] = ( isset( $board_event_meta_raw['street'] ) ) ? $board_event_meta_raw['street'][0] : '';
     $board_event_meta['area'] = ( isset( $board_event_meta_raw['area'] ) ) ? $board_event_meta_raw['area'][0] : '';
-    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['start_date_time'] ) ) ? $board_event_meta_raw['start_date_time'][0] : '';
-    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['end_date_time'] ) ) ? $board_event_meta_raw['end_date_time'][0] : '';
+    //TODO Fix dates that break when the field is set to blank.
+    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['start_date_time'] ) ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['start_date_time'][0] ) : '';
+    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['end_date_time'] ) ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['end_date_time'][0] ) : '';
     
     return $board_event_meta;
   }
@@ -273,15 +306,115 @@ class WI_Board_Events {
      
      case 'attending':
        
-       echo '';
+       echo $this->board_event_rsvps( $post_id );
        
        break;
      
      case 'rsvp':
        
-       echo '';
+       //Determine whether they're going and if add classes if they have RSVPed previously.
+       $user_id = get_current_user_id();
+       $rsvp_status = $this->rsvp_status( $post_id, $user_id );
+       
+       //class button-primary should be used for selected option
+       //class secondary-button should be used for those that aren't selected
+       echo '<input id="attending" type="submit" class="button secondary-button ';
+       if( $rsvp_status === 1 ){
+         echo 'button-primary active';
+       }
+       echo '" value="I\'m Going" />';
+       echo '<input id="not-attending" type="submit" class="button secondary-button ';
+       if( $rsvp_status === 0 ){
+         echo 'button-primary active';
+       }
+       echo '" value="I\'m Not Going" />';
        
        break;
    }
  }
+ 
+ 
+ /*
+  * Save the RSVP for this board member
+  */
+ public function rsvp(){
+  //TODO Add nonce field via localize function 
+  //check_ajax_referer( 'save_note_nonce', 'security' );
+   
+  //Put data in variables
+  $post_id = intval( $_POST['post_id'] );
+  $rsvp = intval( $_POST['rsvp'] );
+  $user_id = get_current_user_id();
+  
+  //Access $wpdb.  We're going to need it.
+  global $wpdb;
+  $wpdb->show_errors(); //TODO Take this out when done testing.
+  
+  $rsvp_status = $this->rsvp_status( $post_id, $user_id );
+  
+  //Insert data into database
+  $result = 'we did nothing';
+  if( $rsvp_status === FALSE ){
+    $result = $wpdb->insert(
+            $wpdb->prefix . 'board_rsvps', //TODO Possibly make this a constant so it's easier to manage
+            array( 'user_id' => $user_id, 'post_id' => $post_id, 'rsvp' => $rsvp ),
+            array( '%d', '%d', '%d' ) //All of these should be saved as integers
+           );
+  }
+  else if( $rsvp_status != $rsvp ) { //Only do the db update if there RSVP status in the db will change
+    $result = $wpdb->update(
+            $wpdb->prefix . 'board_rsvps', //TODO Possibly make this a constant so it's easier to manage
+            array( 'rsvp' => $rsvp ), //Data to be updated
+            array( 'user_id' => $user_id, 'post_id' => $post_id ), //Where clause
+            array( '%d' ), //Format for data being updated
+            array( '%d', '%d' )
+           );
+  }
+   
+  echo $result;
+  
+  die(); //required
+ }
+ 
+ 
+ /*
+  * Provides the status or the RSVP for this user for this event.
+  * Possible returns include FALSE, 0, 1
+  */
+ private function rsvp_status( $post_id, $user_id ){
+  global $wpdb;
+
+  //Check if this user has already RSVPed for this event.
+  //NULL means they haven't yet.
+  $rsvp = $wpdb->get_var( $wpdb->prepare(
+            "
+             SELECT rsvp
+             FROM " . $wpdb->prefix  . "board_rsvps
+             WHERE post_id = %d
+             AND user_id = %d
+            ",
+            $post_id,
+            $user_id
+          ) );
+  
+  $rsvp_status = ( $rsvp == NULL ) ? FALSE : (int)$rsvp;
+  
+  return $rsvp_status;
+ }
+ 
+ 
+ private function board_event_rsvps( $post_id ){
+   $board_members = get_users( array( 'role' => 'board_member' ) );
+   $board_members_attending = array();
+   $board_members_not_attending = array();
+   
+   //Get user info for all board members
+   
+   //Get all rsvps for for given event id
+   
+   //loop through rsvps and for every one move into new arrays for going/not going.
+   
+   return $board_members;
+ }
+ 
 }//WI_Board_Events
