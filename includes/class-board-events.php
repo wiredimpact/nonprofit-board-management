@@ -35,25 +35,29 @@ class WI_Board_Events {
    * Create the database table that will hold our board event RSVP information.
    */
   public function create_db_table(){
-    global $wpdb;
     
-    $table_name = $wpdb->prefix . "board_rsvps";
-    
-    $sql = "CREATE TABLE $table_name (
-      id mediumint(9) NOT NULL AUTO_INCREMENT,
-      user_id bigint(20) NOT NULL,
-      post_id bigint(20) NOT NULL,
-      rsvp tinyint(2) NOT NULL,
-      time timestamp NOT NULL,
-      PRIMARY  KEY  (id),
-      UNIQUE KEY (user_id, post_id)
-    );";
-    
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql);
-    
-    //We set a variable in options in case we need to update the database in the future.
-    add_option('board_rsvp_db_version', 0.1);
+    //Only create table if it doesn't exist.
+    if( get_option( 'board_rsvp_db_version' ) == FALSE ){
+      global $wpdb;
+
+      $table_name = $wpdb->prefix . "board_rsvps";
+
+      $sql = "CREATE TABLE $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        user_id bigint(20) NOT NULL,
+        post_id bigint(20) NOT NULL,
+        rsvp tinyint(2) NOT NULL,
+        time timestamp NOT NULL,
+        PRIMARY  KEY  (id),
+        UNIQUE KEY (user_id, post_id)
+      );";
+
+      require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+      dbDelta($sql);
+
+      //We set a variable in options in case we need to update the database in the future.
+      add_option('board_rsvp_db_version', 0.1);
+    }
   }
   
   
@@ -231,8 +235,36 @@ class WI_Board_Events {
    * Display who has RSVPed for each event including who's coming, 
    * who's not, and who hasn't responded yet.
    */
-  public function display_board_event_rsvps(){
+  public function display_board_event_rsvps( $board_event ){
     echo '<p>Here we will show each person that is coming, not coming, and hasn\'t responded.</p>';
+    
+    $rsvps = $this->board_event_rsvps( $board_event->ID );
+    
+    //Attending Array
+    $attending = array();
+    foreach( $rsvps['attending'] as $event_rsvp ){
+      $attending[] = $event_rsvp->display_name;
+    }
+    
+    //Not Attending Array
+    $not_attending = array();
+    foreach( $rsvps['not_attending'] as $event_rsvp ){
+      $not_attending[] = $event_rsvp->display_name;
+    }
+    
+    //No Response Array
+    $no_response = array();
+    foreach( $rsvps['no_response'] as $event_rsvp ){
+      $no_response[] = $event_rsvp->display_name;
+    }
+    
+    //Display all the board members
+    echo '<h4>Attending</h4>';
+    echo implode( ', ', $attending );
+    echo '<h4>Not Attending</h4>';
+    echo implode( ', ', $not_attending );
+    echo '<h4>No Response</h4>';
+    echo implode( ', ', $no_response );
   }
   
   /*
@@ -283,9 +315,15 @@ class WI_Board_Events {
      
      case 'location':
        
+       //Create a Google maps URL so we can add a link to get a map.
+       $google_maps_string = str_replace( ' ', '+', $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
+       $google_maps_address = 'https://maps.google.com/maps?q=' . $google_maps_string;
+       
+       echo '<a href="' . $google_maps_address . '" target="_blank">';
        echo $board_event_meta['location'] . '<br />';
        echo $board_event_meta['street'] . '<br />';;
        echo $board_event_meta['area'];
+       echo '</a>';
        
        break;
      
@@ -306,11 +344,24 @@ class WI_Board_Events {
      
      case 'attending':
        
-       echo $this->board_event_rsvps( $post_id );
+       $rsvps = $this->board_event_rsvps( $post_id );
+       
+       $attending = array();
+       foreach( $rsvps['attending'] as $event_rsvp ){
+         $attending[] = $event_rsvp->display_name;
+       }
+       
+       echo implode( ', ', $attending );
        
        break;
      
      case 'rsvp':
+       
+       if( !current_user_can( 'contain_board_info' ) ){
+         echo 'You are not a board member so you can\'t RSVP for events.';
+         
+         break;
+       }
        
        //Determine whether they're going and if add classes if they have RSVPed previously.
        $user_id = get_current_user_id();
@@ -402,19 +453,52 @@ class WI_Board_Events {
   return $rsvp_status;
  }
  
- 
+ /*
+  * Provide an array for users that are attending, not attending and haven't 
+  * responded to an event.
+  */
  private function board_event_rsvps( $post_id ){
    $board_members = get_users( array( 'role' => 'board_member' ) );
-   $board_members_attending = array();
-   $board_members_not_attending = array();
-   
-   //Get user info for all board members
    
    //Get all rsvps for for given event id
+   //TODO Possibly make table name this a constant so it's easier to manage
+   global $wpdb;
+   $event_rsvps = $wpdb->get_results(
+           "
+             SELECT user_id, rsvp
+             FROM {$wpdb->prefix}board_rsvps
+             WHERE post_id = {$post_id}
+           "
+           );          
+  
+  //Loop through and add RSVP info to each board member.
+  //Loop through all the board members first.
+  $board_member_count = count( $board_members );
+  for( $i = 0; $i < $board_member_count; $i++){
+    //With each board member loop through all RSVPs
+    //If one matches then add it as a property of that user object
+    foreach( $event_rsvps as $event_rsvp ){
+      if( $event_rsvp->user_id == $board_members[$i]->ID ){
+        $board_members[$i]->rsvp = $event_rsvp->rsvp;
+      }
+    }
+  }
+  
+  //Build an array with all those attending, not attending and haven't responded.
+  $rsvps = array( 'attending' => array(), 'not-attending' => array(), 'no-response' => array() );
+  for( $i = 0; $i < $board_member_count; $i++ ){
+    if( !isset( $board_members[$i]->rsvp ) ){
+      $rsvps['no_response'][] = $board_members[$i];
+    }
+    else if ( $board_members[$i]->rsvp == 1 ){
+      $rsvps['attending'][] = $board_members[$i];
+    }
+    else {
+      $rsvps['not_attending'][] = $board_members[$i];
+    }
+  }
    
-   //loop through rsvps and for every one move into new arrays for going/not going.
-   
-   return $board_members;
+   return $rsvps;
  }
  
 }//WI_Board_Events

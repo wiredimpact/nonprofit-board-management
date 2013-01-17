@@ -51,7 +51,8 @@ class WI_Board_Management {
               array( 
                   'read' => true,
                   'view_board_content' => true,
-                  'contain_board_info' => true
+                  'contain_board_info' => true,
+                  'edit_posts' => true
                   )
               );
       
@@ -127,11 +128,11 @@ class WI_Board_Management {
      */
     public function create_menu(){
       //Create top level menu item
-      add_menu_page( 'Nonprofit Board Management', 'Nonprofit Board Management', 'manage_options', 'nonprofit-board', array( $this, 'create_settings_page' ) );
+      add_menu_page( 'Nonprofit Board Management', 'Nonprofit Board Management', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
       
       //Create submenu items
-      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'manage_options', 'users.php?role=board_member' );
-      add_submenu_page( 'nonprofit-board', 'Board Recruits', 'Board Recruits', 'manage_options', 'users.php?role=board_recruit' );
+      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'users.php?role=board_member' );
+      add_submenu_page( 'nonprofit-board', 'Board Recruits', 'Board Recruits', 'view_board_content', 'users.php?role=board_recruit' );
     }
     
     /*
