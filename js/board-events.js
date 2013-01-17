@@ -63,7 +63,7 @@ jQuery(document).ready(function(){
         else if( post_attending_col.html().indexOf( wi_board_events.current_user_display_name + ',' ) !== -1 ){ //If they aren't coming and their name doesn't show last
           post_attending_col.html(post_attending_col.html().split( wi_board_events.current_user_display_name + ', ' ).join(''));
         }
-        else{ //If they are coming and their name shows last.
+        else{ //If they aren't coming and their name shows last.
           post_attending_col.html(post_attending_col.html().split( ', ' + wi_board_events.current_user_display_name ).join(''));
         }
       }
