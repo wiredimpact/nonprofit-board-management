@@ -89,6 +89,17 @@ class WI_Board_Events {
     wp_enqueue_script( 'jquery-timepicker', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/jquery-ui-timepicker.js', array( 'jquery-ui-slider', 'jquery-ui-datepicker' ) );
 
     wp_enqueue_script( 'board-events', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/board-events.js', 'jquery' );
+    
+    
+    $current_user = wp_get_current_user();
+    //wp_localize_script allows us to send PHP info to JS
+    wp_localize_script( 'board-events', 'wi_board_events', array(
+      // generate a nonces that can be checked later on save
+      'save_rsvp_nonce' => wp_create_nonce( 'save_rsvp_nonce' ),  
+      'error_rsvp' => _( 'Woops.  We failed to RSVP for you.  Please try again.' ),
+      'current_user_display_name' => _( $current_user->display_name ) //Must match text used to display who's coming
+      )
+     );
   }
   
   
@@ -389,8 +400,8 @@ class WI_Board_Events {
   * Save the RSVP for this board member
   */
  public function rsvp(){
-  //TODO Add nonce field via localize function 
-  //check_ajax_referer( 'save_note_nonce', 'security' );
+  //Use nonce passed through wp_localize_script for added security.
+  check_ajax_referer( 'save_rsvp_nonce', 'security' );
    
   //Put data in variables
   $post_id = intval( $_POST['post_id'] );
@@ -399,12 +410,11 @@ class WI_Board_Events {
   
   //Access $wpdb.  We're going to need it.
   global $wpdb;
-  $wpdb->show_errors(); //TODO Take this out when done testing.
   
   $rsvp_status = $this->rsvp_status( $post_id, $user_id );
   
   //Insert data into database
-  $result = 'we did nothing';
+  $result = 0;
   if( $rsvp_status === FALSE ){
     $result = $wpdb->insert(
             $wpdb->prefix . 'board_rsvps', //TODO Possibly make this a constant so it's easier to manage
@@ -422,6 +432,7 @@ class WI_Board_Events {
            );
   }
    
+  //Result is 1 if db changes made, 0 if no changes made
   echo $result;
   
   die(); //required
