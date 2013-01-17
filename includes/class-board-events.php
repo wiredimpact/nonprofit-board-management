@@ -25,7 +25,9 @@ class WI_Board_Events {
     
     //Adjust the columns and content shown when viewing the board events post type list.
     add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
-    add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );    
+    add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
+    add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
+    add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
     
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
@@ -395,7 +397,47 @@ class WI_Board_Events {
    }
  }
  
+ /*
+  * Add Date & Time as a sortable field.
+  */
+ public function make_board_events_sortable( $columns ){
+   $columns['date_time'] = 'date_time';
+   
+   return $columns;
+ }
  
+ 
+ /*
+  * Run our sort function for the request filter.
+  */
+ public function edit_board_events_load() {
+	add_filter( 'request', array( $this, 'sort_board_events' ) );
+ }
+
+ 
+ /*
+  * On list of board events make date and time sortable by start_date_time.
+  */
+ public function sort_board_events( $vars ) {
+
+  if ( isset( $vars['post_type'] ) && 'board_events' == $vars['post_type'] ) {
+
+    if ( isset( $vars['orderby'] ) && 'date_time' == $vars['orderby'] ) {
+     
+      $vars = array_merge(
+        $vars,
+        array(
+          'meta_key' => 'start_date_time',
+          'orderby' => 'meta_value_num'
+        )
+      );
+    }
+  }
+  
+  return $vars;
+}
+ 
+  
  /*
   * Save the RSVP for this board member
   */
