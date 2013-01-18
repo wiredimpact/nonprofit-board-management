@@ -558,31 +558,7 @@ public function show_admins_notices(){
   * TODO Break this down into multiple methods.
   */
  private function board_event_rsvps( $post_id ){
-   //$board_members = get_users( array( 'role' => 'board_member' ) );
-   //$admins = get_users( array( 'role' => 'administrator' ) );
-   
-   //Needs work http://codex.wordpress.org/Function_Reference/get_users
-   //More things to look at http://codex.wordpress.org/Function_Reference/WP_Query#Custom_Field_Parameters
-   $board_members = get_users ( array(
-       'meta_query' => array( 
-           array(
-           //'key' => 'wp_capabilities',
-           //'value' => '%rsvp_board_events%',
-           'key' => 'user_firstname',
-           'value' => '%Test%',
-           'compare' => 'LIKE' 
-           ) ) ) );
-   var_dump( $board_members );
-   //Check if admins can rsvp and if not, remove them.
-   /*$admins_count = count( $admins );
-   for( $i = 0; $i < $admins_count; $i++ ){
-     if( !user_can( $admins[$i]->ID, 'rsvp_board_events' ) ){
-       unset( $admins[$i] );
-     }
-   }
-   
-   //Combine board members with admins that can rsvp
-   $board_members = array_merge( $board_members, $admins );*/
+   $rsvp_users = $this->get_users_who_rsvp();
    
    //Get all rsvps for for given event id
    global $wpdb;
@@ -596,32 +572,54 @@ public function show_admins_notices(){
   
   //Loop through and add RSVP info to each board member.
   //Loop through all the board members first.
-  $board_member_count = count( $board_members );
-  for( $i = 0; $i < $board_member_count; $i++){
+  $rsvp_users_count = count( $rsvp_users );
+  for( $i = 0; $i < $rsvp_users_count; $i++){
     //With each board member loop through all RSVPs
     //If one matches then add it as a property of that user object
     foreach( $event_rsvps as $event_rsvp ){
-      if( $event_rsvp->user_id == $board_members[$i]->ID ){
-        $board_members[$i]->rsvp = $event_rsvp->rsvp;
+      if( $event_rsvp->user_id == $rsvp_users[$i]->ID ){
+        $rsvp_users[$i]->rsvp = $event_rsvp->rsvp;
       }
     }
   }
   
   //Build an array with all those attending, not attending and haven't responded.
   $rsvps = array( 'attending' => array(), 'not-attending' => array(), 'no-response' => array() );
-  for( $i = 0; $i < $board_member_count; $i++ ){
-    if( !isset( $board_members[$i]->rsvp ) ){
-      $rsvps['no_response'][] = $board_members[$i];
+  for( $i = 0; $i < $rsvp_users_count; $i++ ){
+    if( !isset( $rsvp_users[$i]->rsvp ) ){
+      $rsvps['no_response'][] = $rsvp_users[$i];
     }
-    else if ( $board_members[$i]->rsvp == 1 ){
-      $rsvps['attending'][] = $board_members[$i];
+    else if ( $rsvp_users[$i]->rsvp == 1 ){
+      $rsvps['attending'][] = $rsvp_users[$i];
     }
     else {
-      $rsvps['not_attending'][] = $board_members[$i];
+      $rsvps['not_attending'][] = $rsvp_users[$i];
     }
   }
    
    return $rsvps;
+ }
+ 
+ 
+ /*
+  * Get an array with all the users who can potentially RSVP to an event.
+  */
+ private function get_users_who_rsvp(){
+   $board_members = get_users( array( 'role' => 'board_member' ) );
+   $admins = get_users( array( 'role' => 'administrator' ) );
+   
+   //Check if admins can rsvp and if not, remove them from the array.
+   $admins_count = count( $admins );
+   for( $i = 0; $i < $admins_count; $i++ ){
+     if( !isset( $admins[$i]->allcaps['rsvp_board_events'] ) || $admins[$i]->allcaps['rsvp_board_events'] != true ) {
+       unset( $admins[$i] );
+     }
+   }
+   
+   //Combine board members with admins that can rsvp
+   $rsvp_users = array_merge( $board_members, $admins );
+   
+   return $rsvp_users;
  }
  
 }//WI_Board_Events
