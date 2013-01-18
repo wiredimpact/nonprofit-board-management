@@ -20,9 +20,6 @@ class WI_Board_Events {
     //We must use a constant instead of __FILE__ because this file is loaded using require_once.
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
-    //Flush rewrite rules 
-    register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'flush_slugs' ) ); 
-    
     //Load CSS and JS
     add_action( 'admin_menu', array( $this, 'insert_css') );
     add_action( 'admin_menu', array( $this, 'insert_js') );
@@ -79,16 +76,6 @@ class WI_Board_Events {
   
   
   /*
-   * So our new post type's URLs will work out of the box
-   * we flush the WordPress rewrite rules on activation.
-   */
-  public function flush_slugs(){
-    $this->create_board_events_type();
-    flush_rewrite_rules();
-  }
-  
-  
-  /*
    * Enqueue CSS
    */
   public function insert_css(){
@@ -126,7 +113,6 @@ class WI_Board_Events {
    * Create our board events post type.
    */
   public function create_board_events_type(){
-    //TODO Make sure the front of the URL is not added to the slug.
     $labels = array(
       'name' => 'Board Events',
       'singular_name' => 'Board Event',
@@ -145,18 +131,11 @@ class WI_Board_Events {
 
     $args = array(
       'labels' => $labels,
-      'public' => true,
-      'exclude_from_search' => true,
-      'publicly_queryable' => true, //TODO See if we can turn this to false for public security purposes.
+      'public' => false,
       'show_ui' => true,
-      'show_in_nav_menus' => false,
       'show_in_menu' => 'nonprofit-board', 
-      'query_var' => true,
-      'rewrite' => array( 'slug' => 'board-event' ),
+      'query_var' => false,
       'capability_type' => 'board_event',
-      'has_archive' => false, 
-      'hierarchical' => false,
-      'menu_position' => null,
       'supports' => array( 'title', 'editor' )
     ); 
     
@@ -575,7 +554,6 @@ public function show_admins_notices(){
  /*
   * Provide an array for users that are attending, not attending and haven't 
   * responded to an event.
-  * TODO Break this down into multiple methods.
   */
  private function board_event_rsvps( $post_id ){
    $rsvp_users = $this->get_users_who_rsvp();
