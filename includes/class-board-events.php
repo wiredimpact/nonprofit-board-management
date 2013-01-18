@@ -322,8 +322,7 @@ class WI_Board_Events {
  /*
   * Show content for custom columns for board events.
   */
- public function show_board_event_columns( $column, $post_id ){
-   global $post;
+ public function show_board_event_columns( $column, $post_id ){  
    $board_event_meta = $this->retrieve_board_event_meta( $post_id );
    
    switch( $column ){
@@ -580,7 +579,7 @@ public function show_admins_notices(){
   }
   
   //Build an array with all those attending, not attending and haven't responded.
-  $rsvps = array( 'attending' => array(), 'not-attending' => array(), 'no-response' => array() );
+  $rsvps = array( 'attending' => array(), 'not_attending' => array(), 'no_response' => array() );
   for( $i = 0; $i < $rsvp_users_count; $i++ ){
     if( !isset( $rsvp_users[$i]->rsvp ) ){
       $rsvps['no_response'][] = $rsvp_users[$i];
