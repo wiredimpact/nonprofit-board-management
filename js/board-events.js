@@ -25,19 +25,28 @@ jQuery(document).ready(function(){
   
   
   //JS for RSVPing to an Event
-  jQuery( '#the-list #attending, #the-list #not-attending' ).not('.rsvped').click(function(){
+  jQuery( '#the-list #attending, #the-list #not-attending' ).click(function(){
     var $this = jQuery(this),
     button_id = $this.attr('id'),
     rsvp = 1,
     post_row = $this.closest('tr'),
     post_attending_col = post_row.find( 'td.attending' ),
+    load_spinner = $this.siblings( '.spinner' ),
     post_id = post_row.attr('id');
     post_id = parseInt( post_id.replace('post-', '') );
+    
+    //If they've already RSPVed for this then don't continue.
+    if( $this.hasClass( 'active' ) ){
+      return false;
+    }
     
     //Make rsvp = 0 if they're not coming.
     if( button_id === 'not-attending' ){
       rsvp = 0;
     }
+    
+    //Show spinner while we handle ajax request.
+    load_spinner.show();
     
     //Send RSVP via ajax
     var data = {
@@ -55,6 +64,9 @@ jQuery(document).ready(function(){
         
         //Put the new list of who's coming in the attending column.
         post_attending_col.html( response );
+        
+        //Hide the load spinner
+        load_spinner.hide();
       }
     });
     

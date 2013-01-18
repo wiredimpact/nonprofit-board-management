@@ -390,6 +390,7 @@ class WI_Board_Events {
          echo 'button-primary active';
        }
        echo '" value="I\'m Not Going" />';
+       echo '<span class="waiting spinner" style="display: none;"></span>';
        
        break;
    }
