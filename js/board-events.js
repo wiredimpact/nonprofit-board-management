@@ -71,5 +71,25 @@ jQuery(document).ready(function(){
     
     return false;
   });
+  
+  //Allow admins to rsvp by giving them the correct capability.
+  jQuery( 'input#allow-rsvp' ).click(function(){
+    var data = {
+      action: 'allow_rsvp',
+      security: wi_board_events.allow_rsvp_nonce
+     };
+
+    jQuery.post(ajaxurl, data, function( response ) {
+      if( response !== '1' ){ //If there's an error
+        alert( wi_board_events.error_allow_rsvp ); 
+      }
+      else{
+       //Reload the current page so they can start RSVPing.
+       location.reload(true); 
+      }
+    });
+    
+    return false;
+  });
 });
 

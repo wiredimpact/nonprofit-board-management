@@ -43,6 +43,9 @@ class WI_Board_Events {
     
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
+    
+    //Allow user to RSVP for events
+    add_action( 'wp_ajax_allow_rsvp', array( $this, 'allow_rsvp' ) );
   }
   
   /*
@@ -110,8 +113,10 @@ class WI_Board_Events {
     wp_localize_script( 'board-events', 'wi_board_events', array(
       // generate a nonces that can be checked later on save
       'save_rsvp_nonce' => wp_create_nonce( 'save_rsvp_nonce' ),  
-      'error_rsvp' => _( 'Woops.  We failed to RSVP for you.  Please try again.' ),
-      'current_user_display_name' => _( $current_user->display_name ) //Must match text used to display who's coming
+      'allow_rsvp_nonce' => wp_create_nonce( 'allow_rsvp_nonce' ),
+      'error_rsvp' => __( 'Woops.  We failed to RSVP for you.  Please try again.' ),
+      'error_allow_rsvp' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
+      'current_user_display_name' => __( $current_user->display_name ) //Must match text used to display who's coming
       )
      );
   }
@@ -472,7 +477,21 @@ public function show_admins_notices(){
   </div>
   <?php
 }
- 
+
+  /*
+   * Allow current user to RSVP by giving them the capability.
+   * This method is called via ajax.
+   */
+  public function allow_rsvp(){
+    check_ajax_referer( 'allow_rsvp_nonce', 'security' );
+
+    $current_user = wp_get_current_user();
+    $current_user->add_cap( 'rsvp_board_events' );
+
+    echo '1';
+
+    die();
+  }
 
   /*
    * Return the table prefix for this WordPress install.
@@ -485,7 +504,8 @@ public function show_admins_notices(){
   
   
  /*
-  * Save the RSVP for this board member
+  * Save the RSVP for this board member.
+  * This method is called via ajax.
   */
  public function rsvp(){
   //Use nonce passed through wp_localize_script for added security.
@@ -523,7 +543,7 @@ public function show_admins_notices(){
   //Result is 1 if db changes made, 0 if no changes made
   echo $result;
   
-  die(); //required
+  die();
  }
  
  
