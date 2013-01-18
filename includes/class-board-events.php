@@ -38,6 +38,9 @@ class WI_Board_Events {
     add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
     add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
     
+    //Add notice to admin who can't RSVP
+    add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
+    
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
   }
@@ -218,14 +221,17 @@ class WI_Board_Events {
    */
   public function save_board_events_meta( $board_event_id, $board_event ){
     
-    //Check nonce, post type, and user caps
-    if ( !wp_verify_nonce( $_REQUEST['_event_details_nonce'], 'event_details_nonce' ) ){
+    //Check autosave, post type, user caps, nonce
+    if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
       return;
     }
     if( $board_event->post_type != 'board_events' ){
       return;
     }
     if( !current_user_can( 'edit_post', $board_event_id ) ){
+      return;
+    }
+    if ( !isset( $_REQUEST['_event_details_nonce'] ) || !wp_verify_nonce( $_REQUEST['_event_details_nonce'], 'event_details_nonce' ) ){
       return;
     }
     
@@ -319,8 +325,11 @@ class WI_Board_Events {
      'date_time' => __( 'Date & Time' ),
      'description' => __( 'Description' ),
      'attending' => __( 'Who\'s Coming?' ),
-     'rsvp' => __( 'RSVP' ),
    );
+   
+   if( current_user_can( 'rsvp_board_events' ) ){
+     $columns['rsvp'] = __( 'RSVP' );
+   }
 
    return $columns;
  }
@@ -448,6 +457,21 @@ class WI_Board_Events {
   
   return $vars;
 }
+
+/*
+ * Show notice to admins allowing them to start RSVPing.
+ */
+public function show_admins_notices(){
+  $screen = get_current_screen();
+  if( $screen->id != 'edit-board_events' || current_user_can( 'rsvp_board_events' ) ) return;
+  ?>
+  <div class="updated">
+    <p>You don't have the board member role, so you can't RSVP to board events.
+      <input id="allow-rsvp" type="submit" class="button secondary-button" value="Allow Me to RSVP" />
+    </p>
+  </div>
+  <?php
+}
  
 
   /*
@@ -531,9 +555,34 @@ class WI_Board_Events {
  /*
   * Provide an array for users that are attending, not attending and haven't 
   * responded to an event.
+  * TODO Break this down into multiple methods.
   */
  private function board_event_rsvps( $post_id ){
-   $board_members = get_users( array( 'role' => 'board_member' ) );
+   //$board_members = get_users( array( 'role' => 'board_member' ) );
+   //$admins = get_users( array( 'role' => 'administrator' ) );
+   
+   //Needs work http://codex.wordpress.org/Function_Reference/get_users
+   //More things to look at http://codex.wordpress.org/Function_Reference/WP_Query#Custom_Field_Parameters
+   $board_members = get_users ( array(
+       'meta_query' => array( 
+           array(
+           //'key' => 'wp_capabilities',
+           //'value' => '%rsvp_board_events%',
+           'key' => 'user_firstname',
+           'value' => '%Test%',
+           'compare' => 'LIKE' 
+           ) ) ) );
+   var_dump( $board_members );
+   //Check if admins can rsvp and if not, remove them.
+   /*$admins_count = count( $admins );
+   for( $i = 0; $i < $admins_count; $i++ ){
+     if( !user_can( $admins[$i]->ID, 'rsvp_board_events' ) ){
+       unset( $admins[$i] );
+     }
+   }
+   
+   //Combine board members with admins that can rsvp
+   $board_members = array_merge( $board_members, $admins );*/
    
    //Get all rsvps for for given event id
    global $wpdb;
