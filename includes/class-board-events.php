@@ -362,14 +362,7 @@ class WI_Board_Events {
      
      case 'attending':
        
-       $rsvps = $this->board_event_rsvps( $post_id );
-       
-       $attending = array();
-       foreach( $rsvps['attending'] as $event_rsvp ){
-         $attending[] = $event_rsvp->display_name;
-       }
-       
-       echo implode( ', ', $attending );
+       echo $this->get_attending_rsvps( $post_id );
        
        break;
      
@@ -503,23 +496,27 @@ public function show_admins_notices(){
   //Insert data into database
   $result = 0;
   if( $rsvp_status === FALSE ){
-    $result = $wpdb->insert(
+    $wpdb->insert(
             $this->table_name,
             array( 'user_id' => $user_id, 'post_id' => $post_id, 'rsvp' => $rsvp ),
             array( '%d', '%d', '%d' ) //All of these should be saved as integers
            );
+    
+    $result = $this->get_attending_rsvps( $post_id );
   }
   else if( $rsvp_status != $rsvp ) { //Only do the db update if there RSVP status in the db will change
-    $result = $wpdb->update(
+    $wpdb->update(
             $this->table_name,
             array( 'rsvp' => $rsvp ), //Data to be updated
             array( 'user_id' => $user_id, 'post_id' => $post_id ), //Where clause
             array( '%d' ), //Format for data being updated
             array( '%d', '%d' )
            );
+    
+    $result = $this->get_attending_rsvps( $post_id );
   }
-   
-  //Result is 1 if db changes made, 0 if no changes made
+  
+  //0 means that nothing changed, a returned string is the list of RSVPs
   echo $result;
   
   die();
@@ -596,6 +593,20 @@ public function show_admins_notices(){
   }
    
    return $rsvps;
+ }
+ 
+ /*
+  * Get a comma separated list of those attending the event.
+  */
+ private function get_attending_rsvps( $post_id ){
+    $rsvps = $this->board_event_rsvps( $post_id );
+       
+    $attending = array();
+    foreach( $rsvps['attending'] as $event_rsvp ){
+      $attending[] = $event_rsvp->display_name;
+    }
+
+    return implode( ', ', $attending );
  }
  
  

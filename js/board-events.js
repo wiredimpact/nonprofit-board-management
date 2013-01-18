@@ -48,24 +48,13 @@ jQuery(document).ready(function(){
      };
 
     jQuery.post(ajaxurl, data, function( response ) {
-      if( response !== '1' && response !== '0' ){ //If there's an error
-        alert( wi_board_events.error_rsvp ); 
-      }
-      else if ( response !== '0' ) { //If we made a db change
+      if ( response !== '0' ) { //If we made a db change
         //Add class of button primary and of rsvped and remove those for the siblings.
         $this.addClass('button-primary active');
         $this.siblings().removeClass('button-primary active'); 
         
-        //Adjust the who's coming list by adding or removing the users display name.
-        if( rsvp === 1 ){ //If they are now coming.
-          post_attending_col.prepend( wi_board_events.current_user_display_name + ', ' );
-        }
-        else if( post_attending_col.html().indexOf( wi_board_events.current_user_display_name + ',' ) !== -1 ){ //If they aren't coming and their name doesn't show last
-          post_attending_col.html(post_attending_col.html().split( wi_board_events.current_user_display_name + ', ' ).join(''));
-        }
-        else{ //If they aren't coming and their name shows last.
-          post_attending_col.html(post_attending_col.html().split( ', ' + wi_board_events.current_user_display_name ).join(''));
-        }
+        //Put the new list of who's coming in the attending column.
+        post_attending_col.html( response );
       }
     });
     
