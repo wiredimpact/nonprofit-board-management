@@ -52,7 +52,20 @@ class WI_Board_Management {
                   'read' => true,
                   'view_board_content' => true,
                   'contain_board_info' => true,
-                  'edit_posts' => true
+                  'rsvp_board_events' => true,
+                  'edit_board_event' => true,
+                  'read_board_event' => true,
+                  'delete_board_event' => true,
+                  'edit_board_events' => true,
+                  'edit_others_board_events' => true,
+                  'publish_board_events' => true,
+                  'read_private_board_events' => true,
+                  'delete_board_events' => true,
+                  'delete_private_board_events' => true,
+                  'delete_published_board_events' => true,
+                  'delete_others_board_events' => true,
+                  'edit_private_board_events' => true,
+                  'edit_published_board_events' => true,
                   )
               );
       
@@ -71,6 +84,19 @@ class WI_Board_Management {
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
+        $role->add_cap( 'edit_board_event' );
+        $role->add_cap( 'read_board_event' );
+        $role->add_cap( 'delete_board_event' );
+        $role->add_cap( 'edit_board_events' );
+        $role->add_cap( 'edit_others_board_events' );
+        $role->add_cap( 'publish_board_events' );
+        $role->add_cap( 'read_private_board_events' );
+        $role->add_cap( 'delete_board_events' );
+        $role->add_cap( 'delete_private_board_events' );
+        $role->add_cap( 'delete_published_board_events' );
+        $role->add_cap( 'delete_others_board_events' );
+        $role->add_cap( 'edit_private_board_events' );
+        $role->add_cap( 'edit_published_board_events' );     
       }
     }
     

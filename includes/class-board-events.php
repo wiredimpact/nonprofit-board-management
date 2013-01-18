@@ -6,7 +6,16 @@
  */
 class WI_Board_Events {
   
+  //The version of our database.
+  const db_version = 1.0;
+  
+  //The full name of our database table.
+  private $table_name = '';
+  
   public function __construct() {
+    //Set our table name for our db from the start.
+    $this->table_name = $this->get_table_prefix() . 'board_rsvps';
+    
     //Add database table on activation for RSVP features
     //We must use a constant instead of __FILE__ because this file is loaded using require_once.
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
@@ -126,7 +135,6 @@ class WI_Board_Events {
       'menu_name' => 'Board Events'
     );
 
-    //TODO Capabilities argument needs to be added here.
     $args = array(
       'labels' => $labels,
       'public' => true,
@@ -137,7 +145,7 @@ class WI_Board_Events {
       'show_in_menu' => 'nonprofit-board', 
       'query_var' => true,
       'rewrite' => array( 'slug' => 'board-event' ),
-      'capability_type' => 'post',
+      'capability_type' => 'board_event',
       'has_archive' => false, 
       'hierarchical' => false,
       'menu_position' => null,
@@ -172,8 +180,9 @@ class WI_Board_Events {
   public function display_board_event_details( $board_event ){
     //Get all the meta data
     $board_event_meta = $this->retrieve_board_event_meta( $board_event->ID );
-    
+    $nonce = wp_create_nonce( 'event_details_nonce' );
     ?>
+    <input type="hidden" id="_event_details_nonce" name="_event_details_nonce" value="<?php echo $nonce ?>" />
     <table>
       <tr>
         <td><label for="location">Location Name</label></td>
@@ -209,6 +218,10 @@ class WI_Board_Events {
    */
   public function save_board_events_meta( $board_event_id, $board_event ){
     
+    //Check nonce, post type, and user caps
+    if ( !wp_verify_nonce( $_REQUEST['_event_details_nonce'], 'event_details_nonce' ) ){
+      return;
+    }
     if( $board_event->post_type != 'board_events' ){
       return;
     }
@@ -216,30 +229,28 @@ class WI_Board_Events {
       return;
     }
     
-    //TODO sanitize the data first
-    //TODO Save all meta data with underscore first so it doesn't show as a custom field
     //Save all of our fields
     //Location
     if (isset($_REQUEST['location'])) {
-      update_post_meta( $board_event_id, 'location', $_REQUEST['location'] );
+      update_post_meta( $board_event_id, '_location', sanitize_text_field( $_REQUEST['location'] ) );
     }
     //Street
     if (isset($_REQUEST['street'])) {
-      update_post_meta( $board_event_id, 'street', $_REQUEST['street'] );
+      update_post_meta( $board_event_id, '_street', sanitize_text_field( $_REQUEST['street'] ) );
     }
     //Area
     if (isset($_REQUEST['area'])) {
-      update_post_meta( $board_event_id, 'area', $_REQUEST['area'] );
+      update_post_meta( $board_event_id, '_area', sanitize_text_field( $_REQUEST['area'] ) );
     }
     //Start Date & Time stored as UNIX timestamp
     if (isset($_REQUEST['start-date-time'])) {
       $start_date_time = strtotime( $_REQUEST['start-date-time'] );
-      update_post_meta( $board_event_id, 'start_date_time', $start_date_time );
+      update_post_meta( $board_event_id, '_start_date_time', $start_date_time );
     }
     //End Date & Time stored as UNIX timestamp
     if (isset($_REQUEST['end-date-time'])) {
       $end_date_time = strtotime( $_REQUEST['end-date-time'] );
-      update_post_meta( $board_event_id, 'end_date_time', $end_date_time );
+      update_post_meta( $board_event_id, '_end_date_time', $end_date_time );
     }
   }
   
@@ -249,8 +260,7 @@ class WI_Board_Events {
    * who's not, and who hasn't responded yet.
    */
   public function display_board_event_rsvps( $board_event ){
-    echo '<p>Here we will show each person that is coming, not coming, and hasn\'t responded.</p>';
-    
+        
     $rsvps = $this->board_event_rsvps( $board_event->ID );
     
     //Attending Array
@@ -287,12 +297,11 @@ class WI_Board_Events {
     $board_event_meta_raw = get_post_custom( $post_id );
     $board_event_meta = array();
     
-    $board_event_meta['location'] = ( isset( $board_event_meta_raw['location'] ) ) ? $board_event_meta_raw['location'][0] : '';
-    $board_event_meta['street'] = ( isset( $board_event_meta_raw['street'] ) ) ? $board_event_meta_raw['street'][0] : '';
-    $board_event_meta['area'] = ( isset( $board_event_meta_raw['area'] ) ) ? $board_event_meta_raw['area'][0] : '';
-    //TODO Fix dates that break when the field is set to blank.
-    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['start_date_time'] ) ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['start_date_time'][0] ) : '';
-    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['end_date_time'] ) ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['end_date_time'][0] ) : '';
+    $board_event_meta['location'] = ( isset( $board_event_meta_raw['_location'] ) ) ? $board_event_meta_raw['_location'][0] : '';
+    $board_event_meta['street'] = ( isset( $board_event_meta_raw['_street'] ) ) ? $board_event_meta_raw['_street'][0] : '';
+    $board_event_meta['area'] = ( isset( $board_event_meta_raw['_area'] ) ) ? $board_event_meta_raw['_area'][0] : '';
+    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['_start_date_time'] ) && $board_event_meta_raw['_start_date_time'][0] != '' ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['_start_date_time'][0] ) : '';
+    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['_end_date_time']  ) && $board_event_meta_raw['_end_date_time'][0] != '' ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['_end_date_time'][0] ) : '';
     
     return $board_event_meta;
   }
@@ -329,29 +338,32 @@ class WI_Board_Events {
      case 'location':
        
        //Create a Google maps URL so we can add a link to get a map.
-       $google_maps_string = str_replace( ' ', '+', $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
-       $google_maps_address = 'https://maps.google.com/maps?q=' . $google_maps_string;
-       
-       echo '<a href="' . $google_maps_address . '" target="_blank">';
-       echo $board_event_meta['location'] . '<br />';
-       echo $board_event_meta['street'] . '<br />';;
-       echo $board_event_meta['area'];
-       echo '</a>';
+       if( $board_event_meta['street'] != '' || $board_event_meta['area'] != '' ){
+         
+        $google_maps_string = str_replace( ' ', '+', $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
+        $google_maps_address = 'https://maps.google.com/maps?q=' . $google_maps_string;
+
+        echo '<a href="' . $google_maps_address . '" target="_blank">';
+        if( $board_event_meta['location'] != '' ) echo $board_event_meta['location'] . '<br />';
+        if( $board_event_meta['street'] != '' ) echo $board_event_meta['street'] . '<br />';;
+        if( $board_event_meta['area'] != '' ) echo $board_event_meta['area'];
+        echo '</a>';
+        
+       }
        
        break;
      
      case 'date_time':
        
        echo $board_event_meta['start_date_time'];
-       echo ' - ';
+       if( $board_event_meta['start_date_time'] != '' ) echo ' - ';
        echo $board_event_meta['end_date_time'];
        
        break;
     
      case 'description':
        
-       //TODO Make this handle strings of all lengths.  Don't add ... to short strings or strings that end in a period.
-       echo substr( $post->post_content, 0, 50 ) . '...';
+       echo wp_trim_words( get_the_content(), 15 );
        
        break;
      
@@ -370,7 +382,7 @@ class WI_Board_Events {
      
      case 'rsvp':
        
-       if( !current_user_can( 'contain_board_info' ) ){
+       if( !current_user_can( 'rsvp_board_events' ) ){
          echo 'You are not a board member so you can\'t RSVP for events.';
          
          break;
@@ -427,7 +439,7 @@ class WI_Board_Events {
       $vars = array_merge(
         $vars,
         array(
-          'meta_key' => 'start_date_time',
+          'meta_key' => '_start_date_time',
           'orderby' => 'meta_value_num'
         )
       );
@@ -437,6 +449,16 @@ class WI_Board_Events {
   return $vars;
 }
  
+
+  /*
+   * Return the table prefix for this WordPress install.
+   */
+  private function get_table_prefix(){
+    global $wpdb;
+
+    return $wpdb->prefix;
+  }
+  
   
  /*
   * Save the RSVP for this board member
@@ -459,14 +481,14 @@ class WI_Board_Events {
   $result = 0;
   if( $rsvp_status === FALSE ){
     $result = $wpdb->insert(
-            $wpdb->prefix . 'board_rsvps', //TODO Possibly make this a constant so it's easier to manage
+            $this->table_name,
             array( 'user_id' => $user_id, 'post_id' => $post_id, 'rsvp' => $rsvp ),
             array( '%d', '%d', '%d' ) //All of these should be saved as integers
            );
   }
   else if( $rsvp_status != $rsvp ) { //Only do the db update if there RSVP status in the db will change
     $result = $wpdb->update(
-            $wpdb->prefix . 'board_rsvps', //TODO Possibly make this a constant so it's easier to manage
+            $this->table_name,
             array( 'rsvp' => $rsvp ), //Data to be updated
             array( 'user_id' => $user_id, 'post_id' => $post_id ), //Where clause
             array( '%d' ), //Format for data being updated
@@ -514,12 +536,11 @@ class WI_Board_Events {
    $board_members = get_users( array( 'role' => 'board_member' ) );
    
    //Get all rsvps for for given event id
-   //TODO Possibly make table name this a constant so it's easier to manage
    global $wpdb;
    $event_rsvps = $wpdb->get_results(
            "
              SELECT user_id, rsvp
-             FROM {$wpdb->prefix}board_rsvps
+             FROM $this->table_name
              WHERE post_id = {$post_id}
            "
            );          
