@@ -339,11 +339,11 @@ class WI_Board_Events {
     }
     
     //Display all the board members
-    echo '<h4>Attending</h4>';
+    echo '<h4>Going (' . count( $attending ) . ')</h4>';
     echo implode( ', ', $attending );
-    echo '<h4>Not Attending</h4>';
+    echo '<h4>Not Going (' . count( $not_attending ) . ')</h4>';
     echo implode( ', ', $not_attending );
-    echo '<h4>No Response</h4>';
+    echo '<h4>Not Responsed (' . count( $no_response ) . ')</h4>';
     echo implode( ', ', $no_response );
   }
   
@@ -430,7 +430,7 @@ class WI_Board_Events {
      case 'attending':
        
        echo $this->get_attending_rsvps( $post_id );
-       
+
        break;
      
      case 'rsvp':
@@ -621,17 +621,11 @@ public function show_admins_notices(){
   * responded to an event.
   */
  private function board_event_rsvps( $post_id ){
+   //Get all users who have cap to RSVP.
    $rsvp_users = $this->get_users_who_rsvp();
    
-   //Get all rsvps for for given event id
-   global $wpdb;
-   $event_rsvps = $wpdb->get_results(
-           "
-             SELECT user_id, rsvp
-             FROM $this->table_name
-             WHERE post_id = {$post_id}
-           "
-           );          
+   //Get all rsvps for this event that have happened.
+   $event_rsvps = $this->get_db_rsvps( $post_id );
   
   //Loop through and add RSVP info to each board member.
   //Loop through all the board members first.
@@ -663,18 +657,67 @@ public function show_admins_notices(){
    return $rsvps;
  }
  
+ 
+ /*
+  * Get all rsvps from the database for a given event.
+  */
+ private function get_db_rsvps( $post_id ){
+   global $wpdb;
+   $event_rsvps = $wpdb->get_results(
+           "
+             SELECT user_id, rsvp
+             FROM $this->table_name
+             WHERE post_id = {$post_id}
+           "
+           );  
+             
+   return $event_rsvps;
+ }
+ 
  /*
   * Get a comma separated list of those attending the event.
+  * Additional parameter allows to include a number at the beginning of how many.
   */
- private function get_attending_rsvps( $post_id ){
+ private function get_attending_rsvps( $post_id, $include_num = true ){
+    $attending_rsvps = '';
+   
+    //Include the number of people attending if $include_num calls for it.
+    if( $include_num == true ){
+      $num_attending = $this->get_num_attending( $post_id );
+      $attending_rsvps .= '(' . $num_attending. ')';
+      if( $num_attending > 0 ){
+        $attending_rsvps .= ' - ';
+      }
+    }
+   
     $rsvps = $this->board_event_rsvps( $post_id );
        
     $attending = array();
     foreach( $rsvps['attending'] as $event_rsvp ){
       $attending[] = $event_rsvp->display_name;
     }
+    
+    $attending_rsvps .= implode( ', ', $attending );
 
-    return implode( ', ', $attending );
+    return $attending_rsvps;
+ }
+ 
+ 
+ /*
+  * Get the number of attending RSVPs to a specific board event
+  */
+ private function get_num_attending( $post_id ){
+  global $wpdb;
+  $num_attending_rsvps = $wpdb->get_var(
+          "
+            SELECT COUNT(rsvp)
+            FROM $this->table_name
+            WHERE post_id = {$post_id}
+            AND rsvp = 1
+          "
+          ); 
+            
+  return $num_attending_rsvps;
  }
  
  

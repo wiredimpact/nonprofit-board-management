@@ -22,3 +22,8 @@
   cursor: default;
 }
 
+/*RSVP Meta Box*/
+#board_event_rsvps h4 {
+  margin-bottom: .25em;
+}
+
