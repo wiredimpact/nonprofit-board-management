@@ -150,7 +150,7 @@ class WI_Board_Events {
           'delete_post' => 'delete_board_event',
           'read_post' => 'read_board_event'
       ),
-      'supports' => array( 'title', 'editor' )
+      'supports' => array( 'title' )
     ); 
     
     register_post_type( 'board_events', $args );
@@ -230,6 +230,11 @@ class WI_Board_Events {
     <input type="hidden" id="_event_details_nonce" name="_event_details_nonce" value="<?php echo $nonce ?>" />
     <table>
       <tr>
+        <td><label for="event-description">Event Description</label></td>
+        <td><input type="text" id="event-description" name="event-description" class="large-text" value="<?php echo $board_event_meta['event_description']; ?>" /></td>
+      </tr>
+      
+      <tr>
         <td><label for="location">Location Name</label></td>
         <td><input type="text" id="location" name="location" class="regular-text" value="<?php echo $board_event_meta['location']; ?>" /></td>
       </tr>
@@ -278,6 +283,10 @@ class WI_Board_Events {
     }
     
     //Save all of our fields
+    //Event Description
+    if (isset($_REQUEST['event-description'])) {
+      update_post_meta( $board_event_id, '_event_description', sanitize_text_field( $_REQUEST['event-description'] ) );
+    }
     //Location
     if (isset($_REQUEST['location'])) {
       update_post_meta( $board_event_id, '_location', sanitize_text_field( $_REQUEST['location'] ) );
@@ -345,6 +354,7 @@ class WI_Board_Events {
     $board_event_meta_raw = get_post_custom( $post_id );
     $board_event_meta = array();
     
+    $board_event_meta['event_description'] = ( isset( $board_event_meta_raw['_event_description'] ) ) ? $board_event_meta_raw['_event_description'][0] : '';
     $board_event_meta['location'] = ( isset( $board_event_meta_raw['_location'] ) ) ? $board_event_meta_raw['_location'][0] : '';
     $board_event_meta['street'] = ( isset( $board_event_meta_raw['_street'] ) ) ? $board_event_meta_raw['_street'][0] : '';
     $board_event_meta['area'] = ( isset( $board_event_meta_raw['_area'] ) ) ? $board_event_meta_raw['_area'][0] : '';
@@ -413,7 +423,7 @@ class WI_Board_Events {
     
      case 'description':
        
-       echo wp_trim_words( get_the_content(), 15 );
+       echo wp_trim_words( $board_event_meta['event_description'], 15 );
        
        break;
      
