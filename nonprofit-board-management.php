@@ -149,7 +149,7 @@ class WI_Board_Management {
       add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
       
       //Add edit and new board event links to our top level menu so the board member role has correct caps.
-      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'read_board_event' , 'edit.php?post_type=board_events'); 
+      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events'); 
       add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events'); 
       
       //Create submenu items
