@@ -29,6 +29,9 @@ class WI_Board_Events {
     add_action( 'admin_init', array( $this, 'create_board_events_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_events_meta' ), 10, 2 );
     
+    //Handle meta capabilities for our board_events custom post type.
+    add_filter( 'map_meta_cap', array( $this, 'board_events_map_meta_cap' ), 10, 4 );
+    
     //Adjust the columns and content shown when viewing the board events post type list.
     add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
     add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
@@ -133,14 +136,69 @@ class WI_Board_Events {
       'labels' => $labels,
       'public' => false,
       'show_ui' => true,
-      'show_in_menu' => 'nonprofit-board', 
+      'show_in_menu' => false, //Done through add_submenu_page for more flexibility
       'query_var' => false,
       'capability_type' => 'board_event',
+      'capabilities' => array(
+          'publish_posts' => 'publish_board_events',
+          'edit_posts' => 'edit_board_events',
+          'edit_others_posts' => 'edit_others_board_events',
+          'delete_posts' => 'delete_board_events',
+          'delete_others_posts' => 'delete_others_board_events',
+          'read_private_posts' => 'read_private_board_events',
+          'edit_post' => 'edit_board_event',
+          'delete_post' => 'delete_board_event',
+          'read_post' => 'read_board_event'
+      ),
       'supports' => array( 'title', 'editor' )
     ); 
     
     register_post_type( 'board_events', $args );
   }
+  
+  
+  /*
+   * Handle meta capabilities for our board_events custom post type
+   */
+  public function board_events_map_meta_cap( $caps, $cap, $user_id, $args ){
+    //If editing, deleting, or reading a board event, get the post and post type object.
+    if ( 'edit_board_event' == $cap || 'delete_board_event' == $cap || 'read_board_event' == $cap ) {
+     $post = get_post( $args[0] );
+     $post_type = get_post_type_object( $post->post_type );
+
+     $caps = array();
+    }
+
+    //If editing a board_event, assign the required capability.
+    if ( 'edit_board_event' == $cap ) {
+     if ( $user_id == $post->post_author )
+      $caps[] = $post_type->cap->edit_posts;
+     else
+      $caps[] = $post_type->cap->edit_others_posts;
+    }
+
+    //If deleting a board_event, assign the required capability.
+    elseif ( 'delete_board_event' == $cap ) {
+     if ( $user_id == $post->post_author )
+      $caps[] = $post_type->cap->delete_posts;
+     else
+      $caps[] = $post_type->cap->delete_others_posts;
+    }
+
+    //If reading a private board_event, assign the required capability.
+    elseif ( 'read_board_event' == $cap ) {
+     if ( 'private' != $post->post_status )
+      $caps[] = 'read';
+     elseif ( $user_id == $post->post_author )
+      $caps[] = 'read';
+     else
+      $caps[] = $post_type->cap->read_private_posts;
+    }
+
+    //Return the capabilities required by the user.
+    return $caps;
+  }
+  
   
   /*
    * Create the meta box when adding/editing a board event

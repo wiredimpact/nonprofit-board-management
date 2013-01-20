@@ -29,10 +29,8 @@ class WI_Board_Management {
         register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
         
-        //Setup menu
-        //We set the priority to 9 so the page will appear even when adding
-        //the board events custom post type to our menu.
-        add_action( 'admin_menu', array( $this, 'create_menu' ), 9 ); 
+        //Setup top level menu
+        add_action( 'admin_menu', array( $this, 'create_menu' ), 10 ); 
         
         //Load CSS and JS
         add_action( 'admin_menu', array( $this, 'insert_css') );
@@ -53,9 +51,6 @@ class WI_Board_Management {
                   'view_board_content' => true,
                   'contain_board_info' => true,
                   'rsvp_board_events' => true,
-                  'edit_board_event' => true,
-                  'read_board_event' => true,
-                  'delete_board_event' => true,
                   'edit_board_events' => true,
                   'edit_others_board_events' => true,
                   'publish_board_events' => true,
@@ -84,9 +79,6 @@ class WI_Board_Management {
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
-        $role->add_cap( 'edit_board_event' );
-        $role->add_cap( 'read_board_event' );
-        $role->add_cap( 'delete_board_event' );
         $role->add_cap( 'edit_board_events' );
         $role->add_cap( 'edit_others_board_events' );
         $role->add_cap( 'publish_board_events' );
@@ -154,7 +146,11 @@ class WI_Board_Management {
      */
     public function create_menu(){
       //Create top level menu item
-      add_menu_page( 'Nonprofit Board Management', 'Nonprofit Board Management', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
+      add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
+      
+      //Add edit and new board event links to our top level menu so the board member role has correct caps.
+      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'read_board_event' , 'edit.php?post_type=board_events'); 
+      add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events'); 
       
       //Create submenu items
       add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'users.php?role=board_member' );
