@@ -1,22 +1,40 @@
 <?php
 /**
- * WI_Board_Events allows the board to add and RSVP to upcoming board events.
+ * Allows users to create board events and RSVP for those events.
+ * 
+ * The WI_Board_Events class allows those with the board member role to create
+ * board events and RSVP for those events through the WordPress admin.
+ * Nothing in this class is created for the front-end of WordPress.
  *
- * @author Wired Impact
+ * @package Nonprofit Board Management
+ *
+ * @version 0.1
+ * @author Jonathan Goldford, Wired Impact
  */
 class WI_Board_Events {
   
-  //The version of our database.
+  /*
+   * The version of our database changes so we know when adjustments are needed.
+   * 
+   * @var int
+   */
   const db_version = 1.0;
   
-  //The full name of our database table.
+  /*
+   * The full name of our database table.
+   * 
+   * @var string
+   */
   private $table_name = '';
   
+  /*
+   * Runs all board event filters and hooks and all necessary activation actions.
+   */
   public function __construct() {
-    //Set our table name for our db from the start.
+    //Set our table name for the db from the start.
     $this->table_name = $this->get_table_prefix() . 'board_rsvps';
     
-    //Add database table on activation for RSVP features
+    //Add database table on activation to hold RSVPs.
     //We must use a constant instead of __FILE__ because this file is loaded using require_once.
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
@@ -38,26 +56,30 @@ class WI_Board_Events {
     add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
     add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
     
-    //Add notice to admin who can't RSVP
+    //Add notice to admin who can't RSVP allowing them to RSVP if they want.
     add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
     
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
     
-    //Allow user to RSVP for events
+    //Allow admin to click a button and start RSVPing.
     add_action( 'wp_ajax_allow_rsvp', array( $this, 'allow_rsvp' ) );
   }
   
+  
   /*
    * Create the database table that will hold our board event RSVP information.
+   * 
+   * We create a database table that will hold our board event RSVP information.
+   * We check first to make sure the table doesn't exist by seeing if the
+   * version exists in the options table.
    */
   public function create_db_table(){
-    
     //Only create table if it doesn't exist.
-    if( get_option( 'board_rsvp_db_version' ) == FALSE ){
+    if( get_option( 'board_rsvp_db_version' ) == false ){
       global $wpdb;
 
-      $table_name = $wpdb->prefix . "board_rsvps";
+      $table_name = $this->table_name;
 
       $sql = "CREATE TABLE $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -79,7 +101,7 @@ class WI_Board_Events {
   
   
   /*
-   * Enqueue CSS
+   * Enqueue CSS needed for the board events.
    */
   public function insert_css(){
     wp_enqueue_style( 'board-events', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/board-events.css' );
@@ -88,7 +110,7 @@ class WI_Board_Events {
 
   
   /*
-   * Enqueue JS
+   * Enqueue JS needed for the board events including JS generated through PHP.
    */
   public function insert_js(){
     wp_enqueue_script( 'jquery-ui-slider' );
@@ -113,7 +135,7 @@ class WI_Board_Events {
   
   
   /*
-   * Create our board events post type.
+   * Create our board_events custom post type.
    */
   public function create_board_events_type(){
     $labels = array(
@@ -136,7 +158,7 @@ class WI_Board_Events {
       'labels' => $labels,
       'public' => false,
       'show_ui' => true,
-      'show_in_menu' => false, //Done through add_submenu_page for more flexibility
+      'show_in_menu' => false, //Done through add_submenu_page
       'query_var' => false,
       'capability_type' => 'board_event',
       'capabilities' => array(
@@ -158,7 +180,11 @@ class WI_Board_Events {
   
   
   /*
-   * Handle meta capabilities for our board_events custom post type
+   * Handle meta capabilities for our board_events custom post type.
+   * 
+   * Handle all the meta capabilities for our board_events custom post type.
+   * All board members have the ability to read, edit, and delete all of the 
+   * board events since they are given all the capabilities necessary.
    */
   public function board_events_map_meta_cap( $caps, $cap, $user_id, $args ){
     //If editing, deleting, or reading a board event, get the post and post type object.
@@ -201,7 +227,11 @@ class WI_Board_Events {
   
   
   /*
-   * Create the meta box when adding/editing a board event
+   * Create the meta boxes when adding/editing a board event.
+   * 
+   * Create the meta boxes when adding/editing a board event.  The boxes include
+   * one for editing the details of the board event and one for showing the
+   * RSVPs for that board event.
    */
   public function create_board_events_meta_boxes(){
     //Details of board event
@@ -219,8 +249,11 @@ class WI_Board_Events {
     );
   }
   
+  
   /*
-   * Display the meta fields and values for boad events when in the admin
+   * Display the meta fields and values when editing a board event.
+   * 
+   * @param object $board_event The $post object for the board event.
    */
   public function display_board_event_details( $board_event ){
     //Get all the meta data
@@ -262,9 +295,10 @@ class WI_Board_Events {
     </table>
     <?php
   }
+
   
   /*
-   * Save the meta data fields for board events
+   * Save the meta fields for board events when saving from the edit screen.
    */
   public function save_board_events_meta( $board_event_id, $board_event ){
     
@@ -313,11 +347,15 @@ class WI_Board_Events {
   
   
   /*
-   * Display who has RSVPed for each event including who's coming, 
-   * who's not, and who hasn't responded yet.
+   * Display attending, not attending, and not responded for each board event.
+   * 
+   * Display attending, not attending, and not responded for each board event
+   * as a meta box on the board_events edit screen.  This includes a count for 
+   * each group along with names of the people in each group.
+   * 
+   * @param object $board_event The $post object for the board event.
    */
   public function display_board_event_rsvps( $board_event ){
-        
     $rsvps = $this->board_event_rsvps( $board_event->ID );
     
     //Attending Array
@@ -346,9 +384,13 @@ class WI_Board_Events {
     echo '<h4>Not Responsed (' . count( $no_response ) . ')</h4>';
     echo implode( ', ', $no_response );
   }
+
   
   /*
-   * Retrieve all the board event meta data and place it in an array.
+   * Retrieve all the board event meta data.
+   * 
+   * @param int $post_id The ID of the board event we're referencing.
+   * @return array Associative array of all meta data for the board event.
    */
   private function retrieve_board_event_meta( $post_id ){
     $board_event_meta_raw = get_post_custom( $post_id );
@@ -366,10 +408,12 @@ class WI_Board_Events {
   
   
  /*
-  * Add custom columns the board events content type.
+  * Add custom columns the board events content type list.
+  * 
+  * @param array $columns The default columns for board events.
+  * @return array Custom columns we want to use on the board events list.
   */
  public function edit_board_events_columns( $columns ) {
-
    $columns = array(
      'cb' => '<input type="checkbox" />',
      'title' => __( 'Title' ),
@@ -379,6 +423,7 @@ class WI_Board_Events {
      'attending' => __( 'Who\'s Coming?' ),
    );
    
+   //Only show the RSVP column if the user has that capability.
    if( current_user_can( 'rsvp_board_events' ) ){
      $columns['rsvp'] = __( 'RSVP' );
    }
@@ -388,7 +433,10 @@ class WI_Board_Events {
  
  
  /*
-  * Show content for custom columns for board events.
+  * Display content for each custom column for board events.
+  * 
+  * @param string $column Column to be displayed.
+  * @param int $post_id ID of the board event to be displayed.
   */
  public function show_board_event_columns( $column, $post_id ){  
    $board_event_meta = $this->retrieve_board_event_meta( $post_id );
@@ -429,42 +477,45 @@ class WI_Board_Events {
      
      case 'attending':
        
+       //Show how many are going and who it is.
        echo $this->get_attending_rsvps( $post_id );
 
        break;
      
      case 'rsvp':
        
-       if( !current_user_can( 'rsvp_board_events' ) ){
-         echo 'You are not a board member so you can\'t RSVP for events.';
-         
-         break;
-       }
-       
-       //Determine whether they're going and if add classes if they have RSVPed previously.
+       //Determine whether they're going and if so, add the necessary classes.
        $user_id = get_current_user_id();
        $rsvp_status = $this->rsvp_status( $post_id, $user_id );
        
-       //class button-primary should be used for selected option
-       //class secondary-button should be used for those that aren't selected
+       //Classes button-primary and active are used for the chosen RSVP choice.
+       //Attending RSVP button
        echo '<input id="attending" type="submit" class="button secondary-button ';
        if( $rsvp_status === 1 ){
          echo 'button-primary active';
        }
        echo '" value="I\'m Going" />';
+       
+       //Not attending RSVP button
        echo '<input id="not-attending" type="submit" class="button secondary-button ';
        if( $rsvp_status === 0 ){
          echo 'button-primary active';
        }
        echo '" value="I\'m Not Going" />';
+       
+       //Add the spinner for use during ajax loading.
        echo '<span class="waiting spinner" style="display: none;"></span>';
        
        break;
    }
  }
+
  
  /*
   * Add Date & Time as a sortable field.
+  * 
+  * @param array $columns List of sortable columns.
+  * @return array List of sortable columns with date_time included.
   */
  public function make_board_events_sortable( $columns ){
    $columns['date_time'] = 'date_time';
@@ -474,18 +525,20 @@ class WI_Board_Events {
  
  
  /*
-  * Run our sort function for the request filter.
+  * Run our sort function for the request filter only during load-edit.php action.
   */
  public function edit_board_events_load() {
-	add_filter( 'request', array( $this, 'sort_board_events' ) );
+   add_filter( 'request', array( $this, 'sort_board_events' ) );
  }
 
  
  /*
-  * On list of board events make date and time sortable by start_date_time.
+  * On list of board events make date and time sortable by _start_date_time.
+  * 
+  * @param array $vars All variables needed to handle sorting.
+  * @return array Adjusted variables needed to handle sorting.
   */
  public function sort_board_events( $vars ) {
-
   if ( isset( $vars['post_type'] ) && 'board_events' == $vars['post_type'] ) {
 
     if ( isset( $vars['orderby'] ) && 'date_time' == $vars['orderby'] ) {
@@ -503,8 +556,14 @@ class WI_Board_Events {
   return $vars;
 }
 
+
 /*
- * Show notice to admins allowing them to start RSVPing.
+ * Show notice to admins allowing them to start RSVPing if they'd like.
+ * 
+ * Show notice to admins that allows them to start RSVPing for events.  Handling
+ * of the button click is done through ajax.
+ * 
+ * @see allow_rsvp()
  */
 public function show_admins_notices(){
   $screen = get_current_screen();
@@ -518,34 +577,48 @@ public function show_admins_notices(){
   <?php
 }
 
-  /*
-   * Allow current user to RSVP by giving them the capability.
-   * This method is called via ajax.
-   */
-  public function allow_rsvp(){
-    check_ajax_referer( 'allow_rsvp_nonce', 'security' );
 
-    $current_user = wp_get_current_user();
-    $current_user->add_cap( 'rsvp_board_events' );
+/*
+ * Via ajax allow the current user to RSVP by giving them the capability.
+ * 
+ * @see show_admin_notices()
+ * @return string Echos '1' to show that capability has been added.
+ */
+public function allow_rsvp(){
+  check_ajax_referer( 'allow_rsvp_nonce', 'security' );
 
-    echo '1';
+  $current_user = wp_get_current_user();
+  $current_user->add_cap( 'rsvp_board_events' );
 
-    die();
-  }
+  echo '1';
 
-  /*
-   * Return the table prefix for this WordPress install.
-   */
-  private function get_table_prefix(){
-    global $wpdb;
+  die();
+}
 
-    return $wpdb->prefix;
-  }
+
+/*
+ * Return the table prefix for this WordPress install.
+ * 
+ * @return string Table prefix for this install of WordPress.
+ */
+private function get_table_prefix(){
+  global $wpdb;
+
+  return $wpdb->prefix;
+}
   
   
  /*
-  * Save the RSVP for this board member.
-  * This method is called via ajax.
+  * Via ajax save the RSVP for this board member.
+  * 
+  * Via ajax we save the RSVP for this user to our board_rsvps table. We only
+  * update the table if the user is RSVPing for the first time or is changing
+  * their RSVP status.  We then provide back the number of people coming to the
+  * board event and a list of people that are coming.
+  * 
+  * @return int|string Int means no change to db.  String is num and list of RSVPs.
+  * @see rsvp_status()
+  * @see get_attending_rsvps()
   */
  public function rsvp(){
   //Use nonce passed through wp_localize_script for added security.
@@ -563,7 +636,7 @@ public function show_admins_notices(){
   
   //Insert data into database
   $result = 0;
-  if( $rsvp_status === FALSE ){
+  if( $rsvp_status === false ){
     $wpdb->insert(
             $this->table_name,
             array( 'user_id' => $user_id, 'post_id' => $post_id, 'rsvp' => $rsvp ),
@@ -592,8 +665,9 @@ public function show_admins_notices(){
  
  
  /*
-  * Provides the status or the RSVP for this user for this event.
-  * Possible returns include FALSE, 0, 1
+  * Provides the status of the RSVP for this user for this event.
+  * 
+  * @return bool|int False means hasn't RSVPed.  1 means going, 0 means not going.
   */
  private function rsvp_status( $post_id, $user_id ){
   global $wpdb;
@@ -611,14 +685,17 @@ public function show_admins_notices(){
             $user_id
           ) );
   
-  $rsvp_status = ( $rsvp == NULL ) ? FALSE : (int)$rsvp;
+  $rsvp_status = ( $rsvp == NULL ) ? false : (int)$rsvp;
   
   return $rsvp_status;
  }
  
+ 
  /*
-  * Provide an array for users that are attending, not attending and haven't 
-  * responded to an event.
+  * Get all the user data for those who can RSVP grouped by their RSVP status.
+  * 
+  * @param int $post_id ID of the board event of which we want the RSVPs.
+  * @return array Array of attending, not attending, and not responded with user objects in each.
   */
  private function board_event_rsvps( $post_id ){
    //Get all users who have cap to RSVP.
@@ -659,7 +736,10 @@ public function show_admins_notices(){
  
  
  /*
-  * Get all rsvps from the database for a given event.
+  * Get all rsvps from our db table for a given event.
+  * 
+  * @param int $post_id ID of the board event of which we want the RSVPs.
+  * @return array Array of event rsvps in unique objects.
   */
  private function get_db_rsvps( $post_id ){
    global $wpdb;
@@ -674,14 +754,18 @@ public function show_admins_notices(){
    return $event_rsvps;
  }
  
+ 
  /*
-  * Get a comma separated list of those attending the event.
-  * Additional parameter allows to include a number at the beginning of how many.
+  * Get the numer attending and a comma separated list of their names.
+  * 
+  * @param int $post_id ID of the board event.
+  * @param bool $include_num Optional Whether we want the number coming too.
+  * @return string Number coming in parentheses, along with list of names attending.
   */
  private function get_attending_rsvps( $post_id, $include_num = true ){
     $attending_rsvps = '';
    
-    //Include the number of people attending if $include_num calls for it.
+    //Include the number of people attending if $include_num == true.
     if( $include_num == true ){
       $num_attending = $this->get_num_attending( $post_id );
       $attending_rsvps .= '(' . $num_attending. ')';
@@ -690,21 +774,29 @@ public function show_admins_notices(){
       }
     }
    
-    $rsvps = $this->board_event_rsvps( $post_id );
-       
-    $attending = array();
-    foreach( $rsvps['attending'] as $event_rsvp ){
-      $attending[] = $event_rsvp->display_name;
+    //If $include_num is false or $num_attending is not equal to 0 then pull names
+    //since we either don't if people are going or we know at least
+    //one person is going.
+    if( $include_num == false || ( isset( $num_attending ) && $num_attending != 0 ) ){
+      $rsvps = $this->board_event_rsvps( $post_id );
+
+      $attending = array();
+      foreach( $rsvps['attending'] as $event_rsvp ){
+        $attending[] = $event_rsvp->display_name;
+      }
+
+      $attending_rsvps .= implode( ', ', $attending );
     }
-    
-    $attending_rsvps .= implode( ', ', $attending );
 
     return $attending_rsvps;
  }
  
  
  /*
-  * Get the number of attending RSVPs to a specific board event
+  * Get the number of attending RSVPs to a specific board event.
+  * 
+  * @param int $post_id ID of the board event we want to know about.
+  * @return int Number of people attending the board event.
   */
  private function get_num_attending( $post_id ){
   global $wpdb;
@@ -722,7 +814,9 @@ public function show_admins_notices(){
  
  
  /*
-  * Get an array with all the users who can potentially RSVP to an event.
+  * Get the users who can potentially RSVP to an event including board members and admins who opted in.
+  * 
+  * @return array Users who can RSVP to an event.
   */
  private function get_users_who_rsvp(){
    $board_members = get_users( array( 'role' => 'board_member' ) );
@@ -736,7 +830,7 @@ public function show_admins_notices(){
      }
    }
    
-   //Combine board members with admins that can rsvp
+   //Combine board members with admins opted to rsvp
    $rsvp_users = array_merge( $board_members, $admins );
    
    return $rsvp_users;
