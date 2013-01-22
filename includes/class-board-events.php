@@ -99,6 +99,18 @@ class WI_Board_Events {
     }
   }
   
+
+  /*
+   * Return the table prefix for this WordPress install.
+   * 
+   * @return string Table prefix for this install of WordPress.
+   */
+  private function get_table_prefix(){
+    global $wpdb;
+
+    return $wpdb->prefix;
+  }
+  
   
   /*
    * Enqueue CSS needed for the board events.
@@ -594,18 +606,6 @@ public function allow_rsvp(){
 
   die();
 }
-
-
-/*
- * Return the table prefix for this WordPress install.
- * 
- * @return string Table prefix for this install of WordPress.
- */
-private function get_table_prefix(){
-  global $wpdb;
-
-  return $wpdb->prefix;
-}
   
   
  /*
@@ -756,7 +756,7 @@ private function get_table_prefix(){
  
  
  /*
-  * Get the numer attending and a comma separated list of their names.
+  * Get the number attending and a comma separated list of their names for display.
   * 
   * @param int $post_id ID of the board event.
   * @param bool $include_num Optional Whether we want the number coming too.
