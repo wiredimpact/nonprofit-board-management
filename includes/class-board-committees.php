@@ -151,6 +151,7 @@ class WI_Board_Committees {
     <?php
   }
   
+  
   /*
    * Display the members of this committee.
    * 
@@ -159,6 +160,7 @@ class WI_Board_Committees {
   public function display_board_committee_members( $board_committee ){
     echo 'test';
   }
+
   
   /*
    * Save the meta fields for board committees when saving from the edit screen.

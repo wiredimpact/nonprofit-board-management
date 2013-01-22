@@ -35,6 +35,17 @@ class WI_Board_Management {
         //Load CSS and JS
         add_action( 'admin_menu', array( $this, 'insert_css') );
         add_action( 'admin_menu', array( $this, 'insert_js') );
+        
+        //Add filter for putting phone number on profile.
+        add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ) );
+        
+        //Add user fields for job and job title, along with committee info
+        add_action( 'show_user_profile', array( $this, 'add_profile_fields' ) );
+        add_action( 'edit_user_profile', array( $this, 'add_profile_fields' ) );
+        
+        //
+        add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
+        add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
     }
     
     /*
@@ -144,6 +155,68 @@ class WI_Board_Management {
         $role->remove_cap( 'view_board_content' );
       }
     }
+    
+    /*
+     * Add the phone number as a contact method for all users.  Not just board members.
+     */
+    public function add_phone_contactmethod( $user_contactmethods ){
+      $user_contactmethods['phone'] = 'Phone Number';
+      
+      return $user_contactmethods;
+    }
+    
+    
+    /*
+     * Add fields for job and job title, along with committee info.
+     */
+    public function add_profile_fields( $user ){
+      $current_employer = get_user_meta($user->ID, 'current_employer', true);
+      $job_title = get_user_meta($user->ID, 'job_title', true);
+      
+      ?>
+      <h3><?php _e( 'Additional Info for the Board' ); ?></h3>
+    
+      <table class="form-table">
+        <tr>
+          <th><label for="current-employer">Current Employer</label></th>
+          <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo $current_employer; ?>" /></td>
+        </tr>
+        
+        <tr>
+          <th><label for="job-title">Job Title</label></th>
+          <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo $job_title; ?>" /></td>
+        </tr>
+        
+        <tr>
+          <th><label>Your Committees</label></th>
+          <td>
+            <!-- TODO Wrap in a label! -->
+            <input type="checkbox" name="sports" value="soccer"  /> Committee 1 <br />
+            <input type="checkbox" name="sports" value="soccer"  /> Committee 2
+          </td>
+        </tr>
+      </table>
+      
+    <?php
+    }
+    
+    /*
+     * Save our new profile fields
+     */
+    public function save_profile_fields( $user_id ){
+      
+      if( !current_user_can( 'edit_user', $user_id ) ){
+        return;
+      }
+
+      if (isset($_REQUEST['current-employer'])) {
+        update_user_meta( $user_id, 'current_employer', sanitize_text_field( $_REQUEST['current-employer'] ) );
+      }
+      if (isset($_REQUEST['job-title'])) {
+        update_user_meta( $user_id, 'job_title', sanitize_text_field( $_REQUEST['job-title'] ) );
+      }
+    }
+    
     
     /*
      * Enqueue CSS
