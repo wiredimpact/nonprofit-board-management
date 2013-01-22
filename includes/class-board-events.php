@@ -452,6 +452,7 @@ class WI_Board_Events {
   */
  public function show_board_event_columns( $column, $post_id ){  
    $board_event_meta = $this->retrieve_board_event_meta( $post_id );
+   $board_event = get_post( $post_id );
    
    switch( $column ){
      
@@ -490,11 +491,23 @@ class WI_Board_Events {
      case 'attending':
        
        //Show how many are going and who it is.
-       echo $this->get_attending_rsvps( $post_id );
+       if( $board_event->post_status == 'publish' ){
+         echo $this->get_attending_rsvps( $post_id );
+       }
+       else{
+         _e( 'Event must be published prior to accepting RSVPs.' );
+       }
 
        break;
      
      case 'rsvp':
+       
+       //Don't allow for an RSVP if board event hasn't been published.
+       if( $board_event->post_status != 'publish' ){
+         _e( 'Event must be published prior to accepting RSVPs.' );
+         
+         break;
+       }
        
        //Determine whether they're going and if so, add the necessary classes.
        $user_id = get_current_user_id();
