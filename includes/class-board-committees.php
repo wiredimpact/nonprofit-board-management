@@ -10,7 +10,7 @@ class WI_Board_Committees {
     //Create our board committees custom post type
     add_action( 'init', array( $this, 'create_board_committees_type' ) );
     add_action( 'admin_init', array( $this, 'create_board_committee_meta_boxes' ) );
-    //add_action( 'save_post', array( $this, 'save_board_committees_meta' ), 10, 2 );
+    add_action( 'save_post', array( $this, 'save_board_committees_meta' ), 10, 2 );
     
     //Handle meta capabilities for our board_committees custom post type.
     add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
@@ -137,12 +137,15 @@ class WI_Board_Committees {
    */
   public function display_board_committee_desc( $board_committee ){
     //Get all the meta data
+    $board_committee_meta_raw = get_post_custom( $board_committee->ID );
+    $board_committee_meta['description'] = ( isset( $board_committee_meta_raw['_committee_description'] ) ) ? $board_committee_meta_raw['_committee_description'][0] : '';
+    
     $nonce = wp_create_nonce( 'committee_desc_nonce' );
     ?>
-    <input type="hidden" id="_committee_desc_nonce" name="_committee_desc_nonce" value="<?php echo $nonce ?>" />
+    <input type="hidden" id="committee_desc_nonce" name="committee_desc_nonce" value="<?php echo $nonce ?>" />
     <table>
       <tr>
-        <td><textarea id="committee-desc" name="committee-desc" rows="6" style="width: 500px;"><?php echo 'test'; ?></textarea></td>
+        <td><textarea id="committee-description" name="committee-description" rows="6" style="width: 500px;"><?php echo $board_committee_meta['description']; ?></textarea></td>
       </tr>      
     </table>
     <?php
@@ -155,6 +158,31 @@ class WI_Board_Committees {
    */
   public function display_board_committee_members( $board_committee ){
     echo 'test';
+  }
+  
+  /*
+   * Save the meta fields for board committees when saving from the edit screen.
+   */
+  public function save_board_committees_meta( $board_committee_id, $board_committee ){
+    
+    //Check autosave, post type, user caps, nonce
+    if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+      return;
+    }
+    if( $board_committee->post_type != 'board_committees' ){
+      return;
+    }
+    if( !current_user_can( 'edit_board_committee', $board_committee_id ) ){
+      return;
+    }
+    if ( !isset( $_REQUEST['committee_desc_nonce'] ) || !wp_verify_nonce( $_REQUEST['committee_desc_nonce'], 'committee_desc_nonce' ) ){
+      return;
+    }
+    
+    //Event Description
+    if (isset($_REQUEST['committee-description'])) {
+      update_post_meta( $board_committee_id, '_committee_description', sanitize_text_field( $_REQUEST['committee-description'] ) );
+    }
   }
   
 }//WI_Board_Committees
