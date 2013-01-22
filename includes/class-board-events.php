@@ -321,7 +321,7 @@ class WI_Board_Events {
     if( $board_event->post_type != 'board_events' ){
       return;
     }
-    if( !current_user_can( 'edit_post', $board_event_id ) ){
+    if( !current_user_can( 'edit_board_event', $board_event_id ) ){
       return;
     }
     if ( !isset( $_REQUEST['_event_details_nonce'] ) || !wp_verify_nonce( $_REQUEST['_event_details_nonce'], 'event_details_nonce' ) ){
