@@ -9,15 +9,15 @@ class WI_Board_Committees {
   public function __construct() {
     //Create our board committees custom post type
     add_action( 'init', array( $this, 'create_board_committees_type' ) );
-    add_action( 'admin_init', array( $this, 'create_board_committees_meta_boxes' ) );
-    add_action( 'save_post', array( $this, 'save_board_committees_meta' ), 10, 2 );
+    add_action( 'admin_init', array( $this, 'create_board_committee_meta_boxes' ) );
+    //add_action( 'save_post', array( $this, 'save_board_committees_meta' ), 10, 2 );
     
     //Handle meta capabilities for our board_committees custom post type.
     add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
     
     //Adjust the columns and content shown when viewing the board committees post type list.
-    add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
-    add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
+    //add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
+    //add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
   }
 
  /*
@@ -106,4 +106,55 @@ class WI_Board_Committees {
     //Return the capabilities required by the user.
     return $caps;
   }  
+  
+
+  /*
+   * Create the meta boxes when adding/editing a board committee.
+   * 
+   * Create the meta boxes when adding/editing a board committee.  The boxes include
+   * one for editing the description of the committee and one for seeing the members of the committee.
+   */
+  public function create_board_committee_meta_boxes(){
+    //Committee description
+    add_meta_box( 'board_committee_desc',
+        'Committee Description',
+        array( $this, 'display_board_committee_desc' ),
+        'board_committees', 'normal', 'high'
+    );
+    
+    //List of board members on the committee
+    add_meta_box( 'board_committee_members',
+        'Committee Members',
+        array( $this, 'display_board_committee_members' ),
+        'board_committees', 'normal', 'default'
+    );
+  }
+  
+/*
+   * Display the description meta field for the committee.
+   * 
+   * @param object $board_committee The $post object for the board committee.
+   */
+  public function display_board_committee_desc( $board_committee ){
+    //Get all the meta data
+    $nonce = wp_create_nonce( 'committee_desc_nonce' );
+    ?>
+    <input type="hidden" id="_committee_desc_nonce" name="_committee_desc_nonce" value="<?php echo $nonce ?>" />
+    <table>
+      <tr>
+        <td><textarea id="committee-desc" name="committee-desc" rows="6" style="width: 500px;"><?php echo 'test'; ?></textarea></td>
+      </tr>      
+    </table>
+    <?php
+  }
+  
+  /*
+   * Display the members of this committee.
+   * 
+   * @param object $board_committee The $post object for the board committee.
+   */
+  public function display_board_committee_members( $board_committee ){
+    echo 'test';
+  }
+  
 }//WI_Board_Committees

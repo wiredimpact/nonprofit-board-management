@@ -50,6 +50,8 @@ class WI_Board_Management {
                   'read' => true,
                   'view_board_content' => true,
                   'contain_board_info' => true,
+                  
+                  //Board event caps
                   'rsvp_board_events' => true,
                   'edit_board_events' => true,
                   'edit_others_board_events' => true,
@@ -61,6 +63,19 @@ class WI_Board_Management {
                   'delete_others_board_events' => true,
                   'edit_private_board_events' => true,
                   'edit_published_board_events' => true,
+                  
+                  //Board committee caps
+                  'join_board_committee' => true,
+                  'edit_board_committees' => true,
+                  'edit_others_board_committees' => true,
+                  'publish_board_committees' => true,
+                  'read_private_board_committees' => true,
+                  'delete_board_committees' => true,
+                  'delete_private_board_committees' => true,
+                  'delete_published_board_committees' => true,
+                  'delete_others_board_committees' => true,
+                  'edit_private_board_committees' => true,
+                  'edit_published_board_committees' => true
                   )
               );
       
@@ -79,6 +94,8 @@ class WI_Board_Management {
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
+        
+        //Board event caps
         $role->add_cap( 'edit_board_events' );
         $role->add_cap( 'edit_others_board_events' );
         $role->add_cap( 'publish_board_events' );
@@ -88,7 +105,19 @@ class WI_Board_Management {
         $role->add_cap( 'delete_published_board_events' );
         $role->add_cap( 'delete_others_board_events' );
         $role->add_cap( 'edit_private_board_events' );
-        $role->add_cap( 'edit_published_board_events' );     
+        $role->add_cap( 'edit_published_board_events' ); 
+        
+        //Board committee caps
+        $role->add_cap( 'edit_board_committees' );
+        $role->add_cap( 'edit_others_board_committees' );
+        $role->add_cap( 'publish_board_committees' );
+        $role->add_cap( 'read_private_board_committees' );
+        $role->add_cap( 'delete_board_committees' );
+        $role->add_cap( 'delete_private_board_committees' );
+        $role->add_cap( 'delete_published_board_committees' );
+        $role->add_cap( 'delete_others_board_committees' );
+        $role->add_cap( 'edit_private_board_committees' );
+        $role->add_cap( 'edit_published_board_committees' );
       }
     }
     
@@ -149,8 +178,12 @@ class WI_Board_Management {
       add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
       
       //Add edit and new board event links to our top level menu so the board member role has correct caps.
-      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events'); 
-      add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events'); 
+      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' ); 
+      add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
+      
+      //Add edit and new board commmittee links to our top level menu so the board member role has correct caps.
+      add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
+      add_submenu_page( 'nonprofit-board', 'Add Board Committee', 'Add Board Committee', 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
       
       //Create submenu items
       add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'users.php?role=board_member' );
@@ -180,9 +213,11 @@ if( is_admin() ){
   //Add board notes and board event classes
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-notes.php';
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
+  require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-committees.php';
 
   //Instantiate each of our classes.
   $wi_board = new WI_Board_Management();
   $wi_board_notes = new WI_Board_Notes();
   $wi_board_events = new WI_Board_Events();
+  $wi_board_committees = new WI_Board_Committees();
 }
