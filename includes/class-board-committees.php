@@ -196,21 +196,69 @@ class WI_Board_Committees {
     if( isset( $_REQUEST['committee-description'] ) ) {
       update_post_meta( $board_committee_id, '_committee_description', sanitize_text_field( $_REQUEST['committee-description'] ) );
     }
+    
     //Committee Members
-    if( isset( $_REQUEST['committee-members'] ) ){
-      //Get list of users
-      //loop through users
-        //get list of committees user is on
-        //Use in_arry to see if user is listed as going
-          //if so, use in_array to see if they're already listed on that committee
-        //if use in_array to see if 
-      //create function for adding board to user and one for removing board from user
-    }
-    else{
-      $board_members = get_users( array( 'role' => 'board_member' ) );
-      foreach( $board_members as $board_member ){
-        delete_user_meta( $board_member->ID, 'board_committees' );
+    //Get all the board members
+    $board_members = $this->get_board_members();
+    foreach( $board_members as $board_member ){
+      //check if board member is on committee
+      $user_committees = get_user_meta( $board_member->ID, 'board_committees', true );
+      $on_committee_prev = $this->is_user_on_committee( $user_committees, $board_committee_id );
+      
+      //If the user should be included in this committee.
+      if( isset( $_REQUEST['committee-members'] ) && in_array( $board_member->ID, $_REQUEST['committee-members'] ) ){
+        //If the committee is not already listed as one of their committees, then we add it.
+        if( $on_committee_prev == false){
+          $this->add_committee_to_user( $board_member->ID, $board_committee_id );
+        }
       }
+      //If they should be removed from the comittee.
+      else{
+       //If they were previously on the committee, then we remove them.
+       if( $on_committee_prev == true ){
+         $this->remove_committee_from_user( $board_member->ID, $board_committee_id );
+       }
+      }
+    }//End foreach
+  }
+  
+  
+  /*
+   * Add the board committee to the list of committees they serve on.
+   */
+  private function add_committee_to_user( $board_member_id, $board_committee_id ){
+    //Get their previous committees and make array if they weren't on any committees.
+    $prev_committees = get_user_meta( $board_member_id, 'board_committees', true );
+    if( $prev_committees == '' ){
+      $prev_committees = array();
+    }
+    
+    $new_committees = array();
+    $new_committees[] = $board_committee_id;
+    //Add the new committee array to the old one.
+    array_merge( $prev_committees, $new_committees );
+    
+    update_user_meta( $board_member_id, 'board_committees', $new_committees );
+  }
+  
+  
+  /*
+   * Remove the board committee from the list of committees they serve on.
+   */
+  private function remove_committee_from_user( $board_member_id, $board_committee_id ){
+    $prev_committees = get_user_meta( $board_member_id, 'board_committees', true );
+    $new_committees = $prev_committees;
+    
+    //Find the key of this board committee so we can unset it in the array.
+    $committee_key = array_search( $board_committee_id, $prev_committees );
+    unset( $new_committees[$committee_key] );
+    
+    //If they are now on no committees, delete meta, otherwise, update with new array.
+    if( empty( $new_committees ) ){
+      delete_user_meta( $board_member_id, 'board_committees' );
+    }
+    else {
+      update_user_meta( $board_member_id, 'board_committees', $new_committees );
     }
   }
   
@@ -286,19 +334,30 @@ class WI_Board_Committees {
     else{
       delete_user_meta( $user_id, 'board_committees' );
     }
-  } 
+  }
+  
+  /*
+   * Get an array of all the board members and their user information.
+   * 
+   * This method is helpful since admins can potentially join boards.
+   */
+  private function get_board_members(){
+    $board_members = get_users( array( 'role' => 'board_member' ) );
+    
+    return $board_members;
+  }
   
   /*
    * Get checkbox inputs for a specific board committee for all the users.
    */
   private function get_committee_inputs( $board_committee_id ){
-    //Get all users with board member role
-    $board_members = get_users( array( 'role' => 'board_member' ) );
+    //Get all the board board memers
+    $board_members = $this->get_board_members();
     
     //Loop through users and add them
     $committee_inputs = '';
     foreach( $board_members as $board_member ){
-      $user_committees = get_user_meta( $board_member->ID, 'board_committees' );
+      $user_committees = get_user_meta( $board_member->ID, 'board_committees', true );
       if( $this->is_user_on_committee( $user_committees, $board_committee_id ) == true ){
         $checked = 'checked="checked"';
       }
@@ -325,7 +384,7 @@ class WI_Board_Committees {
   private function get_user_committee_inputs( $user_id ){
     //Get all the committees
     $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
-    $user_committees = get_user_meta( $user_id, 'board_committees' );
+    $user_committees = get_user_meta( $user_id, 'board_committees', true );
 
     //Loop through the committees and make checkboxes
     $committee_inputs = '';
@@ -353,12 +412,12 @@ class WI_Board_Committees {
   /*
    * Checks if user is on the given board committee
    * 
-   * @param array $user_committees A list of all the user's committees from get_user_meta.
+   * @param array|string $user_committees A list of all the user's committees from get_user_meta or an empty string if none.
    * @param int $board_committee_id The ID of the board committee to check against.
    */
   private function is_user_on_committee( $user_committees, $board_committee_id ){
-    if( !empty( $user_committees) ){
-      foreach( $user_committees[0] as $user_committee ){
+    if( !empty( $user_committees) && $user_committees != '' ){
+      foreach( $user_committees as $user_committee ){
         if( $user_committee == $board_committee_id ) return true;
       }
     }
