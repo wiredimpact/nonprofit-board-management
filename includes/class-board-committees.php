@@ -442,12 +442,16 @@ class WI_Board_Committees {
         $checked = '';
       }
       
+      $board_member_phone = get_user_meta( $board_member->ID, 'phone', true );
       $committee_inputs .= '<label><input type="checkbox" ';
       $committee_inputs .= $checked;
       $committee_inputs .= ' name="committee-members[]" value="';
       $committee_inputs .= $board_member->ID;
       $committee_inputs .= '" /> ';
       $committee_inputs .= $board_member->display_name;
+      $committee_inputs .= ' (' . $board_member->user_email;
+      if( $board_member_phone != '') $committee_inputs .= " | " . $board_member_phone;
+      $committee_inputs .= ')';
       $committee_inputs .= '</label><br />';
     }
     
