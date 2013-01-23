@@ -16,7 +16,7 @@
 
 /*Board Events List*/
 #the-list #attending {
-  margin-right: 5px;
+  margin: 0 5px 5px 0;
 }
 #the-list .button-primary.active {
   cursor: default;
