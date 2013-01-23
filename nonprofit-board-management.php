@@ -178,6 +178,9 @@ class WI_Board_Management {
       //Create top level menu item
       add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
       
+      //Create Board Members page
+      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board/members', array( $this, 'display_members_page' ) );
+      
       //Add edit and new board event links to our top level menu so the board member role has correct caps.
       add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' ); 
       add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
@@ -185,10 +188,6 @@ class WI_Board_Management {
       //Add edit and new board commmittee links to our top level menu so the board member role has correct caps.
       add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
       add_submenu_page( 'nonprofit-board', 'Add Board Committee', 'Add Board Committee', 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
-      
-      //Create submenu items
-      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'users.php?role=board_member' );
-      add_submenu_page( 'nonprofit-board', 'Board Recruits', 'Board Recruits', 'view_board_content', 'users.php?role=board_recruit' );
     }
     
     /*
@@ -200,6 +199,87 @@ class WI_Board_Management {
         <h2>Nonprofit Board Management</h2>
       </div>
     <?php }
+    
+    /*
+     * Create board members list page
+     */
+    public function display_members_page(){ ?>
+      <div class="wrap">
+        <?php screen_icon( 'options-general' ); ?>
+        <h2><?php _e( 'Board Members' ); ?></h2>
+        <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
+          <thead>
+            <tr>
+              <th scope="col" id="name" class="manage-column column-name">Name</th>
+              <th scope="col" id="phone" class="manage-column column-phone">Phone</th>
+              <th scope="col" id="email" class="manage-column column-email">Email</th>
+              <th scope="col" id="job" class="manage-column column-job">Job</th>
+              <th scope="col" id="committees" class="manage-column column-committees">Committees</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th scope="col" class="manage-column column-name">Name</th>
+              <th scope="col" class="manage-column column-phone">Phone</th>
+              <th scope="col" class="manage-column column-email">Email</th>
+              <th scope="col" class="manage-column column-job">Job</th>
+              <th scope="col" class="manage-column column-committees">Committees</th>
+            </tr>
+          </tfoot>
+          <tbody>
+        
+        <?php
+        $board_members = $this->get_board_members();
+        $alternate = 'alternate';
+        foreach( $board_members as $board_member ){
+         $board_member_meta = $this->get_board_member_meta( $board_member->ID );
+         $job = $board_member_meta->job_title;
+         if( $board_member_meta->current_employer != '' and $board_member_meta->job_title != ''){
+           $job .= __(' at ');
+         }
+         $job .= $board_member_meta->current_employer;
+         ?>
+          <tr class="<?php echo $alternate; ?>">
+            <td class="name column-username"><?php echo get_avatar( $board_member->ID, '32' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?></td>
+            <td class="phone column-phone"><?php echo $board_member_meta->phone; ?></td>
+            <td class="email column-email"><?php echo $board_member->user_email; ?></td>
+            <td class="job column-job"><?php echo $job; ?></td>
+            <td class="committees column-committees"><?php echo WI_Board_Committees::get_user_committees( $board_member->ID ); ?></td>
+          </tr>
+        <?php
+        $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
+        }        
+        ?>
+        
+          </tbody>
+        </table>
+        <p>You can set your photo by creating an account at <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
+           and your name can be adjusted by using the "Display name publicly as" dropdown in 
+           <a href="<?php bloginfo('wpurl'); ?>/wp-admin/profile.php">your profile</a>.</p>
+      </div>
+    <?php }
+    
+    /*
+     * Get all board members and those with cap to serve on board.
+     */
+    private function get_board_members(){
+      $board_members = get_users( array( 'role' => 'board_member' ) );
+      
+      return $board_members;
+    }
+    
+    /*
+     * Get all the meta data for a board member.
+     */
+    private function get_board_member_meta( $board_member_id ){
+      $board_member_meta = new stdClass();
+      $board_member_meta->phone = get_user_meta( $board_member_id, 'phone', true );
+      $board_member_meta->current_employer = get_user_meta( $board_member_id, 'current_employer', true );
+      $board_member_meta->job_title = get_user_meta( $board_member_id, 'job_title', true );
+
+      
+      return $board_member_meta;
+    }
      
 } //end class board_management
 

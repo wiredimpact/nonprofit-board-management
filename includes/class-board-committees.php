@@ -339,6 +339,27 @@ class WI_Board_Committees {
     return $committee_member_list;
   }
  
+  
+  /*
+   * Get a list of the committees the user is on separated by commas.
+   */
+  public static function get_user_committees( $board_member_id ){
+    $user_committees_ids = get_user_meta( $board_member_id, 'board_committees', true );
+    
+    //If on no committees return an empty string.
+    if( $user_committees_ids == '' ){
+      return '';
+    }
+    
+    //Create an array with the titles of all the committees.
+    $committees = array();
+    foreach( $user_committees_ids as $user_committee_id ){
+      $committees[] = get_the_title( $user_committee_id );
+    }
+    
+    return implode( ', ', $committees );
+  }
+ 
   /*
    * Add the phone number as a contact method for all users.  Not just board members.
    */

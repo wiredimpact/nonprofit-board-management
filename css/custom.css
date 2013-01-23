@@ -17,3 +17,13 @@ table.widefat tr:hover .note-delete {
 #notes-list tr.adding {
   background-color: #6C6
 }
+
+/********************************
+* Board Members List
+********************************/
+#board-members-table {
+  margin-top: 20px;
+}
+#board-members-table .column-username {
+  padding-bottom: 4px;
+}
