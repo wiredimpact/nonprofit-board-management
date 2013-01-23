@@ -240,7 +240,7 @@ class WI_Board_Management {
          $job .= $board_member_meta->current_employer;
          ?>
           <tr class="<?php echo $alternate; ?>">
-            <td class="name column-username"><?php echo get_avatar( $board_member->ID, '32' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?></td>
+            <td class="name column-username"><?php echo get_avatar( $board_member->ID, '44' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?></td>
             <td class="phone column-phone"><?php echo $board_member_meta->phone; ?></td>
             <td class="email column-email"><?php echo $board_member->user_email; ?></td>
             <td class="job column-job"><?php echo $job; ?></td>
