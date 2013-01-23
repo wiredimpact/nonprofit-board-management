@@ -18,6 +18,17 @@ class WI_Board_Committees {
     //Adjust the columns and content shown when viewing the board committees post type list.
     //add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
     //add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
+    
+     //Add filter for putting phone number on profile.
+    add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ) );
+
+    //Add user fields for job and job title, along with committee info
+    add_action( 'show_user_profile', array( $this, 'add_profile_fields' ) );
+    add_action( 'edit_user_profile', array( $this, 'add_profile_fields' ) );
+
+    //Save the added user fields
+    add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
+    add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
   }
 
  /*
@@ -158,7 +169,7 @@ class WI_Board_Committees {
    * @param object $board_committee The $post object for the board committee.
    */
   public function display_board_committee_members( $board_committee ){
-    echo 'test';
+    echo $this->get_committee_inputs( $board_committee->ID );
   }
 
   
@@ -182,9 +193,177 @@ class WI_Board_Committees {
     }
     
     //Event Description
-    if (isset($_REQUEST['committee-description'])) {
+    if( isset( $_REQUEST['committee-description'] ) ) {
       update_post_meta( $board_committee_id, '_committee_description', sanitize_text_field( $_REQUEST['committee-description'] ) );
     }
+    //Committee Members
+    if( isset( $_REQUEST['committee-members'] ) ){
+      //Get list of users
+      //loop through users
+        //get list of committees user is on
+        //Use in_arry to see if user is listed as going
+          //if so, use in_array to see if they're already listed on that committee
+        //if use in_array to see if 
+      //create function for adding board to user and one for removing board from user
+    }
+    else{
+      $board_members = get_users( array( 'role' => 'board_member' ) );
+      foreach( $board_members as $board_member ){
+        delete_user_meta( $board_member->ID, 'board_committees' );
+      }
+    }
+  }
+  
+  /*
+   * Add the phone number as a contact method for all users.  Not just board members.
+   */
+  public function add_phone_contactmethod( $user_contactmethods ){
+    $user_contactmethods['phone'] = 'Phone Number';
+
+    return $user_contactmethods;
+  }
+
+
+  /*
+   * Add fields for job and job title, along with committee info.
+   */
+  public function add_profile_fields( $user ){
+
+    //If the user can't join a board committee then don't show these fields.
+    if( !current_user_can( 'join_board_committee', $user->ID ) ){
+      return;
+    }
+
+    $current_employer = get_user_meta($user->ID, 'current_employer', true);
+    $job_title = get_user_meta($user->ID, 'job_title', true);
+
+    ?>
+    <h3><?php _e( 'Additional Info for the Board' ); ?></h3>
+
+    <table class="form-table">
+      <tr>
+        <th><label for="current-employer">Current Employer</label></th>
+        <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo $current_employer; ?>" /></td>
+      </tr>
+
+      <tr>
+        <th><label for="job-title">Job Title</label></th>
+        <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo $job_title; ?>" /></td>
+      </tr>
+
+      <tr>
+        <th><label>Your Committees</label></th>
+        <td>
+          <?php echo $this->get_user_committee_inputs( $user->ID ); ?>
+        </td>
+      </tr>
+    </table>
+
+  <?php
+  }
+
+  /*
+   * Save our new profile fields
+   */
+  public function save_profile_fields( $user_id ){
+
+    if( !current_user_can( 'edit_user', $user_id ) ){
+      return;
+    }
+
+    //Current employer
+    if ( isset( $_REQUEST['current-employer'] ) ) {
+      update_user_meta( $user_id, 'current_employer', sanitize_text_field( $_REQUEST['current-employer'] ) );
+    }
+    //Job title
+    if ( isset( $_REQUEST['job-title'] ) ) {
+      update_user_meta( $user_id, 'job_title', sanitize_text_field( $_REQUEST['job-title'] ) );
+    }
+    //Board committees
+    if( isset( $_REQUEST['board-committees'] ) ){
+      update_user_meta( $user_id, 'board_committees', $_REQUEST['board-committees'] );
+    }
+    else{
+      delete_user_meta( $user_id, 'board_committees' );
+    }
+  } 
+  
+  /*
+   * Get checkbox inputs for a specific board committee for all the users.
+   */
+  private function get_committee_inputs( $board_committee_id ){
+    //Get all users with board member role
+    $board_members = get_users( array( 'role' => 'board_member' ) );
+    
+    //Loop through users and add them
+    $committee_inputs = '';
+    foreach( $board_members as $board_member ){
+      $user_committees = get_user_meta( $board_member->ID, 'board_committees' );
+      if( $this->is_user_on_committee( $user_committees, $board_committee_id ) == true ){
+        $checked = 'checked="checked"';
+      }
+      else {
+        $checked = '';
+      }
+      
+      $committee_inputs .= '<label><input type="checkbox" ';
+      $committee_inputs .= $checked;
+      $committee_inputs .= ' name="committee-members[]" value="';
+      $committee_inputs .= $board_member->ID;
+      $committee_inputs .= '" /> ';
+      $committee_inputs .= $board_member->display_name;
+      $committee_inputs .= '</label><br />';
+    }
+    
+    return $committee_inputs;
+  }
+  
+  
+  /*
+   * Return inputs for all the committees with those checked that the user is on.
+   */
+  private function get_user_committee_inputs( $user_id ){
+    //Get all the committees
+    $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
+    $user_committees = get_user_meta( $user_id, 'board_committees' );
+
+    //Loop through the committees and make checkboxes
+    $committee_inputs = '';
+    foreach( $board_committees as $board_committee ){
+      if( $this->is_user_on_committee( $user_committees, $board_committee->ID ) == true ){
+        $checked = 'checked="checked"';
+      }
+      else {
+        $checked = '';
+      }
+      
+      $committee_inputs .= '<label><input type="checkbox" ';
+      $committee_inputs .= $checked;
+      $committee_inputs .= ' name="board-committees[]" value="';
+      $committee_inputs .= $board_committee->ID;
+      $committee_inputs .= '" /> ';
+      $committee_inputs .= $board_committee->post_title;
+      $committee_inputs .= '</label><br />';
+    }
+    
+    return $committee_inputs;
+  }
+  
+  
+  /*
+   * Checks if user is on the given board committee
+   * 
+   * @param array $user_committees A list of all the user's committees from get_user_meta.
+   * @param int $board_committee_id The ID of the board committee to check against.
+   */
+  private function is_user_on_committee( $user_committees, $board_committee_id ){
+    if( !empty( $user_committees) ){
+      foreach( $user_committees[0] as $user_committee ){
+        if( $user_committee == $board_committee_id ) return true;
+      }
+    }
+    
+    return false; //Return false if it doesn't match
   }
   
 }//WI_Board_Committees
