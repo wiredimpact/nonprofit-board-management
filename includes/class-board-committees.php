@@ -16,8 +16,8 @@ class WI_Board_Committees {
     add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
     
     //Adjust the columns and content shown when viewing the board committees post type list.
-    //add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
-    //add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
+    add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
+    add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
     
      //Add filter for putting phone number on profile.
     add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ) );
@@ -148,8 +148,7 @@ class WI_Board_Committees {
    */
   public function display_board_committee_desc( $board_committee ){
     //Get all the meta data
-    $board_committee_meta_raw = get_post_custom( $board_committee->ID );
-    $board_committee_meta['description'] = ( isset( $board_committee_meta_raw['_committee_description'] ) ) ? $board_committee_meta_raw['_committee_description'][0] : '';
+    $board_committee_meta = $this->get_board_committee_meta( $board_committee->ID );
     
     $nonce = wp_create_nonce( 'committee_desc_nonce' );
     ?>
@@ -160,6 +159,17 @@ class WI_Board_Committees {
       </tr>      
     </table>
     <?php
+  }
+  
+  
+  /*
+   * Get meta data for the board committee.
+   */
+  private function get_board_committee_meta( $board_committee_id ){
+    $board_committee_meta_raw = get_post_custom( $board_committee_id );
+    $board_committee_meta['description'] = ( isset( $board_committee_meta_raw['_committee_description'] ) ) ? $board_committee_meta_raw['_committee_description'][0] : '';
+    
+    return $board_committee_meta;
   }
   
   
@@ -262,6 +272,73 @@ class WI_Board_Committees {
     }
   }
   
+  
+  /*
+  * Add custom columns the board committees content type list.
+  * 
+  * @param array $columns The default columns for board committees.
+  * @return array Custom columns we want to use on the board committees list.
+  */
+ public function edit_board_committees_columns( $columns ) {
+   $columns = array(
+     'cb' => '<input type="checkbox" />',
+     'title' => __( 'Title' ),
+     'description' => __( 'Description' ),
+     'committee_members' => __( 'Committee Members' ),
+   );
+
+   return $columns;
+ }
+  
+ 
+  /*
+   * Display content for each custom column for board committees.
+   * 
+   * @param string $column Column to be displayed.
+   * @param int $post_id ID of the board committee to be displayed.
+   */
+  public function show_board_committee_columns( $column, $board_committee_id ){  
+    $board_committee_meta = $this->get_board_committee_meta( $board_committee_id );
+
+    switch( $column ){
+
+      case 'description':
+
+        echo wp_trim_words( $board_committee_meta['description'], 15 );
+
+        break;
+
+      case 'committee_members':
+
+        echo $this->get_committee_member_list( $board_committee_id );
+
+        break;
+    }
+  } 
+ 
+  /*
+   * Get the number of committee members and who is on the committee separated by commas.
+   */
+  private function get_committee_member_list( $board_committee_id ){
+    $board_members = $this->get_board_members();
+    $num_on_committee = 0;
+    $members_on_committee = array();
+    
+    foreach( $board_members as $board_member ){
+      $user_committees = get_user_meta( $board_member->ID, 'board_committees', true );
+      if( $this->is_user_on_committee( $user_committees, $board_committee_id ) ){
+        $members_on_committee[] = $board_member->display_name;
+        $num_on_committee++;
+      }
+    }
+    
+    $committee_member_list = '(' . $num_on_committee . ')';
+    if( $num_on_committee != 0 ) $committee_member_list .= ' - ';
+    $committee_member_list .= implode( ', ', $members_on_committee );
+    
+    return $committee_member_list;
+  }
+ 
   /*
    * Add the phone number as a contact method for all users.  Not just board members.
    */
