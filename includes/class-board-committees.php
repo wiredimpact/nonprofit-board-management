@@ -246,7 +246,7 @@ class WI_Board_Committees {
     $new_committees = array();
     $new_committees[] = $board_committee_id;
     //Add the new committee array to the old one.
-    array_merge( $prev_committees, $new_committees );
+    $new_committees = array_merge( $prev_committees, $new_committees );
     
     update_user_meta( $board_member_id, 'board_committees', $new_committees );
   }
