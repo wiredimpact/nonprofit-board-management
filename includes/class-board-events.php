@@ -808,19 +808,31 @@ public function allow_rsvp(){
  /*
   * Get the number of attending RSVPs to a specific board event.
   * 
+  * Get the number of attending RSVPS to a specific event.  To do this
+  * we must also check to ensure that those who RSVPed still have that
+  * capability.  We use an inner join with the usermeta table to make
+  * sure they're a board member or have the rsvp_board_event capability.
+  * 
   * @param int $post_id ID of the board event we want to know about.
   * @return int Number of people attending the board event.
   */
  private function get_num_attending( $post_id ){
   global $wpdb;
+
+  $rsvps_table = $this->table_name;
+  $usermeta_table = $this->get_table_prefix() . 'usermeta';
   $num_attending_rsvps = $wpdb->get_var(
           "
-            SELECT COUNT(rsvp)
-            FROM $this->table_name
-            WHERE post_id = {$post_id}
-            AND rsvp = 1
+            SELECT COUNT( {$rsvps_table}.rsvp )
+            FROM {$rsvps_table}
+            INNER JOIN {$usermeta_table}
+            ON $rsvps_table.user_id = {$usermeta_table}.user_id
+            WHERE {$rsvps_table}.post_id = {$post_id}
+            AND {$rsvps_table}.rsvp = 1
+            AND {$usermeta_table}.meta_key = '{$this->get_table_prefix()}capabilities'
+            AND ( {$usermeta_table}.meta_value LIKE '%board_member%' OR {$usermeta_table}.meta_value LIKE '%rsvp_board_events%')
           "
-          ); 
+          );  
             
   return $num_attending_rsvps;
  }
