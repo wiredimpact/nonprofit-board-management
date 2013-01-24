@@ -75,19 +75,19 @@ jQuery(document).ready(function(){
     return false;
   });
   
-  //Allow admins to rsvp by giving them the correct capability.
-  jQuery( 'input#allow-rsvp' ).click(function(){
+  //Allow admins to serve on the board by giving them the correct capability.
+  jQuery( 'input#allow-board-serve' ).click(function(){
     var data = {
-      action: 'allow_rsvp',
-      security: wi_board_events.allow_rsvp_nonce
+      action: 'allow_user_to_serve',
+      security: wi_board_mgmt.allow_serve_nonce
      };
 
     jQuery.post(ajaxurl, data, function( response ) {
       if( response !== '1' ){ //If there's an error
-        alert( wi_board_events.error_allow_rsvp ); 
+        alert( wi_board_mgmt.error_allow_serve ); 
       }
       else{
-       //Reload the current page so they can start RSVPing.
+       //Reload the current page so they can start serving.
        location.reload(true); 
       }
     });

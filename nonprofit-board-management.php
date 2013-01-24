@@ -35,6 +35,12 @@ class WI_Board_Management {
         //Load CSS and JS
         add_action( 'admin_menu', array( $this, 'insert_css') );
         add_action( 'admin_menu', array( $this, 'insert_js') );
+        
+        //Add notice to admin who can't serve on board in case they want to.
+        add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
+
+        //Allow admin to click a button and start serving on the board.
+        add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
     }
     
     /*
@@ -49,7 +55,7 @@ class WI_Board_Management {
               array( 
                   'read' => true,
                   'view_board_content' => true,
-                  'contain_board_info' => true,
+                  'serve_on_board' => true,
                   
                   //Board event caps
                   'rsvp_board_events' => true,
@@ -141,8 +147,14 @@ class WI_Board_Management {
      */
     public function insert_js(){      
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
+      
+      //wp_localize_script allows us to send PHP info to JS
+      wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
+        'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
+        'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
+        )
+       );
     }
-    
     
     
     /*
@@ -198,7 +210,7 @@ class WI_Board_Management {
           <tbody>
         
         <?php
-        $board_members = $this->get_board_members();
+        $board_members = $this->get_users_who_serve();
         $alternate = 'alternate';
         foreach( $board_members as $board_member ){
          $board_member_meta = $this->get_board_member_meta( $board_member->ID );
@@ -227,15 +239,7 @@ class WI_Board_Management {
            <a href="<?php bloginfo('wpurl'); ?>/wp-admin/profile.php">your profile</a>.</p>
       </div>
     <?php }
-    
-    /*
-     * Get all board members and those with cap to serve on board.
-     */
-    private function get_board_members(){
-      $board_members = get_users( array( 'role' => 'board_member' ) );
-      
-      return $board_members;
-    }
+
     
     /*
      * Get all the meta data for a board member.
@@ -283,8 +287,79 @@ class WI_Board_Management {
         <iframe width="640" height="360" src="http://www.youtube.com/embed/lB95KLmpLR4" frameborder="0" allowfullscreen></iframe>
       <?php     
     }
+    
+    
+    /*
+    * Get the users who serve on the board.
+    * 
+    * @return array Users who can serve on the board.
+    */
+    public static function get_users_who_serve(){
+      $board_members = get_users( array( 'role' => 'board_member' ) );
+      $admins = get_users( array( 'role' => 'administrator' ) );
+
+      //Check if admins can rsvp and if not, remove them from the array.
+      $admins_count = count( $admins );
+      for( $i = 0; $i < $admins_count; $i++ ){
+        if( !isset( $admins[$i]->allcaps['serve_on_board'] ) || $admins[$i]->allcaps['serve_on_board'] != true ) {
+          unset( $admins[$i] );
+        }
+      }
+
+      //Combine board members with admins opted to rsvp
+      $users_serving = array_merge( $board_members, $admins );
+
+      return $users_serving;
+    }
+    
+    /*
+    * Show notice to admins allowing them to start serving on the board if they'd like.
+    * 
+    * Show notice to admins that allows them to start serving on the board.  Handling
+    * of the button click is done through ajax.  With this cap they're able to
+    * RSVP to events, join committees and show in the members list.
+    * 
+    * @see allow_user_to_serve()
+    */
+   public function show_admins_notices(){
+     $screen = get_current_screen();
      
-} //end class board_management
+     //If the admin already has the serve capability then don't show the message.
+     if( current_user_can( 'serve_on_board' ) ) return;
+     
+     //If the admin is on the members, events, or committees list then show them message.
+     if( $screen->id == 'edit-board_events' || $screen->id == 'toplevel_page_nonprofit-board' || $screen->id == 'edit-board_committees' ){
+     ?>
+     <div class="updated">
+       <p><?php _e( 'You don\'t have the board member role, so you can\'t RSVP to board events, join committees,
+         or show up in the board member list.' ); ?>
+         <input id="allow-board-serve" type="submit" class="button secondary-button" value="Serve on the Board" />
+       </p>
+     </div>
+     <?php
+     }//End if
+   }
+
+
+   /*
+    * Via ajax allow the current user to serve on the board 
+    * by giving them the capability.
+    * 
+    * @see show_admin_notices()
+    * @return string Echos '1' to show that capability has been added.
+    */
+   public function allow_user_to_serve(){
+     check_ajax_referer( 'allow_serve_nonce', 'security' );
+
+     $current_user = wp_get_current_user();
+     $current_user->add_cap( 'serve_on_board' );
+
+     echo '1';
+
+     die();
+   }
+     
+} //WI_Board_Management
 
 if( is_admin() ){
   //Setup some constants for us to more easily work with files

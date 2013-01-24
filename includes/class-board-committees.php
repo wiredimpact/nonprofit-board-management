@@ -19,7 +19,7 @@ class WI_Board_Committees {
     add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
     add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
     
-     //Add filter for putting phone number on profile.
+    //Add filter for putting phone number on profile.
     add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ) );
 
     //Add user fields for job and job title, along with committee info
@@ -201,7 +201,7 @@ class WI_Board_Committees {
     
     //Committee Members
     //Get all the board members
-    $board_members = $this->get_board_members();
+    $board_members = WI_Board_Management::get_users_who_serve();
     foreach( $board_members as $board_member ){
       //check if board member is on committee
       $user_committees = get_user_meta( $board_member->ID, 'board_committees', true );
@@ -289,8 +289,12 @@ class WI_Board_Committees {
    */
   public function display_profile_fields( $board_member ){
 
+    //If the person can't edit ths user don't show these fields.
+    if( !current_user_can( 'edit_user', $board_member->ID ) ){
+      return;
+    }
     //If the user can't join a board committee then don't show these fields.
-    if( !current_user_can( 'join_board_committee', $board_member->ID ) ){
+    if( !user_can( $board_member->ID, 'serve_on_board' ) ){
       return;
     }
 
@@ -329,7 +333,12 @@ class WI_Board_Committees {
    */
   public function save_profile_fields( $board_member_id ){
 
+    //If the person can't edit then don't save these fields.
     if( !current_user_can( 'edit_user', $board_member_id ) ){
+      return;
+    }
+    //If the user can't serve then don't save these fields.
+    if( !user_can( $board_member_id, 'serve_on_board' ) ){
       return;
     }
 
@@ -418,7 +427,7 @@ class WI_Board_Committees {
    * @return string The number and members on committee separated by commas.
    */
   private function get_committee_member_list( $board_committee_id ){
-    $board_members = $this->get_board_members();
+    $board_members = WI_Board_Management::get_users_who_serve();
     $num_on_committee = 0;
     $members_on_committee = array();
     
@@ -460,19 +469,7 @@ class WI_Board_Committees {
     
     return implode( ', ', $committees );
   }
-  
-  
-  /*
-   * Get an array of all the board members and their user information.
-   * 
-   * This method is helpful since admins can potentially join boards.
-   * TODO Move this method to the board management section since we use it throughout.
-   */
-  private function get_board_members(){
-    $board_members = get_users( array( 'role' => 'board_member' ) );
-    
-    return $board_members;
-  }
+
   
   /*
    * Get checkbox inputs for a board committee edit screen.
@@ -485,7 +482,7 @@ class WI_Board_Committees {
    */
   private function get_all_user_inputs( $board_committee_id ){
     //Get all the board board memers
-    $board_members = $this->get_board_members();
+    $board_members = WI_Board_Management::get_users_who_serve();
     
     //Loop through users and add them
     $committee_inputs = '';

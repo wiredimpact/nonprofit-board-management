@@ -56,14 +56,8 @@ class WI_Board_Events {
     add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
     add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
     
-    //Add notice to admin who can't RSVP allowing them to RSVP if they want.
-    add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
-    
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
-    
-    //Allow admin to click a button and start RSVPing.
-    add_action( 'wp_ajax_allow_rsvp', array( $this, 'allow_rsvp' ) );
   }
   
   
@@ -128,16 +122,11 @@ class WI_Board_Events {
     wp_enqueue_script( 'jquery-ui-datepicker' );
     wp_enqueue_script( 'jquery-timepicker', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/jquery-ui-timepicker.js', array( 'jquery-ui-slider', 'jquery-ui-datepicker' ) );
     
-    
-    $current_user = wp_get_current_user();
     //wp_localize_script allows us to send PHP info to JS
     wp_localize_script( 'board-mgmt', 'wi_board_events', array(
       // generate a nonces that can be checked later on save
       'save_rsvp_nonce' => wp_create_nonce( 'save_rsvp_nonce' ),  
-      'allow_rsvp_nonce' => wp_create_nonce( 'allow_rsvp_nonce' ),
       'error_rsvp' => __( 'Woops.  We failed to RSVP for you.  Please try again.' ),
-      'error_allow_rsvp' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
-      'current_user_display_name' => __( $current_user->display_name ) //Must match text used to display who's coming
       )
      );
   }
@@ -433,7 +422,7 @@ class WI_Board_Events {
    );
    
    //Only show the RSVP column if the user has that capability.
-   if( current_user_can( 'rsvp_board_events' ) ){
+   if( current_user_can( 'serve_on_board' ) ){
      $columns['rsvp'] = __( 'RSVP' );
    }
 
@@ -577,45 +566,6 @@ class WI_Board_Events {
   
   return $vars;
 }
-
-
-/*
- * Show notice to admins allowing them to start RSVPing if they'd like.
- * 
- * Show notice to admins that allows them to start RSVPing for events.  Handling
- * of the button click is done through ajax.
- * 
- * @see allow_rsvp()
- */
-public function show_admins_notices(){
-  $screen = get_current_screen();
-  if( $screen->id != 'edit-board_events' || current_user_can( 'rsvp_board_events' ) ) return;
-  ?>
-  <div class="updated">
-    <p>You don't have the board member role, so you can't RSVP to board events.
-      <input id="allow-rsvp" type="submit" class="button secondary-button" value="Allow Me to RSVP" />
-    </p>
-  </div>
-  <?php
-}
-
-
-/*
- * Via ajax allow the current user to RSVP by giving them the capability.
- * 
- * @see show_admin_notices()
- * @return string Echos '1' to show that capability has been added.
- */
-public function allow_rsvp(){
-  check_ajax_referer( 'allow_rsvp_nonce', 'security' );
-
-  $current_user = wp_get_current_user();
-  $current_user->add_cap( 'rsvp_board_events' );
-
-  echo '1';
-
-  die();
-}
   
   
  /*
@@ -709,7 +659,7 @@ public function allow_rsvp(){
   */
  private function board_event_rsvps( $post_id ){
    //Get all users who have cap to RSVP.
-   $rsvp_users = $this->get_users_who_rsvp();
+   $rsvp_users = WI_Board_Management::get_users_who_serve();
    
    //Get all rsvps for this event that have happened.
    $event_rsvps = $this->get_db_rsvps( $post_id );
@@ -808,7 +758,7 @@ public function allow_rsvp(){
   * Get the number of attending RSVPS to a specific event.  To do this
   * we must also check to ensure that those who RSVPed still have that
   * capability.  We use an inner join with the usermeta table to make
-  * sure they're a board member or have the rsvp_board_event capability.
+  * sure they're a board member or have the serve_on_board capability.
   * 
   * @param int $post_id ID of the board event we want to know about.
   * @return int Number of people attending the board event.
@@ -827,35 +777,10 @@ public function allow_rsvp(){
             WHERE {$rsvps_table}.post_id = {$post_id}
             AND {$rsvps_table}.rsvp = 1
             AND {$usermeta_table}.meta_key = '{$this->get_table_prefix()}capabilities'
-            AND ( {$usermeta_table}.meta_value LIKE '%board_member%' OR {$usermeta_table}.meta_value LIKE '%rsvp_board_events%')
+            AND ( {$usermeta_table}.meta_value LIKE '%board_member%' OR {$usermeta_table}.meta_value LIKE '%serve_on_board%')
           "
           );  
             
   return $num_attending_rsvps;
- }
- 
- 
- /*
-  * Get the users who can potentially RSVP to an event including board members and admins who opted in.
-  * 
-  * @return array Users who can RSVP to an event.
-  */
- private function get_users_who_rsvp(){
-   $board_members = get_users( array( 'role' => 'board_member' ) );
-   $admins = get_users( array( 'role' => 'administrator' ) );
-   
-   //Check if admins can rsvp and if not, remove them from the array.
-   $admins_count = count( $admins );
-   for( $i = 0; $i < $admins_count; $i++ ){
-     if( !isset( $admins[$i]->allcaps['rsvp_board_events'] ) || $admins[$i]->allcaps['rsvp_board_events'] != true ) {
-       unset( $admins[$i] );
-     }
-   }
-   
-   //Combine board members with admins opted to rsvp
-   $rsvp_users = array_merge( $board_members, $admins );
-   
-   return $rsvp_users;
- }
- 
+ } 
 }//WI_Board_Events
