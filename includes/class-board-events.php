@@ -9,7 +9,7 @@
  * @package Nonprofit Board Management
  *
  * @version 0.1
- * @author Jonathan Goldford, Wired Impact
+ * @author Wired Impact
  */
 class WI_Board_Events {
   

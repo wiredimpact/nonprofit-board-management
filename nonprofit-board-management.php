@@ -15,9 +15,12 @@ GPLv2 - read it - http://www.gnu.org/licenses/license-list.html#GPLCompatibleLic
 
 
 /**
- * WI_Board_Management adds the new user roles we need and the menu items
- * we'll use for the plugin.
+ * WI_Board_Management set up the board management plugin by adding the needed roles
+ * and caps, along with providing most of the necessary css and js.
  *
+ * @package Nonprofit Board Management
+ *
+ * @version 0.1
  * @author Wired Impact
  */
 class WI_Board_Management {
@@ -211,6 +214,15 @@ class WI_Board_Management {
         
         <?php
         $board_members = $this->get_users_who_serve();
+        
+        //If no board members were found then give them a message.
+        if( empty( $board_members ) ){ ?>
+            <tr class="no-items">
+              <td class="colspanchange" colspan="5"><?php _e( 'No board members were found.  You should create some users and set their role to "Board Member".' ); ?></td>
+            </tr>
+        <?php
+        }
+        
         $alternate = 'alternate';
         foreach( $board_members as $board_member ){
          $board_member_meta = $this->get_board_member_meta( $board_member->ID );
@@ -311,6 +323,7 @@ class WI_Board_Management {
 
       return $users_serving;
     }
+    
     
     /*
     * Show notice to admins allowing them to start serving on the board if they'd like.

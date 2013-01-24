@@ -1,7 +1,14 @@
 <?php
 /**
  * WI_Board_Committees allows the board to create committees and add board members to each of those committees.
+ * 
+ * The WI_Board_Committees class allows board members to add themselves 
+ * and others to committees.  Board members can also see the name, description and
+ * who is on each committee. Nothing in this class is created for the front-end of WordPress.
  *
+ * @package Nonprofit Board Management
+ *
+ * @version 0.1
  * @author Wired Impact
  */
 class WI_Board_Committees {
