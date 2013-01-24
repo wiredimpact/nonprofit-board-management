@@ -176,29 +176,24 @@ class WI_Board_Management {
      */
     public function create_menu(){
       //Create top level menu item
-      add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board', array( $this, 'create_settings_page' ) );
+      add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board' );
       
       //Create Board Members page
-      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board/members', array( $this, 'display_members_page' ) );
+      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
       
       //Add edit and new board event links to our top level menu so the board member role has correct caps.
       add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' ); 
-      add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
+      add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
       
       //Add edit and new board commmittee links to our top level menu so the board member role has correct caps.
-      add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
+      add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
       add_submenu_page( 'nonprofit-board', 'Add Board Committee', 'Add Board Committee', 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
+      
+      //Add Resources and Support pages
+      add_submenu_page( 'nonprofit-board', 'Board Resources', 'Board Resources', 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
+      add_submenu_page( 'nonprofit-board', 'Support', 'Support', 'view_board_content', 'nonprofit-board/support', array( $this, 'display_support_page' ) );
     }
     
-    /*
-     * Create the settings page for the plugin.
-     */
-    public function create_settings_page(){ ?>
-      <div class="wrap">
-        <?php screen_icon( 'options-general' ); ?>
-        <h2>Nonprofit Board Management</h2>
-      </div>
-    <?php }
     
     /*
      * Create board members list page
@@ -279,6 +274,40 @@ class WI_Board_Management {
 
       
       return $board_member_meta;
+    }
+   
+    
+    /*
+     * Display the content for our resources page.
+     */
+    public function display_resources_page(){
+      ?>
+      <div class="wrap">
+        <?php screen_icon( 'options-general' ); ?>
+        <h2><?php _e( 'Board Resources' ); ?></h2>
+      <?php
+    }
+    
+    
+    /*
+     * Display the content for our support page.
+     */
+    public function display_support_page(){
+      ?>
+      <div class="wrap">
+        <?php screen_icon( 'options-general' ); ?>
+        <h2><?php _e( 'Support' ); ?></h2>
+        <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.' ); ?></p>
+        
+        <h3><?php _e( 'Getting Started with Nonprofit Board Management' ); ?></h3>
+        <iframe width="640" height="360" src="http://www.youtube.com/embed/66TuSJo4dZM" frameborder="0" allowfullscreen></iframe>
+        
+        <h3><?php _e( 'Allowing Admins to Serve on the Board' ); ?></h3>
+        <iframe width="640" height="360" src="http://www.youtube.com/embed/yQ5U8suTUw0" frameborder="0" allowfullscreen></iframe>
+        
+        <h3><?php _e( 'RSVP to Board Events' ); ?></h3>
+        <iframe width="640" height="360" src="http://www.youtube.com/embed/lB95KLmpLR4" frameborder="0" allowfullscreen></iframe>
+      <?php     
     }
      
 } //end class board_management

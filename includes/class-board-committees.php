@@ -38,8 +38,8 @@ class WI_Board_Committees {
     $labels = array(
       'name' => 'Board Committees',
       'singular_name' => 'Board Committee',
-      'add_new' => 'Add New Board Committee',
-      'add_new_item' => 'Add New Board Committee',
+      'add_new' => 'Add Board Committee',
+      'add_new_item' => 'Add Board Committee',
       'edit_item' => 'Edit Board Committee',
       'new_item' => 'New Board Committee',
       'all_items' => 'All Board Committees',
@@ -463,16 +463,12 @@ class WI_Board_Committees {
         $checked = '';
       }
       
-      $board_member_phone = get_user_meta( $board_member->ID, 'phone', true );
       $committee_inputs .= '<label><input type="checkbox" ';
       $committee_inputs .= $checked;
       $committee_inputs .= ' name="committee-members[]" value="';
       $committee_inputs .= $board_member->ID;
       $committee_inputs .= '" /> ';
       $committee_inputs .= $board_member->display_name;
-      $committee_inputs .= ' (' . $board_member->user_email;
-      if( $board_member_phone != '') $committee_inputs .= " | " . $board_member_phone;
-      $committee_inputs .= ')';
       $committee_inputs .= '</label><br />';
     }
     

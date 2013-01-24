@@ -153,8 +153,8 @@ class WI_Board_Events {
     $labels = array(
       'name' => 'Board Events',
       'singular_name' => 'Board Event',
-      'add_new' => 'Add New Board Event',
-      'add_new_item' => 'Add New Board Event',
+      'add_new' => 'Add Board Event',
+      'add_new_item' => 'Add Board Event',
       'edit_item' => 'Edit Board Event',
       'new_item' => 'New Board Event',
       'all_items' => 'All Board Events',
