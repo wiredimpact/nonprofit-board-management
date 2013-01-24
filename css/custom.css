@@ -1,21 +1,30 @@
 /********************************
-* Board User Notes
+* Board Events
 ********************************/
-.note-delete {
-  color: #BC0B0B;
-  visibility: hidden;
+
+/*Timepicker jQuery Add-On*/
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; }
+.ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+
+/*Board Events List*/
+#the-list #attending {
+  margin: 0 5px 5px 0;
+}
+#the-list .button-primary.active {
+  cursor: default;
 }
 
-table.widefat tr:hover .note-delete {
-  visibility: visible;
-}
-
-#notes-list tr.deleting {
-  background-color: #FAA;
-}
-
-#notes-list tr.adding {
-  background-color: #6C6
+/*RSVP Meta Box*/
+#board_event_rsvps h4 {
+  margin-bottom: .25em;
 }
 
 /********************************
@@ -26,4 +35,12 @@ table.widefat tr:hover .note-delete {
 }
 #board-members-table .column-username {
   padding-bottom: 4px;
+}
+
+/********************************
+* General Board Styles
+********************************/
+#icon-nonprofit-board {
+  background-image: url('../../../../wp-admin/images/icons32.png?ver=20121105');
+  background-position: -492px -5px;  
 }

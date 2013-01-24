@@ -116,7 +116,6 @@ class WI_Board_Events {
    * Enqueue CSS needed for the board events.
    */
   public function insert_css(){
-    wp_enqueue_style( 'board-events', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/board-events.css' );
     wp_enqueue_style( 'jquery-ui-smoothness', 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css' );
   }
 
@@ -128,13 +127,11 @@ class WI_Board_Events {
     wp_enqueue_script( 'jquery-ui-slider' );
     wp_enqueue_script( 'jquery-ui-datepicker' );
     wp_enqueue_script( 'jquery-timepicker', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/jquery-ui-timepicker.js', array( 'jquery-ui-slider', 'jquery-ui-datepicker' ) );
-
-    wp_enqueue_script( 'board-events', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/board-events.js', 'jquery' );
     
     
     $current_user = wp_get_current_user();
     //wp_localize_script allows us to send PHP info to JS
-    wp_localize_script( 'board-events', 'wi_board_events', array(
+    wp_localize_script( 'board-mgmt', 'wi_board_events', array(
       // generate a nonces that can be checked later on save
       'save_rsvp_nonce' => wp_create_nonce( 'save_rsvp_nonce' ),  
       'allow_rsvp_nonce' => wp_create_nonce( 'allow_rsvp_nonce' ),

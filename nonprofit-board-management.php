@@ -79,17 +79,6 @@ class WI_Board_Management {
                   )
               );
       
-      //Create the board recruit role.
-      add_role(
-              'board_recruit',
-              'Board Recruit',
-              array(
-                  'read' => true,
-                  'view_board_content' => true,
-                  'contain_board_info' => true
-                  )
-              ); 
-      
       //Give admin access to view all board content.
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
@@ -132,12 +121,6 @@ class WI_Board_Management {
         remove_role( 'board_member' );
       }
       
-      //Delete the board recruit role if no user has it.
-      $recruit_users = get_users( array( 'role' => 'board_recruit', 'number' => 1 ) );
-      if( empty( $recruit_users ) ){
-        remove_role( 'board_recruit' );
-      }
-      
       //Remove admin capability if the plugin is deactivated.
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
@@ -158,15 +141,6 @@ class WI_Board_Management {
      */
     public function insert_js(){      
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
-      
-      //wp_localize_script allows us to send PHP info to JS
-      wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
-        // generate a nonces that can be checked later on save and delete
-        'save_note_nonce' => wp_create_nonce( 'save_note_nonce' ),  
-        'delete_note_nonce' => wp_create_nonce( 'delete_note_nonce' ),
-        'error_deleting_note' => _( 'Woops.  We failed to add your note.  Please try again.' )
-        )
-       );
     }
     
     
@@ -320,16 +294,12 @@ if( is_admin() ){
   define( "BOARD_MANAGEMENT_PLUGINFULLURL", WP_PLUGIN_URL . BOARD_MANAGEMENT_PLUGINPATH );
   define( "BOARD_MANAGEMENT_FILEFULLPATH", BOARD_MANAGEMENT_PLUGINFULLPATH . 'nonprofit-board-management.php' );
 
-  //Add board notes and board event classes
-  //TODO Move notes to be its own plugin.
-  //require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-notes.php';
+  //Add board events and committees classes
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-committees.php';
 
   //Instantiate each of our classes.
-  $wi_board = new WI_Board_Management();
-  //TODO Move notes to be its own plugin.
-  //$wi_board_notes = new WI_Board_Notes();
+  $wi_board_mgmt = new WI_Board_Management();
   $wi_board_events = new WI_Board_Events();
   $wi_board_committees = new WI_Board_Committees();
 }

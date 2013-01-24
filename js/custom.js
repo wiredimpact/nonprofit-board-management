@@ -1,79 +1,98 @@
-jQuery(document).ready(function(){  
+jQuery(document).ready(function(){
+  //JavaScript for Board Events Edit Screen
+  var start_date_time = jQuery( '#board_event_details #start-date-time' ),
+      end_date_time = jQuery( '#board_event_details #end-date-time' );
   
-  //Delete note through Ajax
-  jQuery( '#notes-list' ).on( 'click', '.note-delete a', function(){    
+  //Set the end date & time field to match the start date and time if the end is empty.
+  //Only do this when focusing out on start time.
+  //TODO Use restrict start and end date at http://trentrichardson.com/examples/timepicker/ to ensure the end date isn't before start date
+  start_date_time.datetimepicker({
+    controlType: 'select',
+    dateFormat: "D, MM d, yy",
+    timeFormat: "hh:mm tt",
+    stepMinute: 5,
+    onClose: function(dateText, inst){
+      if( end_date_time.val() === '' ){
+        end_date_time.val( start_date_time.val() );
+      }
+    }
+  }); 
+  
+  end_date_time.datetimepicker({
+    controlType: 'select',
+    dateFormat: "D, MM d, yy",
+    timeFormat: "hh:mm tt",
+    stepMinute: 5
+  });
+  
+  
+  //JS for RSVPing to an Event
+  jQuery( '#the-list #attending, #the-list #not-attending' ).click(function(){
     var $this = jQuery(this),
-      parent_row = $this.closest( 'tr' ),
-      user_id = parent_row.find( 'div.note' ).attr( 'data-user-id' ),
-      note = parent_row.find( 'div.note' ).text(),
-      note_timestamp = parent_row.find( '.note-date' ).attr( 'data-timestamp' ),
-      creator_id = parent_row.attr( 'data-creator-id' );
+    button_id = $this.attr('id'),
+    rsvp = 1,
+    post_row = $this.closest('tr'),
+    post_attending_col = post_row.find( 'td.attending' ),
+    load_spinner = $this.siblings( '.spinner' ),
+    post_id = post_row.attr('id');
+    post_id = parseInt( post_id.replace('post-', '') );
     
-    var data = {
-      action: 'delete_note',
-      user_id: user_id,
-      meta_key: 'note',
-      note: note,
-      note_timestamp: note_timestamp,
-      creator_id: creator_id,
-      security: wi_board_mgmt.delete_note_nonce
-     };
-
-     jQuery.post(ajaxurl, data, function( response ) {
-      if( 'deleted' === response ){
-        //Remove row from notes-list table
-        parent_row.addClass( 'deleting' );
-        parent_row.fadeOut( 1000 );  //1 second fade out.
-      }
-      else {
-        alert( response );
-      }
-     });
-     
-     return false;
-   });
-   
-   //Add note through Ajax
-   jQuery( '#add-note' ).click(function(){    
-    var $this = jQuery( this ),
-      note_textarea = $this.siblings( '#note' ),
-      user_id = note_textarea.attr( 'data-user-id' ),
-      note = note_textarea.val();
-    
-    //If the note textarea is empty then don't save the note.
-    if( note == '' ){
-      alert( 'You need to add some text for the note first.' );
+    //If they've already RSPVed for this then don't continue.
+    if( $this.hasClass( 'active' ) ){
       return false;
     }
     
+    //Make rsvp = 0 if they're not coming.
+    if( button_id === 'not-attending' ){
+      rsvp = 0;
+    }
+    
+    //Show spinner while we handle ajax request.
+    load_spinner.show();
+    
+    //Send RSVP via ajax
     var data = {
-      action: 'add_note',
-      user_id: user_id,
-      note: note,
-      security: wi_board_mgmt.save_note_nonce
+      action: 'rsvp',
+      rsvp: rsvp,
+      post_id: post_id,
+      security: wi_board_events.save_rsvp_nonce
      };
 
-     jQuery.post(ajaxurl, data, function( response ) {
-      if( 'error' === response ){
-        alert( wi_board_mgmt.error_deleting_note ); 
-      }
-      else {
-        //Clear text from the textarea
-        note_textarea.val('');
+    jQuery.post(ajaxurl, data, function( response ) {
+      if ( response !== '0' ) { //If we made a db change
+        //Add class of button primary and of rsvped and remove those for the siblings.
+        $this.addClass('button-primary active');
+        $this.siblings().removeClass('button-primary active'); 
         
-        //Add new note to the notes list table
-        var notes_list = jQuery( '#notes-list' ),
-            new_note = jQuery( response );
+        //Put the new list of who's coming in the attending column.
+        post_attending_col.html( response );
         
-        new_note.hide()
-                .prependTo( notes_list )
-                .addClass( 'adding' )
-                .fadeIn( 1000 , function(){
-                  jQuery(this).removeClass( 'adding' );
-                });    
+        //Hide the load spinner
+        load_spinner.hide();
       }
-     });
-     
-     return false;
-   });
+    });
+    
+    return false;
+  });
+  
+  //Allow admins to rsvp by giving them the correct capability.
+  jQuery( 'input#allow-rsvp' ).click(function(){
+    var data = {
+      action: 'allow_rsvp',
+      security: wi_board_events.allow_rsvp_nonce
+     };
+
+    jQuery.post(ajaxurl, data, function( response ) {
+      if( response !== '1' ){ //If there's an error
+        alert( wi_board_events.error_allow_rsvp ); 
+      }
+      else{
+       //Reload the current page so they can start RSVPing.
+       location.reload(true); 
+      }
+    });
+    
+    return false;
+  });
 });
+
