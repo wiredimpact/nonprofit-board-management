@@ -15,7 +15,7 @@ GPLv2 - read it - http://www.gnu.org/licenses/license-list.html#GPLCompatibleLic
 
 
 /**
- * WI_Board_Management set up the board management plugin by adding the needed roles
+ * WI_Board_Management is used to set up the board management plugin by adding the needed roles
  * and caps, along with providing most of the necessary css and js.
  *
  * @package Nonprofit Board Management
@@ -25,9 +25,6 @@ GPLv2 - read it - http://www.gnu.org/licenses/license-list.html#GPLCompatibleLic
  */
 class WI_Board_Management {
   
-    /*
-     * Initiate the plugin by  running activation and attaching to hooks.
-     */
     public function __construct(){
         register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
@@ -46,12 +43,11 @@ class WI_Board_Management {
         add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
     }
     
+    
     /*
      * Add the board roles when the plugin is first activated.
      */
     public function add_board_roles(){   
-      //TODO Combine roll creation with a for loop.
-      //Create the board member role.
       add_role( 
               'board_member',
               'Board Member', 
@@ -88,7 +84,9 @@ class WI_Board_Management {
                   )
               );
       
-      //Give admin access to view all board content.
+      //Give admin access to view and edit all board content.
+      //Initially they can't serve on the board, but can add that cap
+      //through the UI.
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
@@ -118,35 +116,33 @@ class WI_Board_Management {
         $role->add_cap( 'edit_published_board_committees' );
       }
     }
+
     
     /*
-     * Remove the board roles when the plugin is deactivated.
+     * Remove the board member role when the plugin is deactivated.
+     * 
+     * We remove the board member role when the plugin is deactivated,
+     * but we do not remove the caps from the admins since we still want
+     * them to have those caps if the board is activated again.
      */
     public function remove_board_roles(){
-      //Delete the board member role if no user has it.
-      //TODO Combine removal of both roles with a for loop.
       $member_users = get_users( array( 'role' => 'board_member', 'number' => 1 ) );
       if( empty( $member_users ) ){
         remove_role( 'board_member' );
       }
-      
-      //Remove admin capability if the plugin is deactivated.
-      $role =& get_role( 'administrator' );
-      if ( !empty( $role ) ){
-        $role->remove_cap( 'view_board_content' );
-      }
     }
     
     
     /*
-     * Enqueue CSS
+     * Enqueue the necessary CSS.
      */
     public function insert_css(){
       wp_enqueue_style( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/custom.css' );
     }
+
     
     /*
-     * Enqueue JS
+     * Enqueue the necessary JS.
      */
     public function insert_js(){      
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
@@ -161,7 +157,7 @@ class WI_Board_Management {
     
     
     /*
-     * Create each of the menu items
+     * Create each of the menu items we need for board management.
      */
     public function create_menu(){
       //Create top level menu item
@@ -170,11 +166,11 @@ class WI_Board_Management {
       //Create Board Members page
       add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
       
-      //Add edit and new board event links to our top level menu so the board member role has correct caps.
+      //Add edit and new board event pages to our top level menu so the board member role has correct caps.
       add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' ); 
       add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
       
-      //Add edit and new board commmittee links to our top level menu so the board member role has correct caps.
+      //Add edit and new board commmittee pages to our top level menu so the board member role has correct caps.
       add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
       add_submenu_page( 'nonprofit-board', 'Add Board Committee', 'Add Board Committee', 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
       
@@ -185,7 +181,7 @@ class WI_Board_Management {
     
     
     /*
-     * Create board members list page
+     * Display the list of board members with their contact info and current committees.
      */
     public function display_members_page(){ ?>
       <div class="wrap">
@@ -250,18 +246,20 @@ class WI_Board_Management {
            and your name can be adjusted by using the "Display name publicly as" dropdown in 
            <a href="<?php bloginfo('wpurl'); ?>/wp-admin/profile.php">your profile</a>.</p>
       </div>
-    <?php }
+    <?php }//display_members_page()
 
     
     /*
      * Get all the meta data for a board member.
+     * 
+     * @param int $board_member_id User ID of the board member.
+     * @return object Meta data for the provided board member.
      */
     private function get_board_member_meta( $board_member_id ){
       $board_member_meta = new stdClass();
       $board_member_meta->phone = get_user_meta( $board_member_id, 'phone', true );
       $board_member_meta->current_employer = get_user_meta( $board_member_id, 'current_employer', true );
       $board_member_meta->job_title = get_user_meta( $board_member_id, 'job_title', true );
-
       
       return $board_member_meta;
     }
@@ -281,6 +279,7 @@ class WI_Board_Management {
     
     /*
      * Display the content for our support page.
+     * TODO Replace these videos with our support videos.
      */
     public function display_support_page(){
       ?>
@@ -301,10 +300,14 @@ class WI_Board_Management {
     }
     
     
-    /*
+   /*
     * Get the users who serve on the board.
     * 
-    * @return array Users who can serve on the board.
+    * The users who serve on the board includes all users
+    * with the board member role and any admins who added the
+    * serve_on_board capability.
+    * 
+    * @return array User objects for users who can serve on the board.
     */
     public static function get_users_who_serve(){
       $board_members = get_users( array( 'role' => 'board_member' ) );
@@ -330,7 +333,7 @@ class WI_Board_Management {
     * 
     * Show notice to admins that allows them to start serving on the board.  Handling
     * of the button click is done through ajax.  With this cap they're able to
-    * RSVP to events, join committees and show in the members list.
+    * RSVP to events, join committees and show in the board members list.
     * 
     * @see allow_user_to_serve()
     */
@@ -355,11 +358,15 @@ class WI_Board_Management {
 
 
    /*
+    * Allow the current user to serve on the board.
+    * 
     * Via ajax allow the current user to serve on the board 
-    * by giving them the capability.
+    * by giving them the capability.  Only admins have
+    * the ability to use this method since the button used to activate
+    * this method is only shown to that role.
     * 
     * @see show_admin_notices()
-    * @return string Echos '1' to show that capability has been added.
+    * @return string Echos '1' to show that the method has run.
     */
    public function allow_user_to_serve(){
      check_ajax_referer( 'allow_serve_nonce', 'security' );
@@ -370,8 +377,7 @@ class WI_Board_Management {
      echo '1';
 
      die();
-   }
-     
+   }  
 } //WI_Board_Management
 
 if( is_admin() ){
