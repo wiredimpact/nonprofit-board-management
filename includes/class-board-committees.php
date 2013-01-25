@@ -36,6 +36,9 @@ class WI_Board_Committees {
     //Save the added user fields
     add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
     add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
+    
+    //Add our board committees dashboard widget
+    add_action('wp_dashboard_setup', array( $this, 'add_board_committees_dashboard_widget' ) );
   }
 
  /*
@@ -365,6 +368,31 @@ class WI_Board_Committees {
       delete_user_meta( $board_member_id, 'board_committees' );
     }
   }
+  
+  
+  /*
+  * Add our committees dashboard widget to the list of widgets.
+  */
+ public function add_board_committees_dashboard_widget(){
+   wp_add_dashboard_widget('board_committees_db_widget', 'Board Committees', array( $this, 'display_board_committees_dashboard_widget' ) );
+ }
+
+
+ /*
+  * Display a dashboard widget for all of the board members.
+  * 
+  * @see add_board_members_dashboard_widget()
+  */
+ public function display_board_committees_dashboard_widget(){
+   $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
+   foreach( $board_committees as $board_committee ){
+     echo '<h4>' . $board_committee->post_title . '</h4>';
+     echo '<p>' . $this->get_committee_member_list( $board_committee->ID ) . '</p>';
+   }
+   
+   echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_committees">View and edit the committees</a></p>';
+   
+ }
     
   
   /*

@@ -51,4 +51,6 @@
 #board_members_db_widget table th {
   padding: 3px 7px 2px;
 }
-
+#board_committees_db_widget p {
+  margin-top: 0;
+}

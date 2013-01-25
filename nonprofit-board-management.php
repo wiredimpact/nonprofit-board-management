@@ -343,9 +343,10 @@ class WI_Board_Management {
       
       ?>
       </tbody></table>
+      <p class="note"><a href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board">View more board member details</a></p>
       <?php
     }
-    
+
     
     /*
      * Get the users who serve on the board.
