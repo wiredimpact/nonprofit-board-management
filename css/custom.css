@@ -54,7 +54,7 @@
 #board_committees_db_widget p {
   margin-top: 0;
 }
-#board_events_db_widget a.title {
+#board_events_db_widget span.title {
   font-size: 13px;
   line-height: 1.7em;
   font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;

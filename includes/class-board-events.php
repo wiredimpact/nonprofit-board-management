@@ -589,14 +589,14 @@ class WI_Board_Events {
      $board_event_meta = $this->retrieve_board_event_meta( $event->ID );
      ?>
       <li>
-        <a class="title" title="Edit this event" href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/post.php?post=<?php echo $event->ID; ?>&action=edit"><?php echo $event->post_title; ?></a>
+        <span class="title"><?php echo $event->post_title; ?></span>
         <span class="start-time"><?php echo $board_event_meta['start_date_time']; ?></span>
         <div class="location"><?php echo $this->get_event_location( $board_event_meta, false ); ?></div>
       </li>
      <?php
    }
    echo '</ul>';
-   echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_events">View and edit the events</a></p>';
+   echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_events">View, edit and RSVP to events</a></p>';
  }
  
  
