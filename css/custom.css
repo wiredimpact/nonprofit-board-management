@@ -44,3 +44,11 @@
   background-image: url('../../../../wp-admin/images/icons32.png?ver=20121105');
   background-position: -492px -5px;  
 }
+
+/********************************
+* Dashboard Widgets
+********************************/
+#board_members_db_widget table th {
+  padding: 3px 7px 2px;
+}
+

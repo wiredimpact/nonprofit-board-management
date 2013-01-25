@@ -36,6 +36,9 @@ class WI_Board_Management {
         add_action( 'admin_menu', array( $this, 'insert_css') );
         add_action( 'admin_menu', array( $this, 'insert_js') );
         
+        //Add our board members dashboard widget
+        add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
+        
         //Add notice to admin who can't serve on board in case they want to.
         add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
 
@@ -300,15 +303,59 @@ class WI_Board_Management {
     }
     
     
-   /*
-    * Get the users who serve on the board.
-    * 
-    * The users who serve on the board includes all users
-    * with the board member role and any admins who added the
-    * serve_on_board capability.
-    * 
-    * @return array User objects for users who can serve on the board.
-    */
+    /*
+     * Add our members dashboard widget to the list of widgets.
+     */
+    public function add_board_members_dashboard_widget(){
+      wp_add_dashboard_widget('board_members_db_widget', 'Board Members', array( $this, 'display_board_members_dashboard_widget' ) );
+    }
+    
+    
+    /*
+     * Display a dashboard widget for all of the board members.
+     * 
+     * @see add_board_members_dashboard_widget()
+     */
+    public function display_board_members_dashboard_widget(){
+      ?>
+        <table class="widefat">
+          <thead>
+            <th scope="col" class="column-name">Name</th>
+            <th scope="col" class="column-phone">Phone</th>
+            <th scope="col" lass="column-email">Email</th>
+          </thead>
+          <tbody>
+      <?php
+      $board_members = $this->get_users_who_serve();
+      $alternate = 'alternate';
+      
+      foreach( $board_members as $board_member ){
+        $board_member_meta = $this->get_board_member_meta( $board_member->ID );
+        ?>
+        <tr class="<?php echo $alternate; ?>">
+          <td><?php echo $board_member->display_name; ?></td>
+          <td><?php echo $board_member_meta->phone; ?></td>
+          <td><?php echo $board_member->user_email; ?></td>
+        </tr>
+        <?php
+      $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';  
+      }
+      
+      ?>
+      </tbody></table>
+      <?php
+    }
+    
+    
+    /*
+     * Get the users who serve on the board.
+     * 
+     * The users who serve on the board includes all users
+     * with the board member role and any admins who added the
+     * serve_on_board capability.
+     * 
+     * @return array User objects for users who can serve on the board.
+     */
     public static function get_users_who_serve(){
       $board_members = get_users( array( 'role' => 'board_member' ) );
       $admins = get_users( array( 'role' => 'administrator' ) );
