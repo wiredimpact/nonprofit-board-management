@@ -54,3 +54,16 @@
 #board_committees_db_widget p {
   margin-top: 0;
 }
+#board_events_db_widget a.title {
+  font-size: 13px;
+  line-height: 1.7em;
+  font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+}
+#board_events_db_widget span.start-time {
+  color: #999;
+  font-size: 12px;
+  margin-left: 3px;
+}
+#board_events_db_widget div.location {
+  margin-bottom: 1em;
+}

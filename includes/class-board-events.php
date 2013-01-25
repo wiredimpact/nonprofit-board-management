@@ -56,6 +56,9 @@ class WI_Board_Events {
     add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
     add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
     
+    //Add our board events dashboard widget
+    add_action('wp_dashboard_setup', array( $this, 'add_board_events_dashboard_widget' ) );
+    
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
   }
@@ -444,19 +447,7 @@ class WI_Board_Events {
      
      case 'location':
        
-       //Create a Google maps URL so we can add a link to get a map.
-       if( $board_event_meta['street'] != '' || $board_event_meta['area'] != '' ){
-         
-        $google_maps_string = str_replace( ' ', '+', $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
-        $google_maps_address = 'https://maps.google.com/maps?q=' . $google_maps_string;
-
-        echo '<a href="' . $google_maps_address . '" target="_blank">';
-        if( $board_event_meta['location'] != '' ) echo $board_event_meta['location'] . '<br />';
-        if( $board_event_meta['street'] != '' ) echo $board_event_meta['street'] . '<br />';;
-        if( $board_event_meta['area'] != '' ) echo $board_event_meta['area'];
-        echo '</a>';
-        
-       }
+       echo $this->get_event_location( $board_event_meta );
        
        break;
      
@@ -566,8 +557,95 @@ class WI_Board_Events {
   
   return $vars;
 }
+
+
+/*
+ * Add our board events dashboard widget to the list of widgets.
+ */
+ public function add_board_events_dashboard_widget(){
+   wp_add_dashboard_widget('board_events_db_widget', 'Upcoming Board Events', array( $this, 'display_board_events_dashboard_widget' ) );
+ }
+
+
+ /*
+  * Display a dashboard widget for a few upcoming board events.
+  * 
+  * @see add_board_events_dashboard_widget()
+  */
+ public function display_board_events_dashboard_widget(){
+   $time_now = current_time( 'timestamp' );
+   $args = array(
+     'post_type' => 'board_events',
+     'posts_per_page' => 3,
+     'meta_key' => '_start_date_time',
+     'meta_value' => $time_now,
+     'meta_compare' => '>=',
+     'orderby' => 'meta_value_num',
+     'order' => 'ASC'
+   );
+   $upcoming_events = get_posts( $args );
+   echo '<ul>';
+   foreach( $upcoming_events as $event ){
+     $board_event_meta = $this->retrieve_board_event_meta( $event->ID );
+     ?>
+      <li>
+        <a class="title" title="Edit this event" href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/post.php?post=<?php echo $event->ID; ?>&action=edit"><?php echo $event->post_title; ?></a>
+        <span class="start-time"><?php echo $board_event_meta['start_date_time']; ?></span>
+        <div class="location"><?php echo $this->get_event_location( $board_event_meta, false ); ?></div>
+      </li>
+     <?php
+   }
+   echo '</ul>';
+   echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_events">View and edit the events</a></p>';
+ }
+ 
+ 
+ /*
+  * Get the event location with a Google Maps link if possible.
+  * 
+  * @param array $board_event_meta Array of meta for the board event.
+  * @param bool $line_breaks Whether to include line breaks in string.
+  * @return string Location of event with Google Maps link if possible.
+  */
+ private function get_event_location( $board_event_meta, $line_breaks = true ){
+  $event_location = ''; 
   
+  //Add the Google Maps link if the area or street are not empty
+  if( $board_event_meta['area'] != '' || $board_event_meta['street'] != '' ){
+    $google_maps_string = str_replace( ' ', '+', $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
+    $google_maps_address = 'https://maps.google.com/maps?q=' . $google_maps_string;
+
+    $event_location .= '<a href="' . $google_maps_address . '" title="Map this location on Google Maps" target="_blank">';
+  }
   
+  //Add location name
+  $event_location .= $board_event_meta['location'];
+  if( $board_event_meta['location'] != '' && $line_breaks == true ){
+    $event_location .= '<br />';
+  }
+  else if( $board_event_meta['location'] != '' ){
+    $event_location .= ', ';
+  }
+  //Add street
+  $event_location .= $board_event_meta['street'];
+  if( $board_event_meta['street'] != '' && $line_breaks == true ){
+    $event_location .= '<br />';
+  }
+  else if( $board_event_meta['street'] != '' && $board_event_meta['area'] != '' ) {
+    $event_location .= ', ';
+  }
+  //Add area (city, state zip)
+  $event_location .= $board_event_meta['area'];
+  
+  //Close the Google Maps link if we added one.
+  if( $board_event_meta['area'] != '' || $board_event_meta['street'] != '' ){
+   $event_location .= '</a>';
+  }
+
+  return $event_location;
+ } 
+ 
+ 
  /*
   * Via ajax save the RSVP for this board member.
   * 

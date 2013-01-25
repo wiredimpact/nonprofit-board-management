@@ -379,9 +379,9 @@ class WI_Board_Committees {
 
 
  /*
-  * Display a dashboard widget for all of the board members.
+  * Display a dashboard widget for all of the board committees.
   * 
-  * @see add_board_members_dashboard_widget()
+  * @see add_board_committees_dashboard_widget()
   */
  public function display_board_committees_dashboard_widget(){
    $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
@@ -391,7 +391,6 @@ class WI_Board_Committees {
    }
    
    echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_committees">View and edit the committees</a></p>';
-   
  }
     
   
