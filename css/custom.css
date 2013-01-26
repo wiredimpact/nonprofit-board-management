@@ -67,3 +67,21 @@
 #board_events_db_widget div.location {
   margin-bottom: 1em;
 }
+
+/********************************
+* Board Resources
+********************************/
+.board-resources h3 a {
+  font-weight: normal;
+}
+#edit-resources-editor {
+  margin-right: 300px;
+}
+.edit-board-resources #poststuff {
+  float: right;
+  width: 280px;
+}
+.edit-board-resources .postbox .hndle {
+  cursor: default;
+  color: #000;
+}

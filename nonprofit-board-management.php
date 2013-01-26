@@ -57,6 +57,7 @@ class WI_Board_Management {
               array( 
                   'read' => true,
                   'view_board_content' => true,
+                  'edit_board_content' => true,
                   'serve_on_board' => true,
                   
                   //Board event caps
@@ -93,6 +94,7 @@ class WI_Board_Management {
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
+        $role->add_cap( 'edit_board_content' );
         
         //Board event caps
         $role->add_cap( 'edit_board_events' );
@@ -179,6 +181,7 @@ class WI_Board_Management {
       
       //Add Resources and Support pages
       add_submenu_page( 'nonprofit-board', 'Board Resources', 'Board Resources', 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
+      add_submenu_page( null, 'Edit Your Board Resources', 'Edit Your Board Resources', 'edit_board_content', 'nonprofit-board/resources/edit', array( $this, 'edit_resources_page' ) );
       add_submenu_page( 'nonprofit-board', 'Support', 'Support', 'view_board_content', 'nonprofit-board/support', array( $this, 'display_support_page' ) );
     }
     
@@ -273,10 +276,78 @@ class WI_Board_Management {
      */
     public function display_resources_page(){
       ?>
-      <div class="wrap">
+      <div class="wrap board-resources">
         <?php screen_icon( 'options-general' ); ?>
         <h2><?php _e( 'Board Resources' ); ?></h2>
+        <p><?php _e( 'We\'ve provided two resource sections.  One for you to include your own resources
+          and one where we\'ve included resources we think are helpful.' ); ?></p>
+        <h3>
+          <?php _e( 'Your Board Resources' ); ?>
+          <a class="button secondary-button" href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board/resources/edit">
+            <?php _e( 'Edit your board resources' ); ?>
+          </a>
+        </h3>
+        <div>
+          <?php echo get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ); ?>
+        </div>
+        
+        
+        <h3><?php _e( 'Some Other Helpful Resources' ); ?></h3>
+      </div><!-- /wrap -->
       <?php
+    }
+    
+    
+    /*
+     * Screen for editing the board resources content.
+     */
+    public function edit_resources_page(){
+      if( isset( $_POST['board_resources'] ) ){
+        $this->save_board_resources( $_POST['board_resources'] );
+      }
+      
+      ?>
+      <div class="wrap edit-board-resources">
+        <?php screen_icon( 'options-general' ); ?>
+        <h2><?php _e( 'Edit Your Board Resources' ); ?></h2>
+        <p><?php _e( 'Edit the content in your board resources section.' ); ?></p>
+        <form method="post" action="">
+        <div id="poststuff">
+          <div class="postbox">
+            <h3 class="hndle">
+              <span><?php _e( 'Save Your Resources' ); ?></span>
+            </h3>
+            <div class="inside">
+              <input type="submit" class="button button-primary button-large" value="Update" />
+              <a class="button secondary-button button-large" href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board/resources">
+                <?php _e( 'Back to Resources' ); ?>
+              </a>
+            </div>
+          </div><!-- /postbox -->
+        </div><!-- /poststuff -->
+        <div id="edit-resources-editor">
+          <?php wp_editor( get_option( 'board_resources_content' ), 'board_resources', array( 'teeny' => true ) ); ?>
+        </div><!-- /edit-resources-editor -->
+        </form>
+      </div><!-- /wrap -->
+      <?php
+    }
+    
+    /*
+     * Save the customized board resources.
+     */
+    private function save_board_resources( $content ){
+      if( !current_user_can( 'edit_board_content' ) ){
+        return false;
+      }
+      
+      $clean_content = wp_kses_post( $content );
+      if( $clean_content != '' ){
+        update_option( 'board_resources_content', $clean_content );
+      }
+      else{
+        delete_option( 'board_resources_content' );
+      }
     }
     
     
