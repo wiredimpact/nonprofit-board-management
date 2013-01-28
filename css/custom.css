@@ -74,6 +74,10 @@
 .board-resources h3 a {
   font-weight: normal;
 }
+.custom-board-resources ul {
+  list-style: disc outside;
+  margin-left: 2em;
+}
 #edit-resources-editor {
   margin-right: 300px;
 }

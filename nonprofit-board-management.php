@@ -272,7 +272,7 @@ class WI_Board_Management {
    
     
     /*
-     * Display the content for our resources page.
+     * Display the content for the board resources page.
      */
     public function display_resources_page(){
       ?>
@@ -287,10 +287,9 @@ class WI_Board_Management {
             <?php _e( 'Edit your board resources' ); ?>
           </a>
         </h3>
-        <div>
-          <?php echo get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ); ?>
+        <div class="custom-board-resources">
+          <?php echo stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ); ?>
         </div>
-        
         
         <h3><?php _e( 'Some Other Helpful Resources' ); ?></h3>
       </div><!-- /wrap -->
@@ -299,11 +298,25 @@ class WI_Board_Management {
     
     
     /*
-     * Screen for editing the board resources content.
+     * Screen for editing the organization's board resources content.
      */
     public function edit_resources_page(){
       if( isset( $_POST['board_resources'] ) ){
-        $this->save_board_resources( $_POST['board_resources'] );
+        $result = $this->save_board_resources();
+        
+        //If updated we show an updated message to the user.
+        if( $result == true ){
+          ?>
+          <div class="updated">
+            <p>
+              <?php _e( 'Your board resources have been updated.' ); ?>
+              <a href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board/resources">
+                <?php _e( 'View your board resources.' ); ?>
+              </a>
+            </p>
+          </div>
+          <?php
+        }
       }
       
       ?>
@@ -326,28 +339,39 @@ class WI_Board_Management {
           </div><!-- /postbox -->
         </div><!-- /poststuff -->
         <div id="edit-resources-editor">
-          <?php wp_editor( get_option( 'board_resources_content' ), 'board_resources', array( 'teeny' => true ) ); ?>
+          <?php wp_editor( stripslashes( get_option( 'board_resources_content' ) ), 'board_resources', array( 'teeny' => true ) ); ?>
         </div><!-- /edit-resources-editor -->
+        <?php $board_resources_nonce = wp_create_nonce( 'board_resources_nonce' ); ?>
+        <input type="hidden" id="board_resources_nonce" name="board_resources_nonce" value="<?php echo $board_resources_nonce; ?>" />
         </form>
       </div><!-- /wrap -->
       <?php
     }
     
+    
     /*
-     * Save the customized board resources.
+     * Save the organization's board resources.
+     * 
+     * @return bool True if the resources were updated, false otherwise.
      */
-    private function save_board_resources( $content ){
+    private function save_board_resources(){
       if( !current_user_can( 'edit_board_content' ) ){
         return false;
       }
+      if ( !isset( $_POST['board_resources_nonce'] ) || !wp_verify_nonce( $_POST['board_resources_nonce'], 'board_resources_nonce' ) ){
+        return false;
+      }
       
-      $clean_content = wp_kses_post( $content );
+      //Sanitize the board resources content, then save or delete it.
+      $clean_content = wp_kses_post( $_POST['board_resources'] );
       if( $clean_content != '' ){
-        update_option( 'board_resources_content', $clean_content );
+        $result = update_option( 'board_resources_content', $clean_content );
       }
       else{
-        delete_option( 'board_resources_content' );
+        $result = delete_option( 'board_resources_content' );
       }
+      
+      return $result;
     }
     
     
