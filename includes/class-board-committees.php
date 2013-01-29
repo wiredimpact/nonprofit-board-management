@@ -22,6 +22,9 @@ class WI_Board_Committees {
     //Handle meta capabilities for our board_committees custom post type.
     add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
     
+    //Remove the filter field from the board committees list screen
+    add_action( 'load-edit.php', array( $this, 'remove_date_filter' ) );
+    
     //Adjust the columns and content shown when viewing the board committees post type list.
     add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
     add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
@@ -232,6 +235,24 @@ class WI_Board_Committees {
        }
       }
     }//End foreach
+  }
+  
+  
+  /*
+   * Hide the date filter from the board committees list page.
+   * 
+   * There is no way to filter this out or we would have taken that approach.
+   */
+  public function remove_date_filter(){
+    if( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'board_committees' ){
+      ?>
+      <style>
+        .tablenav.top .actions + .actions {
+          display: none;
+        }
+      </style>
+      <?php
+    }
   }
   
   

@@ -51,6 +51,9 @@ class WI_Board_Events {
     //Handle meta capabilities for our board_events custom post type.
     add_filter( 'map_meta_cap', array( $this, 'board_events_map_meta_cap' ), 10, 4 );
     
+    //Remove the filter field from the board events list screen
+    add_action( 'load-edit.php', array( $this, 'remove_date_filter' ) );
+    
     //Adjust the columns and content shown when viewing the board events post type list.
     add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
     add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
@@ -394,6 +397,24 @@ class WI_Board_Events {
     echo implode( ', ', $not_attending );
     echo '<h4>Not Responsed (' . count( $no_response ) . ')</h4>';
     echo implode( ', ', $no_response );
+  }
+  
+  
+  /*
+   * Hide the date filter from the board events list page.
+   * 
+   * There is no way to filter this out or we would have taken that approach.
+   */
+  public function remove_date_filter(){
+    if( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'board_events' ){
+      ?>
+      <style>
+        .tablenav.top .actions + .actions {
+          display: none;
+        }
+      </style>
+      <?php
+    }
   }
 
   
