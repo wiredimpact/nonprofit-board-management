@@ -45,6 +45,7 @@ class WI_Board_Events {
     //Create our board events custom post type
     add_action( 'init', array( $this, 'create_board_events_type' ) );
     add_action( 'admin_init', array( $this, 'create_board_events_meta_boxes' ) );
+    add_action( 'load-post.php', array( $this, 'create_existing_event_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_events_meta' ), 10, 2 );
     
     //Handle meta capabilities for our board_events custom post type.
@@ -231,8 +232,7 @@ class WI_Board_Events {
    * Create the meta boxes when adding/editing a board event.
    * 
    * Create the meta boxes when adding/editing a board event.  The boxes include
-   * one for editing the details of the board event and one for showing the
-   * RSVPs for that board event.
+   * one for editing the details of the board event.
    */
   public function create_board_events_meta_boxes(){
     //Details of board event
@@ -241,7 +241,17 @@ class WI_Board_Events {
         array( $this, 'display_board_event_details' ),
         'board_events', 'normal', 'high'
     );
-    
+  }
+  
+  
+  /*
+   * Show meta boxes that are only needed on existing board events.
+   * 
+   * Show meta boxes that we only need for existing board events, not new board
+   * events.  We add the RSVP meta box here so RSVPs are only shown after members
+   * have the ability to RSVP.
+   */
+  public function create_existing_event_meta_boxes(){
     //Current signup info for board event
     add_meta_box( 'board_event_rsvps',
         'RSVP List',
