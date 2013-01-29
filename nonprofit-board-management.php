@@ -25,7 +25,18 @@ GPLv2 - read it - http://www.gnu.org/licenses/license-list.html#GPLCompatibleLic
  */
 class WI_Board_Management {
   
+   /*
+    * All of the board members' user objects.
+    * 
+    * @var array
+    */
+    public $board_members;
+    
+  
     public function __construct(){
+        //Put all the user objects for every board member in a variable.
+        $this->board_members = $this->get_users_who_serve();
+      
         register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
         
@@ -215,7 +226,7 @@ class WI_Board_Management {
           <tbody>
         
         <?php
-        $board_members = $this->get_users_who_serve();
+        $board_members = $this->board_members;
         
         //If no board members were found then give them a message.
         if( empty( $board_members ) ){ ?>
@@ -421,7 +432,7 @@ class WI_Board_Management {
           </thead>
           <tbody>
       <?php
-      $board_members = $this->get_users_who_serve();
+      $board_members = $this->board_members;
       $alternate = 'alternate';
       
       foreach( $board_members as $board_member ){
@@ -452,7 +463,7 @@ class WI_Board_Management {
      * 
      * @return array User objects for users who can serve on the board.
      */
-    public static function get_users_who_serve(){
+    private function get_users_who_serve(){
       $board_members = get_users( array( 'role' => 'board_member' ) );
       $admins = get_users( array( 'role' => 'administrator' ) );
 

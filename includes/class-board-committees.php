@@ -214,7 +214,8 @@ class WI_Board_Committees {
     
     //Committee Members
     //Get all the board members
-    $board_members = WI_Board_Management::get_users_who_serve();
+    global $wi_board_mgmt;
+    $board_members = $wi_board_mgmt->board_members;
     foreach( $board_members as $board_member ){
       //check if board member is on committee
       $user_committees = get_user_meta( $board_member->ID, 'board_committees', true );
@@ -482,7 +483,8 @@ class WI_Board_Committees {
    * @return string The number and members on committee separated by commas.
    */
   private function get_committee_member_list( $board_committee_id ){
-    $board_members = WI_Board_Management::get_users_who_serve();
+    global $wi_board_mgmt;
+    $board_members = $wi_board_mgmt->board_members;
     $num_on_committee = 0;
     $members_on_committee = array();
     
@@ -536,8 +538,9 @@ class WI_Board_Committees {
    * @return string HTML with all user checkbox inputs.
    */
   private function get_all_user_inputs( $board_committee_id ){
-    //Get all the board board memers
-    $board_members = WI_Board_Management::get_users_who_serve();
+    //Get all the board board members
+    global $wi_board_mgmt;
+    $board_members = $wi_board_mgmt->board_members;
     
     //Loop through users and add them
     $committee_inputs = '';

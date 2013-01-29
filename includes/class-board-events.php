@@ -768,7 +768,8 @@ class WI_Board_Events {
   */
  private function board_event_rsvps( $post_id ){
    //Get all users who have cap to RSVP.
-   $rsvp_users = WI_Board_Management::get_users_who_serve();
+   global $wi_board_mgmt;
+   $rsvp_users = $wi_board_mgmt->board_members;
    
    //Get all rsvps for this event that have happened.
    $event_rsvps = $this->get_db_rsvps( $post_id );
