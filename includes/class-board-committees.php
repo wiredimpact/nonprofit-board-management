@@ -407,6 +407,17 @@ class WI_Board_Committees {
   */
  public function display_board_committees_dashboard_widget(){
    $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
+   
+   //If no committees show the user a message.
+   if( empty( $board_committees ) ){
+     _e( 'There are no board committees. ' );
+     echo '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_committees">';
+     _e( 'Go ahead and add some.' );
+     echo '</a>';
+     
+     return;
+   }
+   
    foreach( $board_committees as $board_committee ){
      echo '<h4>' . $board_committee->post_title . '</h4>';
      echo '<p>' . $this->get_committee_member_list( $board_committee->ID ) . '</p>';

@@ -423,6 +423,15 @@ class WI_Board_Management {
      * @see add_board_members_dashboard_widget()
      */
     public function display_board_members_dashboard_widget(){
+      $board_members = $this->board_members;
+      
+      //If we don't have any board members then the user needs a message.
+      if( empty( $board_members ) ){
+        _e( 'You don\'t have any board members.  You should create some users and set their role to "Board Member".' );
+        
+        return;
+      }
+      
       ?>
         <table class="widefat">
           <thead>
@@ -432,7 +441,6 @@ class WI_Board_Management {
           </thead>
           <tbody>
       <?php
-      $board_members = $this->board_members;
       $alternate = 'alternate';
       
       foreach( $board_members as $board_member ){

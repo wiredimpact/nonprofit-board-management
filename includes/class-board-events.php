@@ -615,6 +615,17 @@ class WI_Board_Events {
      'order' => 'ASC'
    );
    $upcoming_events = get_posts( $args );
+   
+   //If no upcoming events show the user a message.
+   if( empty( $upcoming_events ) ){
+     _e( 'There are no upcoming events. ' );
+     echo '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_events">';
+     _e( 'Go ahead and add some.' );
+     echo '</a>';
+     
+     return;
+   }
+   
    echo '<ul>';
    foreach( $upcoming_events as $event ){
      $board_event_meta = $this->retrieve_board_event_meta( $event->ID );
