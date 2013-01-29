@@ -114,10 +114,10 @@ class WI_Board_Events {
   
   
   /*
-   * Enqueue CSS needed for the board events.
+   * Enqueue CSS needed for jQuery UI.
    */
   public function insert_css(){
-    wp_enqueue_style( 'jquery-ui-smoothness', 'http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css' );
+    wp_enqueue_style( 'jquery-ui-smoothness', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/jquery-ui.css' );
   }
 
   
