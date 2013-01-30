@@ -137,14 +137,45 @@ class WI_Board_Management {
     /*
      * Remove the board member role when the plugin is deactivated.
      * 
-     * We remove the board member role when the plugin is deactivated,
-     * but we do not remove the caps from the admins since we still want
-     * them to have those caps if the board is activated again.
+     * We remove the board member role when the plugin is deactivated along with
+     * the caps we gave to admins except for serve_on_board since that is an
+     * opt-in capability that will be needed if the plugin is added again.
      */
     public function remove_board_roles(){
       $member_users = get_users( array( 'role' => 'board_member', 'number' => 1 ) );
       if( empty( $member_users ) ){
         remove_role( 'board_member' );
+      }
+      
+      //Remove all the admin caps aside from serve_on_board.
+      $role =& get_role( 'administrator' );
+      if ( !empty( $role ) ){
+        $role->remove_cap( 'view_board_content' );
+        $role->remove_cap( 'edit_board_content' );
+        
+        //Board event caps
+        $role->remove_cap( 'edit_board_events' );
+        $role->remove_cap( 'edit_others_board_events' );
+        $role->remove_cap( 'publish_board_events' );
+        $role->remove_cap( 'read_private_board_events' );
+        $role->remove_cap( 'delete_board_events' );
+        $role->remove_cap( 'delete_private_board_events' );
+        $role->remove_cap( 'delete_published_board_events' );
+        $role->remove_cap( 'delete_others_board_events' );
+        $role->remove_cap( 'edit_private_board_events' );
+        $role->remove_cap( 'edit_published_board_events' ); 
+        
+        //Board committee caps
+        $role->remove_cap( 'edit_board_committees' );
+        $role->remove_cap( 'edit_others_board_committees' );
+        $role->remove_cap( 'publish_board_committees' );
+        $role->remove_cap( 'read_private_board_committees' );
+        $role->remove_cap( 'delete_board_committees' );
+        $role->remove_cap( 'delete_private_board_committees' );
+        $role->remove_cap( 'delete_published_board_committees' );
+        $role->remove_cap( 'delete_others_board_committees' );
+        $role->remove_cap( 'edit_private_board_committees' );
+        $role->remove_cap( 'edit_published_board_committees' );
       }
     }
     
