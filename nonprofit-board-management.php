@@ -192,7 +192,8 @@ class WI_Board_Management {
       
       //Add Resources and Support pages
       add_submenu_page( 'nonprofit-board', 'Board Resources', 'Board Resources', 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
-      add_submenu_page( null, 'Edit Your Board Resources', 'Edit Your Board Resources', 'edit_board_content', 'nonprofit-board/resources/edit', array( $this, 'edit_resources_page' ) );
+      //Use options.php as the parent page so it doesn't show in any menu.
+      add_submenu_page( 'options.php', 'Edit Your Board Resources', 'Edit Your Board Resources', 'edit_board_content', 'nonprofit-board/resources/edit', array( $this, 'edit_resources_page' ) );
       add_submenu_page( 'nonprofit-board', 'Support', 'Support', 'view_board_content', 'nonprofit-board/support', array( $this, 'display_support_page' ) );
     }
     
