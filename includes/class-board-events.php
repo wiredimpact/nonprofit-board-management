@@ -321,42 +321,43 @@ class WI_Board_Events {
     
     //Check autosave, post type, user caps, nonce
     if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-      return;
+      return false;
     }
     if( $board_event->post_type != 'board_events' ){
-      return;
+      return false;
     }
     if( !current_user_can( 'edit_board_event', $board_event_id ) ){
-      return;
+      return false;
     }
     if ( !isset( $_REQUEST['_event_details_nonce'] ) || !wp_verify_nonce( $_REQUEST['_event_details_nonce'], 'event_details_nonce' ) ){
-      return;
+      return false;
     }
     
     //Save all of our fields
     //Event Description
-    if (isset($_REQUEST['event-description'])) {
+    var_dump( $_REQUEST );
+    if( isset($_REQUEST['event-description'] ) ) {
       update_post_meta( $board_event_id, '_event_description', sanitize_text_field( $_REQUEST['event-description'] ) );
     }
     //Location
-    if (isset($_REQUEST['location'])) {
+    if( isset($_REQUEST['location'] ) ) {
       update_post_meta( $board_event_id, '_location', sanitize_text_field( $_REQUEST['location'] ) );
     }
     //Street
-    if (isset($_REQUEST['street'])) {
+    if(isset($_REQUEST['street'] ) ) {
       update_post_meta( $board_event_id, '_street', sanitize_text_field( $_REQUEST['street'] ) );
     }
     //Area
-    if (isset($_REQUEST['area'])) {
+    if(isset($_REQUEST['area'] ) ) {
       update_post_meta( $board_event_id, '_area', sanitize_text_field( $_REQUEST['area'] ) );
     }
     //Start Date & Time stored as UNIX timestamp
-    if (isset($_REQUEST['start-date-time'])) {
+    if( isset($_REQUEST['start-date-time'] ) ) {
       $start_date_time = strtotime( $_REQUEST['start-date-time'] );
       update_post_meta( $board_event_id, '_start_date_time', $start_date_time );
     }
     //End Date & Time stored as UNIX timestamp
-    if (isset($_REQUEST['end-date-time'])) {
+    if( isset($_REQUEST['end-date-time'] ) ) {
       $end_date_time = strtotime( $_REQUEST['end-date-time'] );
       update_post_meta( $board_event_id, '_end_date_time', $end_date_time );
     }

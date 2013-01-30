@@ -8,7 +8,7 @@ jQuery(document).ready(function(){
   //TODO Use restrict start and end date at http://trentrichardson.com/examples/timepicker/ to ensure the end date isn't before start date
   start_date_time.datetimepicker({
     controlType: 'select',
-    dateFormat: "D, MM d, yy",
+    dateFormat: "D, MM dd, yy",
     timeFormat: "hh:mm tt",
     stepMinute: 5,
     onClose: function(dateText, inst){
@@ -20,7 +20,7 @@ jQuery(document).ready(function(){
   
   end_date_time.datetimepicker({
     controlType: 'select',
-    dateFormat: "D, MM d, yy",
+    dateFormat: "D, MM dd, yy",
     timeFormat: "hh:mm tt",
     stepMinute: 5
   });
@@ -88,7 +88,7 @@ jQuery(document).ready(function(){
       }
       else{
        //Reload the current page so they can start serving.
-       location.reload(true); 
+       location.reload( true ); 
       }
     });
     

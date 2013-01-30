@@ -146,7 +146,7 @@ class WI_Board_Management {
       if( empty( $member_users ) ){
         remove_role( 'board_member' );
       }
-      
+           
       //Remove all the admin caps aside from serve_on_board.
       $role =& get_role( 'administrator' );
       if ( !empty( $role ) ){
