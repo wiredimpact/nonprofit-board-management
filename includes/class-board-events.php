@@ -594,7 +594,9 @@ class WI_Board_Events {
  * Add our board events dashboard widget to the list of widgets.
  */
  public function add_board_events_dashboard_widget(){
-   wp_add_dashboard_widget('board_events_db_widget', 'Upcoming Board Events', array( $this, 'display_board_events_dashboard_widget' ) );
+   if( current_user_can( 'view_board_content' ) ){
+    wp_add_dashboard_widget('board_events_db_widget', 'Upcoming Board Events', array( $this, 'display_board_events_dashboard_widget' ) );
+   }
  }
 
 

@@ -396,7 +396,9 @@ class WI_Board_Committees {
   * Add our committees dashboard widget to the list of widgets.
   */
  public function add_board_committees_dashboard_widget(){
-   wp_add_dashboard_widget('board_committees_db_widget', 'Board Committees', array( $this, 'display_board_committees_dashboard_widget' ) );
+   if( current_user_can( 'view_board_content' ) ){
+    wp_add_dashboard_widget('board_committees_db_widget', 'Board Committees', array( $this, 'display_board_committees_dashboard_widget' ) );
+   }
  }
 
 
