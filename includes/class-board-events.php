@@ -650,7 +650,7 @@ class WI_Board_Events {
    //If no upcoming events show the user a message.
    if( empty( $upcoming_events ) ){
      _e( 'There are no upcoming events. ' );
-     echo '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_events">';
+     echo '<a href="' . admin_url( 'edit.php?post_type=board_events' ) . '">';
      _e( 'Go ahead and add some.' );
      echo '</a>';
      
@@ -669,7 +669,7 @@ class WI_Board_Events {
      <?php
    }
    echo '</ul>';
-   echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_events">View, edit and RSVP to events</a></p>';
+   echo '<p class="note"><a href="' . admin_url( 'edit.php?post_type=board_events' ) . '">View, edit and RSVP to events</a></p>';
  }
  
  

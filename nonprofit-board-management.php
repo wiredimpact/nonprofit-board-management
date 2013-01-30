@@ -293,7 +293,7 @@ class WI_Board_Management {
         </table>
         <p>You can set your photo by creating an account at <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
            and your name can be adjusted by using the "Display name publicly as" dropdown in 
-           <a href="<?php bloginfo('wpurl'); ?>/wp-admin/profile.php">your profile</a>.</p>
+           <a href="<?php echo admin_url( 'profile.php' ); ?>">your profile</a>.</p>
       </div>
     <?php }//display_members_page()
 
@@ -326,7 +326,7 @@ class WI_Board_Management {
           and one where we\'ve included resources we think are helpful.' ); ?></p>
         <h3>
           <?php _e( 'Your Board Resources' ); ?>
-          <a class="button secondary-button" href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board/resources/edit">
+          <a class="button secondary-button" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources/edit' ); ?>">
             <?php _e( 'Edit your board resources' ); ?>
           </a>
         </h3>
@@ -353,7 +353,7 @@ class WI_Board_Management {
           <div class="updated">
             <p>
               <?php _e( 'Your board resources have been updated.' ); ?>
-              <a href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board/resources">
+              <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources' ); ?>">
                 <?php _e( 'View your board resources.' ); ?>
               </a>
             </p>
@@ -375,7 +375,7 @@ class WI_Board_Management {
             </h3>
             <div class="inside">
               <input type="submit" class="button button-primary button-large" value="Update" />
-              <a class="button secondary-button button-large" href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board/resources">
+              <a class="button secondary-button button-large" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources' ); ?>">
                 <?php _e( 'Back to Resources' ); ?>
               </a>
             </div>
@@ -491,7 +491,7 @@ class WI_Board_Management {
       
       ?>
       </tbody></table>
-      <p class="note"><a href="<?php bloginfo( 'wpurl' ); ?>/wp-admin/admin.php?page=nonprofit-board">View more board member details</a></p>
+        <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>">View more board member details</a></p>
       <?php
     }
 

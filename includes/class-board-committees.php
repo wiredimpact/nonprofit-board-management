@@ -442,7 +442,7 @@ class WI_Board_Committees {
    //If no committees show the user a message.
    if( empty( $board_committees ) ){
      _e( 'There are no board committees. ' );
-     echo '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_committees">';
+     echo '<a href="' . admin_url( 'edit.php?post_type=board_committees' ) . '">';
      _e( 'Go ahead and add some.' );
      echo '</a>';
      
@@ -454,7 +454,7 @@ class WI_Board_Committees {
      echo '<p>' . $this->get_committee_member_list( $board_committee->ID ) . '</p>';
    }
    
-   echo '<p class="note"><a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/edit.php?post_type=board_committees">View and edit the committees</a></p>';
+   echo '<p class="note"><a href="' . admin_url( 'edit.php?post_type=board_committees' ) . '">View and edit the committees</a></p>';
  }
     
   
