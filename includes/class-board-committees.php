@@ -25,6 +25,9 @@ class WI_Board_Committees {
     //Remove the filter field from the board committees list screen
     add_action( 'load-edit.php', array( $this, 'remove_date_filter' ) );
     
+    //Change post updated content.
+    add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
+    
     //Adjust the columns and content shown when viewing the board committees post type list.
     add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
     add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
@@ -254,6 +257,32 @@ class WI_Board_Committees {
       </style>
       <?php
     }
+  }
+  
+  
+  /*
+   * Change post updated messages on edit screen.
+   * 
+   * @param array $messages Existing updated messages for posts and pages.
+   * @return array New updated messages content with board committee messages added.
+   */
+  public function change_updated_messages( $messages ){    
+    $messages['board_committees'] = array(
+      0 => '', // Unused. Messages start at index 1.
+      1 => __( 'Committee updated.' ),
+      2 => __( 'Custom field updated.' ),
+      3 => __( 'Custom field deleted.' ),
+      4 => __( 'Committee updated.' ),
+     /* translators: %s: date and time of the revision */
+      5 => isset( $_GET['revision'] ) ? sprintf( __( 'Committee restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+      6 => __( 'Committee published.' ),
+      7 => __( 'Committee saved.' ),
+      8 => __( 'Committee submitted.' ),
+      9 => __( 'You should not be scheduling committees.  It just won\'t work.'),
+     10 => __( 'Committee draft updated.' )
+    );
+    
+    return $messages;
   }
   
   

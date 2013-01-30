@@ -54,6 +54,9 @@ class WI_Board_Events {
     //Remove the filter field from the board events list screen
     add_action( 'load-edit.php', array( $this, 'remove_date_filter' ) );
     
+    //Change post updated content.
+    add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
+    
     //Adjust the columns and content shown when viewing the board events post type list.
     add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
     add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
@@ -415,6 +418,32 @@ class WI_Board_Events {
       </style>
       <?php
     }
+  }
+  
+  
+  /*
+   * Change post updated messages on edit screen.
+   * 
+   * @param array $messages Existing updated messages for posts and pages.
+   * @return array New updated messages content with board event messages added.
+   */
+  public function change_updated_messages( $messages ){    
+    $messages['board_events'] = array(
+      0 => '', // Unused. Messages start at index 1.
+      1 => __( 'Event updated.' ),
+      2 => __( 'Custom field updated.' ),
+      3 => __( 'Custom field deleted.' ),
+      4 => __( 'Event updated.' ),
+     /* translators: %s: date and time of the revision */
+      5 => isset( $_GET['revision'] ) ? sprintf( __( 'Event restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+      6 => __( 'Event published.' ),
+      7 => __( 'Event saved.' ),
+      8 => __( 'Event submitted.' ),
+      9 => __( 'You should not be scheduling events this way.  It just won\'t work.'),
+     10 => __( 'Event draft updated.' )
+    );
+    
+    return $messages;
   }
 
   
