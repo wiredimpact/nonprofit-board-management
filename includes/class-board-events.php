@@ -335,7 +335,6 @@ class WI_Board_Events {
     
     //Save all of our fields
     //Event Description
-    var_dump( $_REQUEST );
     if( isset($_REQUEST['event-description'] ) ) {
       update_post_meta( $board_event_id, '_event_description', sanitize_text_field( $_REQUEST['event-description'] ) );
     }
