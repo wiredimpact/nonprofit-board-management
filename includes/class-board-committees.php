@@ -23,7 +23,7 @@ class WI_Board_Committees {
     add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
     
     //Remove the filter field from the board committees list screen
-    add_action( 'load-edit.php', array( $this, 'remove_date_filter' ) );
+    add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
     
     //Change post updated content.
     add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
