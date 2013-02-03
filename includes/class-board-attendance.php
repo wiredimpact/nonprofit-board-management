@@ -328,14 +328,14 @@ class WI_Board_Attendance {
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" id="event" class="manage-column column-event">Name</th>
+              <th scope="col" id="event" class="manage-column column-event">Board Event</th>
               <th scope="col" id="attended" class="manage-column column-attended">Attended</th>
               <th scope="col" id="not-attended" class="manage-column column-not-attended">Didn't Attend</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th scope="col" id="event" class="manage-column column-event">Name</th>
+              <th scope="col" id="event" class="manage-column column-event">Board Event</th>
               <th scope="col" class="manage-column column-attended">Attended</th>
               <th scope="col" class="manage-column column-not-attended">Didn't Attend</th>
             </tr>
