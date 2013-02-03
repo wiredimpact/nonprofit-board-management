@@ -28,13 +28,21 @@
 }
 
 /********************************
-* Board Members List
+* Board Members List & Attendance Table
 ********************************/
-#board-members-table {
+#board-members-table, #board-attendance-table {
   margin-top: 20px;
 }
-#board-members-table .column-username {
+#board-members-table .column-username,
+#board-attendance-table .column-username {
   padding-bottom: 4px;
+}
+
+/********************************
+* Attendance Tracking
+********************************/
+#board_event_attendance tr input {
+  margin-left: 8px;
 }
 
 /********************************

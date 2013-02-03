@@ -60,6 +60,10 @@ class WI_Board_Management {
     
     /*
      * Add the board roles when the plugin is first activated.
+     * 
+     * The only capability that can be added later is the ability to track
+     * event attendance.  This capability can only be given by an admin. The
+     * checkbox to allow this capability shows on the bottom of the profile page.
      */
     public function add_board_roles(){   
       add_role( 
@@ -294,6 +298,9 @@ class WI_Board_Management {
         <p>You can set your photo by creating an account at <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
            and your name can be adjusted by using the "Display name publicly as" dropdown in 
            <a href="<?php echo admin_url( 'profile.php' ); ?>">your profile</a>.</p>
+        <p>
+          <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance' ); ?>">Check attendance at board events.</a>
+        </p>
       </div>
     <?php }//display_members_page()
 
@@ -586,10 +593,12 @@ if( is_admin() ){
 
   //Add board events and committees classes
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
+  require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-attendance.php';
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-committees.php';
 
   //Instantiate each of our classes.
   $wi_board_mgmt = new WI_Board_Management();
   $wi_board_events = new WI_Board_Events();
+  $wi_board_attendance = new WI_Board_Attendance();
   $wi_board_committees = new WI_Board_Committees();
 }

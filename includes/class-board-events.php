@@ -109,7 +109,7 @@ class WI_Board_Events {
    * 
    * @return string Table prefix for this install of WordPress.
    */
-  private function get_table_prefix(){
+  public function get_table_prefix(){
     global $wpdb;
 
     return $wpdb->prefix;
@@ -453,7 +453,7 @@ class WI_Board_Events {
    * @param int $post_id The ID of the board event we're referencing.
    * @return array Associative array of all meta data for the board event.
    */
-  private function retrieve_board_event_meta( $post_id ){
+  public function retrieve_board_event_meta( $post_id ){
     $board_event_meta_raw = get_post_custom( $post_id );
     $board_event_meta = array();
     

@@ -382,6 +382,21 @@ class WI_Board_Committees {
           <?php echo $this->get_all_committee_inputs( $board_member->ID ); ?>
         </td>
       </tr>
+      
+      <?php if( current_user_can( 'manage_options' ) ){ 
+        $can_track = false;
+        if( user_can( $board_member->ID, 'track_event_attendance' ) ){
+          $can_track = true;
+        }
+      ?>
+      <tr>
+        <th>Tracking Attendance</th>
+        <td>
+          <label><input type="checkbox" name="track-attendance" <?php checked( $can_track ); ?> /> Allow board member to track event attendance</label>
+          <input type="hidden" name="track-attendance-available" value="1" />
+        </td>
+      </tr>
+      <?php } ?>
     </table>
 
   <?php
@@ -417,6 +432,17 @@ class WI_Board_Committees {
     }
     else{
       delete_user_meta( $board_member_id, 'board_committees' );
+    }
+    //Ability to track event attendance
+    if( isset( $_REQUEST['track-attendance-available'] ) ){
+      if( isset( $_REQUEST['track-attendance'] ) && !user_can( $board_member_id, 'track_event_attendance' ) ){
+        $board_member = new WP_User( $board_member_id );
+        $board_member->add_cap( 'track_event_attendance' );
+      }
+      else if( !isset( $_REQUEST['track-attendance'] ) && user_can( $board_member_id, 'track_event_attendance' ) ){
+        $board_member = new WP_User( $board_member_id );
+        $board_member->remove_cap( 'track_event_attendance' );
+      }
     }
   }
   
