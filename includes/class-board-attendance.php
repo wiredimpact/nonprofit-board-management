@@ -2,7 +2,7 @@
 /**
  * WI_Board_Attendance allows the board to track attendace to board events.
  * 
- * The WI_Board_Attendance class chosen board members to track attendance to
+ * The WI_Board_Attendance class allows chosen board members to track attendance to
  * board events.  Once tracked, everyone on the board can see attendance records
  * for each member.
  *
@@ -36,12 +36,9 @@ class WI_Board_Attendance {
     //We must use a constant instead of __FILE__ because this file is loaded using require_once.
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
-    //Add and save meta boxes
+    //Add and save meta box
     add_action( 'load-post.php', array( $this, 'create_existing_attendance_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_attendance_meta' ), 10, 2 );
-    
-    //Add our page to view board attendance
-    add_action( 'admin_menu', array( $this, 'create_pages' ) );
   }
   
   
@@ -79,18 +76,6 @@ class WI_Board_Attendance {
   
   
   /*
-   * Return the table prefix for this WordPress install.
-   * 
-   * @return string Table prefix for this install of WordPress.
-   */
-  private function get_table_prefix(){
-    global $wpdb;
-
-    return $wpdb->prefix;
-  }
-  
-  
-  /*
    * Show our meta box for tracking attendance.
    */
   public function create_existing_attendance_meta_boxes(){
@@ -110,7 +95,7 @@ class WI_Board_Attendance {
    * @param object $board_event The $post object for the board event.
    */
   public function display_event_attendance_tracking( $board_event ){
-    //Don't all them to track attendance if the event isn't over.
+    //Don't allow them to track attendance if the event isn't over.
     $event_end_time = get_post_meta( $board_event->ID, '_end_date_time', true );
     $current_time = current_time( 'timestamp' );
     if( $event_end_time > $current_time ){
@@ -174,64 +159,35 @@ class WI_Board_Attendance {
       return false;
     }
     
-    
-    global $wpdb;
     global $wi_board_mgmt;
     $board_members = $wi_board_mgmt->board_members;
     
     foreach( $board_members as $board_member ){
       if( isset( $_REQUEST['attendance-' . $board_member->ID] ) ){
 
-        //Insert if not recorded previously, update otherwise.
+        //Get whether they attended or not and whether they a recorded attendance in the past.
         $attended = intval( $_REQUEST['attendance-' . $board_member->ID] );
         $prev_attended = $this->get_user_event_attendance( $board_event_id, $board_member->ID );
         
-        //If attendance was never recorded and should be.
-        //TODO Break insert, update and delete into their own methods.
+        //If attendance was not recorded before, and is either attended or didn't attend, then insert into db
         if( $prev_attended === false && $_REQUEST['attendance-' . $board_member->ID] != 'na' ){
-          $wpdb->insert(
-            $this->table_name,
-            array( 'user_id' => $board_member->ID, 'post_id' => $board_event_id, 'attended' => $attended ),
-            array( '%d', '%d', '%d' ) //All of these should be saved as integers
-           );
+          $this->insert_user_attendance( $board_member->ID, $board_event_id, $attended );
         }
         
-        //If attendance was recorded, but now must be removed.
+        //If attendance was previously recorded, but now must be deleted because they no longer want it recorded.
         else if( $prev_attended !== false && $_REQUEST['attendance-' . $board_member->ID] == 'na' ){
-          $wpdb->query( 
-                $wpdb->prepare( 
-                 "
-                  DELETE FROM $this->table_name
-                  WHERE user_id = %d
-                  AND post_id = %d
-                 ",
-                  $board_member->ID, $board_event_id
-                  )
-               );
+          $this->delete_user_attendance( $board_member->ID, $board_event_id );
         }
         
-        //If attendance changed from attended to not attended or vice versa.
+        //If the attendance was recorded previously, but has been changed.
         else if ( $prev_attended != $attended ){
-          $wpdb->update(
-            $this->table_name,
-            array( 'attended' => $attended ),
-            array( 'user_id' => $board_member->ID, 'post_id' => $board_event_id ),
-            array( '%d' ),
-            array( '%d', '%d' )
-           );
+          $this->update_user_attendance( $board_member->ID, $board_event_id, $attended );
         }
         
       }//If attendance field is set
     }//Foreach board member
   }
-  
-  /*
-   * Add our board attendance page.
-   */
-  public function create_pages(){
-    add_submenu_page( 'options.php', 'Board Event Attendance', 'Board Event Attendance', 'view_board_content', 'nonprofit-board/attendance', array( $this, 'display_board_attendance_page' ) );
-    add_submenu_page( 'options.php', 'Board Member Attendance', 'Board Member Attendance', 'view_board_content', 'nonprofit-board/attendance/member', array( $this, 'display_member_attendance_page' ) );
-  }
+
   
   /*
    * Display our board attendance page.
@@ -377,12 +333,70 @@ class WI_Board_Attendance {
   
   
   /*
+   * Return the table prefix for this WordPress install.
+   * 
+   * @return string Table prefix for this install of WordPress.
+   */
+  private function get_table_prefix(){
+    global $wpdb;
+
+    return $wpdb->prefix;
+  }
+
+  
+  /*
+   * Insert user attendance into the database.
+   */
+  private function insert_user_attendance( $board_member_id, $board_event_id, $attended ){
+    global $wpdb;
+    $wpdb->insert(
+            $this->table_name,
+            array( 'user_id' => $board_member_id, 'post_id' => $board_event_id, 'attended' => $attended ),
+            array( '%d', '%d', '%d' ) //All of these should be saved as integers
+           );  
+  }
+  
+  
+  /*
+   * Update a user's attendance in the database.
+   */
+  private function update_user_attendance( $board_member_id, $board_event_id, $attended ){
+    global $wpdb;
+    $wpdb->update(
+            $this->table_name,
+            array( 'attended' => $attended ),
+            array( 'user_id' => $board_member_id, 'post_id' => $board_event_id ),
+            array( '%d' ),
+            array( '%d', '%d' )
+           );
+  }
+  
+  
+  /*
+   * Remove a user's attendance for one event from the database.
+   */
+  private function delete_user_attendance( $board_member_id, $board_event_id ){
+    global $wpdb;
+    $wpdb->query( 
+            $wpdb->prepare( 
+             "
+              DELETE FROM $this->table_name
+              WHERE user_id = %d
+              AND post_id = %d
+             ",
+              $board_member_id, $board_event_id
+              )
+           );
+  }
+  
+  
+  /*
    * Get percentage of two numbers
    */
   private function get_percentage( $top_number, $bottom_number ){
     $percentage = 0;
     if( $bottom_number != 0 ){
-      $percentage = $top_number / $bottom_number * 100;
+      $percentage = round( $top_number / $bottom_number * 100, 2 );
     }
 
     return $percentage;

@@ -217,11 +217,18 @@ class WI_Board_Management {
       //Create Board Members page
       add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
       
-      //Add edit and new board event pages to our top level menu so the board member role has correct caps.
-      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' ); 
+      //Add Board Events page
+      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' );
+      
+      //Add Event Attendance pages
+      global $wi_board_attendance;
+      add_submenu_page( 'nonprofit-board', 'Board Event Attendance', 'Event Attendance', 'view_board_content', 'nonprofit-board/attendance', array( $wi_board_attendance, 'display_board_attendance_page' ) );
+      add_submenu_page( 'options.php', 'Board Member Attendance', 'Board Member Attendance', 'view_board_content', 'nonprofit-board/attendance/member', array( $wi_board_attendance, 'display_member_attendance_page' ) );
+      
+      //Add Board Committees page
       add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
       
-      //Add edit and new board commmittee pages to our top level menu so the board member role has correct caps.
+      //Add new board event and board committee pages
       add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
       add_submenu_page( 'nonprofit-board', 'Add Board Committee', 'Add Board Committee', 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
       
@@ -298,9 +305,6 @@ class WI_Board_Management {
         <p>You can set your photo by creating an account at <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
            and your name can be adjusted by using the "Display name publicly as" dropdown in 
            <a href="<?php echo admin_url( 'profile.php' ); ?>">your profile</a>.</p>
-        <p>
-          <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance' ); ?>">Check attendance at board events.</a>
-        </p>
       </div>
     <?php }//display_members_page()
 
