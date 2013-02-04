@@ -37,7 +37,7 @@ class WI_Board_Attendance {
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
     //Add and save meta box
-    add_action( 'load-post.php', array( $this, 'create_existing_attendance_meta_boxes' ) );
+    add_action( 'load-post.php', array( $this, 'create_attendance_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_attendance_meta' ), 10, 2 );
   }
   
@@ -76,13 +76,13 @@ class WI_Board_Attendance {
   
   
   /*
-   * Show our meta box for tracking attendance.
+   * Show our meta box for tracking attendance if user has the capability to track.
    */
-  public function create_existing_attendance_meta_boxes(){
+  public function create_attendance_meta_boxes(){
     if( current_user_can( 'track_event_attendance' ) ){
       add_meta_box( 'board_event_attendance',
           'Track Attendance',
-          array( $this, 'display_event_attendance_tracking' ),
+          array( $this, 'display_attendance_tracking_meta' ),
           'board_events', 'normal', 'default'
       );
     }
@@ -90,11 +90,15 @@ class WI_Board_Attendance {
   
   
   /*
-   * Display the attendance tracking we need.
+   * Display the attendance tracking meta box.
+   * 
+   * The meta box allows a user who can track attendance to
+   * mark who attended and who didn't attend an event.  The meta box
+   * only shows after the event's end date and time has passed.
    * 
    * @param object $board_event The $post object for the board event.
    */
-  public function display_event_attendance_tracking( $board_event ){
+  public function display_attendance_tracking_meta( $board_event ){
     //Don't allow them to track attendance if the event isn't over.
     $event_end_time = get_post_meta( $board_event->ID, '_end_date_time', true );
     $current_time = current_time( 'timestamp' );
@@ -133,15 +137,18 @@ class WI_Board_Attendance {
         </td>
       </tr> 
     <?php
-      }
+      }//Foreach
     ?>
     </table>
     <?php
   }
   
   
-   /*
-   * Save the meta fields for board events when saving from the edit screen.
+  /*
+   * Save the attendance info for a board event from the meta box.
+   * 
+   * @param int $board_event_id Post ID of the board event.
+   * @param object $board_event Post object for the board event.
    */
   public function save_board_attendance_meta( $board_event_id, $board_event ){
     
@@ -189,9 +196,9 @@ class WI_Board_Attendance {
   }
 
   
-  /*
-   * Display our board attendance page.
-   */
+ /*
+  * Display our board attendance page with a summary of attendance for each board member.
+  */
   public function display_board_attendance_page(){ ?>
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
@@ -264,9 +271,16 @@ class WI_Board_Attendance {
   
   /*
    * Display the attendance for a specific member.
+   * 
+   * This page includes every board event for this member
+   * where attendance was tracked.  It shows each event along with
+   * whether they attended or didn't attend.  It is sorted with the 
+   * most recent events first.  While there are no parameters passed,
+   * The board member's user id is sent through a query string.
    */
   public function display_member_attendance_page(){
-    if( !isset( $_GET['id'] ) ){ ?>
+    //Show an error if the id of the user isn't present or isn't a number.
+    if( !isset( $_GET['id'] ) || !is_numeric( $_GET['id'] ) ){ ?>
       <div id="message" class="error">
         <p><?php _e( 'Oops.  You shouldn\'t be on this page right now.' ); ?></p>
       </div>
@@ -275,12 +289,13 @@ class WI_Board_Attendance {
     }
     
     $board_member_id = intval( $_GET['id'] );
-    $board_member = get_users( array( 'include' => array( $board_member_id ) ) );
-    $board_member = $board_member[0];
+    $board_member_array = get_users( array( 'include' => array( $board_member_id ) ) );
+    $board_member = $board_member_array[0];
     ?>
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
         <h2><?php _e( 'Board Member Attedance: ' ); echo $board_member->display_name; ?></h2>
+        <p>Back to <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance' ); ?>">Event Attendance</a>.</p>
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
@@ -303,7 +318,7 @@ class WI_Board_Attendance {
             //If no board members were found then give them a message.
             if( empty( $attendance_record ) ){ ?>
                 <tr class="no-items">
-                  <td class="colspanchange" colspan="5"><?php _e( 'This board member has not had their attendance recorded at any event.' ); ?></td>
+                  <td class="colspanchange" colspan="3"><?php _e( 'This board member has not had their attendance recorded for any event.' ); ?></td>
                 </tr>
             <?php
             }
@@ -346,6 +361,10 @@ class WI_Board_Attendance {
   
   /*
    * Insert user attendance into the database.
+   * 
+   * @param int $board_member_id User id of the board member.
+   * @param int $board_event_id Post id of the board event.
+   * @param int $attended 1 for attended, 0 for didn't attend.
    */
   private function insert_user_attendance( $board_member_id, $board_event_id, $attended ){
     global $wpdb;
@@ -359,6 +378,10 @@ class WI_Board_Attendance {
   
   /*
    * Update a user's attendance in the database.
+   * 
+   * @param int $board_member_id User id of the board member.
+   * @param int $board_event_id Post id of the board event.
+   * @param int $attended 1 for attended, 0 for didn't attend.
    */
   private function update_user_attendance( $board_member_id, $board_event_id, $attended ){
     global $wpdb;
@@ -374,6 +397,9 @@ class WI_Board_Attendance {
   
   /*
    * Remove a user's attendance for one event from the database.
+   * 
+   * @param int $board_member_id User id of the board member.
+   * @param int $board_event_id Post id of the board event.
    */
   private function delete_user_attendance( $board_member_id, $board_event_id ){
     global $wpdb;
@@ -392,6 +418,10 @@ class WI_Board_Attendance {
   
   /*
    * Get percentage of two numbers
+   * 
+   * @param int $top_number Top number in the division formula.
+   * @param int $bottom_number Bottom number in the division formula.
+   * @return float Percentage rounded to two decimal places (66.67).
    */
   private function get_percentage( $top_number, $bottom_number ){
     $percentage = 0;
@@ -402,8 +432,11 @@ class WI_Board_Attendance {
     return $percentage;
   }
   
+  
   /*
    * Get users who can record attendance.
+   * 
+   * @return string Either a message that no one can track attendance or a list of who can track.
    */
   private function get_users_tracking_attendance(){
     global $wi_board_mgmt;
@@ -428,15 +461,18 @@ class WI_Board_Attendance {
     }
   }
   
+  
   /*
-   * Get attendance status for a specific board member.
+   * Get attendance status for a specific board member for a specific event.
    * 
+   * @param int $board_event_id Post ID for the board event.
+   * @param int $board_member_id User ID for the board member.
    * @return bool|int False if not recorded, 1 for attended, 0 for not attended.
    */
   private function get_user_event_attendance( $board_event_id, $board_member_id ){
     global $wpdb;
 
-    //Check if this user has already had attendance marked for this event.
+    //Check if this user has had attendance marked for this event.
     //NULL means they haven't yet.
     $attended = $wpdb->get_var( $wpdb->prepare(
               "
@@ -458,7 +494,9 @@ class WI_Board_Attendance {
   /*
    * Get number of events attended or not attended for a board member.
    * 
-   * @param $attendance int 1 for number attending, 0 for not attending.
+   * @param int $board_member_id User ID of the board member.
+   * @param int $attended 1 for number attending, 0 for number not attending.
+   * @return int Number attended or not attended.
    */
   private function get_num_events_attendance( $board_member_id, $attended = 1 ){
     global $wpdb;
@@ -476,8 +514,16 @@ class WI_Board_Attendance {
     return $num_attendance;  
   }
   
+  
   /*
    * Get the entire attendance record for a user sorted by start date of event.
+   * 
+   * With this database call we get the ID of the event and whether
+   * or not the user attended.  We also use the _start_date_time meta value
+   * to sort from most recent to oldest events.
+   * 
+   * @param int $board_member_id User ID of the board member.
+   * @return array Array of objects for each event that was tracked. Empty array if no events.
    */
   private function get_user_attendance_record( $board_member_id ){
     global $wpdb, $wi_board_events;
