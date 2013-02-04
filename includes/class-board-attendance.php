@@ -235,13 +235,7 @@ class WI_Board_Attendance {
             
             $alternate = 'alternate';
             foreach( $board_members as $board_member ){
-              $attendance = array();
-              $attendance['attended'] = $this->get_num_events_attendance( $board_member->ID );
-              $attendance['not'] = $this->get_num_events_attendance( $board_member->ID, 0 );
-              $attendance['total'] = $attendance['attended'] + $attendance['not'];
-              
-              $attendance['attended_perc'] = $this->get_percentage( $attendance['attended'], $attendance['total'] );
-              $attendance['not_perc'] = $this->get_percentage( $attendance['not'], $attendance['total'] );
+              $attendance = $this->get_attendance_totals_percentages( $board_member->ID );
               ?>
                <tr class="<?php echo $alternate; ?>">
                  <td class="name column-username">
@@ -291,11 +285,22 @@ class WI_Board_Attendance {
     $board_member_id = intval( $_GET['id'] );
     $board_member_array = get_users( array( 'include' => array( $board_member_id ) ) );
     $board_member = $board_member_array[0];
+    $attendance = $this->get_attendance_totals_percentages( $board_member_id );
     ?>
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
         <h2><?php _e( 'Board Member Attedance: ' ); echo $board_member->display_name; ?></h2>
-        <p>Back to <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance' ); ?>">Event Attendance</a>.</p>
+        <h3>
+          <?php
+          _e( 'Attended: ' );
+          echo $attendance['attended'] . ' (' . $attendance['attended_perc'] . '%) | ';
+          _e( 'Didn\'t Attend: ' );
+          echo $attendance['not'] . ' (' . $attendance['not_perc'] . '%) | ';
+          _e( 'Total Events Tracked: ' );
+          echo $attendance['total'];
+          ?>
+        </h3>
+        <p>Back to <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance' ); ?>">Event Attendance Summary</a>.</p>
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
@@ -342,6 +347,7 @@ class WI_Board_Attendance {
           ?>
           </tbody>
         </table>
+        <p><?php _e( '*Events that have been permanently deleted will not show in the list of events.' ); ?></p>
     </div>
   <?php
   }
@@ -488,6 +494,25 @@ class WI_Board_Attendance {
     $attended_status = ( $attended == NULL ) ? false : (int)$attended;
 
     return $attended_status;
+  }
+  
+  
+  /*
+   * Get user numbers for attended, not attended, and total with percentages.
+   * 
+   * @param int $board_member_id User ID of the board member.
+   * @return array Number attended, not attended, totals, and percentages.
+   */
+  private function get_attendance_totals_percentages( $board_member_id ){
+    $attendance = array();
+    $attendance['attended'] = $this->get_num_events_attendance( $board_member_id );
+    $attendance['not'] = $this->get_num_events_attendance( $board_member_id, 0 );
+    $attendance['total'] = $attendance['attended'] + $attendance['not'];
+
+    $attendance['attended_perc'] = $this->get_percentage( $attendance['attended'], $attendance['total'] );
+    $attendance['not_perc'] = $this->get_percentage( $attendance['not'], $attendance['total'] );
+    
+    return $attendance;
   }
   
   
