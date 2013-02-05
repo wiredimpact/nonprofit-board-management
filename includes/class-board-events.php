@@ -278,35 +278,35 @@ class WI_Board_Events {
     $nonce = wp_create_nonce( 'event_details_nonce' );
     ?>
     <input type="hidden" id="_event_details_nonce" name="_event_details_nonce" value="<?php echo $nonce ?>" />
-    <table>
+    <table class="board-event-meta">
       <tr>
         <td><label for="event-description">Event Description</label></td>
-        <td><input type="text" id="event-description" name="event-description" class="large-text" value="<?php echo $board_event_meta['event_description']; ?>" /></td>
+        <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo $board_event_meta['event_description']; ?></textarea></td>
       </tr>
       
       <tr>
         <td><label for="location">Location Name</label></td>
-        <td><input type="text" id="location" name="location" class="regular-text" value="<?php echo $board_event_meta['location']; ?>" /></td>
+        <td><input type="text" id="location" name="location" tabindex="20" class="regular-text" value="<?php echo $board_event_meta['location']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="street">Street Address</label></td>
-        <td><input type="text" id="street" name="street" class="regular-text" value="<?php echo $board_event_meta['street']; ?>" /></td>
+        <td><input type="text" id="street" name="street" tabindex="30" class="regular-text" value="<?php echo $board_event_meta['street']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="area">City, State Zip</label></td>
-        <td><input type="text" id="area" name="area" class="regular-text" value="<?php echo $board_event_meta['area']; ?>" /></td>
+        <td><input type="text" id="area" name="area" tabindex="40" class="regular-text" value="<?php echo $board_event_meta['area']; ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="start-date-time">Start Date & Time</label></td>
-        <td><input type="text" id="start-date-time" name="start-date-time" class="regular-text" value="<?php echo $board_event_meta['start_date_time'] ?>" /></td>
+        <td><input type="text" id="start-date-time" name="start-date-time" tabindex="50" class="regular-text" value="<?php echo $board_event_meta['start_date_time'] ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="end-date-time">End Date & Time</label></td>
-        <td><input type="text" id="end-date-time" name="end-date-time" class="regular-text" value="<?php echo $board_event_meta['end_date_time'] ?>" /></td>
+        <td><input type="text" id="end-date-time" name="end-date-time" tabindex="60" class="regular-text" value="<?php echo $board_event_meta['end_date_time'] ?>" /></td>
       </tr>
       
     </table>
@@ -430,13 +430,13 @@ class WI_Board_Events {
   public function change_updated_messages( $messages ){    
     $messages['board_events'] = array(
       0 => '', // Unused. Messages start at index 1.
-      1 => __( 'Event updated.' ),
+      1 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.' ), admin_url( 'edit.php?post_type=board_events' ) ),
       2 => __( 'Custom field updated.' ),
       3 => __( 'Custom field deleted.' ),
-      4 => __( 'Event updated.' ),
+      4 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.' ), admin_url( 'edit.php?post_type=board_events' ) ),
      /* translators: %s: date and time of the revision */
       5 => isset( $_GET['revision'] ) ? sprintf( __( 'Event restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-      6 => __( 'Event published.' ),
+      6 => sprintf( __( 'Event published. <a href="%s">View all of your events</a>.' ), admin_url( 'edit.php?post_type=board_events' ) ),
       7 => __( 'Event saved.' ),
       8 => __( 'Event submitted.' ),
       9 => __( 'You should not be scheduling events this way.  It just won\'t work.'),

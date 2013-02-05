@@ -169,9 +169,9 @@ class WI_Board_Committees {
     $nonce = wp_create_nonce( 'committee_desc_nonce' );
     ?>
     <input type="hidden" id="committee_desc_nonce" name="committee_desc_nonce" value="<?php echo $nonce ?>" />
-    <table>
+    <table class="committee-description-meta">
       <tr>
-        <td><textarea id="committee-description" name="committee-description" rows="6" style="width: 500px;"><?php echo $board_committee_meta['description']; ?></textarea></td>
+        <td><textarea id="committee-description" name="committee-description" rows="6" tabindex="10"><?php echo $board_committee_meta['description']; ?></textarea></td>
       </tr>      
     </table>
     <?php
@@ -269,13 +269,13 @@ class WI_Board_Committees {
   public function change_updated_messages( $messages ){    
     $messages['board_committees'] = array(
       0 => '', // Unused. Messages start at index 1.
-      1 => __( 'Committee updated.' ),
+      1 => sprintf( __( 'Committee updated. <a href="%s">View all of your committees</a>.' ), admin_url( 'edit.php?post_type=board_committees' ) ),
       2 => __( 'Custom field updated.' ),
       3 => __( 'Custom field deleted.' ),
-      4 => __( 'Committee updated.' ),
+      4 => sprintf( __( 'Committee updated. <a href="%s">View all of your committees</a>.' ), admin_url( 'edit.php?post_type=board_committees' ) ),
      /* translators: %s: date and time of the revision */
       5 => isset( $_GET['revision'] ) ? sprintf( __( 'Committee restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-      6 => __( 'Committee published.' ),
+      6 => sprintf( __( 'Committee published. <a href="%s">View all of your committees</a>.' ), admin_url( 'edit.php?post_type=board_committees' ) ),
       7 => __( 'Committee saved.' ),
       8 => __( 'Committee submitted.' ),
       9 => __( 'You should not be scheduling committees.  It just won\'t work.'),
@@ -630,24 +630,26 @@ class WI_Board_Committees {
     global $wi_board_mgmt;
     $board_members = $wi_board_mgmt->board_members;
     
+    //Provide mesage if no board members exist
+    if( empty( $board_members ) ){
+      return _( '<p>There aren\'t currently any members on your board so no one can join a committee.</p>' );
+    }
+    
     //Loop through users and add them
     $committee_inputs = '';
+    $tabindex = 20;
     foreach( $board_members as $board_member ){
       $user_committees = get_user_meta( $board_member->ID, 'board_committees', true );
-      if( $this->is_user_on_committee( $user_committees, $board_committee_id ) == true ){
-        $checked = 'checked="checked"';
-      }
-      else {
-        $checked = '';
-      }
       
-      $committee_inputs .= '<label><input type="checkbox" ';
-      $committee_inputs .= $checked;
+      $committee_inputs .= '<label><input type="checkbox" tabindex="' . $tabindex . '" ';
+      $committee_inputs .= checked( $this->is_user_on_committee( $user_committees, $board_committee_id ), true, false );
       $committee_inputs .= ' name="committee-members[]" value="';
       $committee_inputs .= $board_member->ID;
       $committee_inputs .= '" /> ';
       $committee_inputs .= $board_member->display_name;
       $committee_inputs .= '</label><br />';
+      
+      $tabindex += 10;
     }
     
     return $committee_inputs;
