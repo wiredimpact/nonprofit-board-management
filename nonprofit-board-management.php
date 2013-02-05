@@ -279,7 +279,10 @@ class WI_Board_Management {
         //If no board members were found then give them a message.
         if( empty( $board_members ) ){ ?>
             <tr class="no-items">
-              <td class="colspanchange" colspan="5"><?php _e( 'No board members were found.  You should create some users and set their role to "Board Member".' ); ?></td>
+              <td class="colspanchange" colspan="5">
+                <?php _e( 'There aren\'t currently any members on your board (which could definitely limit its effectiveness).  
+                  Why don\'t you <a href="user-new.php">add one now</a>? Oh, and make sure to set the new user\'s role to "Board Member".' ); ?>
+              </td>
             </tr>
         <?php
         }
@@ -316,9 +319,12 @@ class WI_Board_Management {
         
           </tbody>
         </table>
-        <p>You can set your photo by creating an account at <a href="http://en.gravatar.com/" target="_blank">Gravatar</a>
-           and your name can be adjusted by using the "Display name publicly as" dropdown in 
-           <a href="<?php echo admin_url( 'profile.php' ); ?>">your profile</a>.</p>
+        <p><?php 
+          _e( '<strong>Your Photo:</strong> You can set your photo by creating a <a href="http://en.gravatar.com/" target="_blank">Gravatar account</a>
+            using the same email address you used here.<br />' );
+          _e( '<strong>Your Name:</strong> You can adjust your name by changing the "Display name publicly as" dropdown in <a href="profile.php">your profile</a>.' );
+          ?>
+        </p>
       </div>
     <?php }//display_members_page()
 
