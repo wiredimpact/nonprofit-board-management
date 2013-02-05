@@ -61,7 +61,7 @@ class WI_Board_Committees {
       'all_items' => 'All Board Committees',
       'view_item' => 'View Board Committee',
       'search_items' => 'Search Board Committees',
-      'not_found' =>  'No board committees found',
+      'not_found' =>  'You haven\'t created any board committees yet.  You can <a href="' . admin_url( 'post-new.php?post_type=board_committees' ) . '">set one up now</a>.',
       'not_found_in_trash' => 'No board committees found in trash', 
       'parent_item_colon' => '',
       'menu_name' => 'Board Committees'

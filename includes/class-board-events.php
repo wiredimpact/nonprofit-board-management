@@ -156,7 +156,7 @@ class WI_Board_Events {
       'all_items' => 'All Board Events',
       'view_item' => 'View Board Event',
       'search_items' => 'Search Board Events',
-      'not_found' =>  'No board events found',
+      'not_found' =>  'Looks like you don\'t have any board events scheduled. <a href="' . admin_url( 'post-new.php?post_type=board_events' ) . '">Get one set up now</a>.',
       'not_found_in_trash' => 'No board events found in trash', 
       'parent_item_colon' => '',
       'menu_name' => 'Board Events'
