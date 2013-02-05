@@ -607,7 +607,9 @@ class WI_Board_Committees {
     //Create an array with the titles of all the committees.
     $committees = array();
     foreach( $user_committees_ids as $user_committee_id ){
-      $committees[] = get_the_title( $user_committee_id );
+      if( get_post_status( $user_committee_id ) == 'publish' ){ //Only add committee if it is published.
+        $committees[] = get_the_title( $user_committee_id );
+      }
     }
     
     return implode( ', ', $committees );
@@ -663,6 +665,13 @@ class WI_Board_Committees {
     $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
     $user_committees = get_user_meta( $board_member_id, 'board_committees', true );
 
+    //If there aren't any committees then we tell the user
+    if( empty( $board_committees ) ){
+      $committee_inputs = _( 'No committees have been created yet.' );
+      
+      return $committee_inputs;
+    }
+    
     //Loop through the committees and make checkboxes
     $committee_inputs = '';
     foreach( $board_committees as $board_committee ){
