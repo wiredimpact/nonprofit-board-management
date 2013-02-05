@@ -362,10 +362,20 @@ class WI_Board_Management {
           </a>
         </h3>
         <div class="custom-board-resources">
-          <?php echo stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ); ?>
+          <?php echo wpautop( wp_kses_post( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
         </div>
         
         <h3><?php _e( 'Some Other Helpful Resources' ); ?></h3>
+        <div class="fixed-board-resources">
+          <p><a href="http://asana.com/" target="_blank">Asana</a> – A shared task list for your board.</p>
+          <p><a href="http://www.boardsource.org/" target="_blank">BoardSource</a> – A collection of articles and tools on running a board.</p>
+          <p><a href="http://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – Featured content dedicated to nonprofit boards.</p>
+          <p><a href="http://doodle.com/" target="_blank">Doodle</a> – An easy way to find a good time to meet.</p>
+          <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – A great way to share files.</p>
+          <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – A good way to share and collaborate on documents.</p>
+          <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – A tool to find great talent to join your board.</p>
+          <p><a href="http://wiredimpact.com/" target="_blank">Wired Impact</a> – Library articles and blog posts on how nonprofits can use the web to do more good.</p>
+        </div>
       </div><!-- /wrap -->
       <?php
     }
@@ -376,21 +386,20 @@ class WI_Board_Management {
      */
     public function edit_resources_page(){
       if( isset( $_POST['board_resources'] ) ){
-        $result = $this->save_board_resources();
+        //Save our content if the user clicked update.
+        $this->save_board_resources();
         
-        //If updated we show an updated message to the user.
-        if( $result == true ){
-          ?>
-          <div class="updated">
-            <p>
-              <?php _e( 'Your board resources have been updated.' ); ?>
-              <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources' ); ?>">
-                <?php _e( 'View your board resources.' ); ?>
-              </a>
-            </p>
-          </div>
-          <?php
-        }
+        //We show a message to the user if we updated our content.
+        ?>
+        <div class="updated">
+          <p>
+            <?php _e( 'Your board resources have been updated.' ); ?>
+            <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources' ); ?>">
+              <?php _e( 'View your board resources.' ); ?>
+            </a>
+          </p>
+        </div>
+        <?php
       }
       
       ?>
