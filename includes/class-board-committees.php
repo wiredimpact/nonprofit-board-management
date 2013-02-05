@@ -383,7 +383,20 @@ class WI_Board_Committees {
         </td>
       </tr>
       
-      <?php if( current_user_can( 'manage_options' ) ){ 
+      <?php
+      //Only show checkbox to no longer serve on the board if user is admin
+      if( user_can( $board_member, 'manage_options' ) ){ ?>
+        <tr>
+          <th>Serving on Board</th>
+          <td>
+            <label><input type="checkbox" name="serve-on-board" checked="checked" /> Uncheck this box and click the "Update Profile" button to no longer serve on the board.</label>
+            <input type="hidden" name="serve-on-board-available" value="1" />
+          </td>
+        </tr>
+      
+      <?php }
+      //Only show tracking attendance checkbox if user is admin.
+      if( current_user_can( 'manage_options' ) ){ 
         $can_track = false;
         if( user_can( $board_member->ID, 'track_event_attendance' ) ){
           $can_track = true;
@@ -444,6 +457,11 @@ class WI_Board_Committees {
         $board_member->remove_cap( 'track_event_attendance' );
       }
     }
+   //Remove the admin from the board if they unchecked the serve-on-board checkbox
+   if( isset( $_REQUEST['serve-on-board-available'] ) && !isset( $_REQUEST['serve-on-board'] ) ){ 
+     $board_member = new WP_User( $board_member_id );
+     $board_member->remove_cap( 'serve_on_board' );  
+   }
   }
   
   
