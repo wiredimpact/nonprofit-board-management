@@ -246,7 +246,12 @@ class WI_Board_Management {
     public function display_members_page(){ ?>
       <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Board Members' ); ?></h2>
+        <h2>
+          <?php _e( 'Board Members ' ); ?>
+          <?php if( current_user_can( 'create_users' ) ){ ?>
+            <a href="user-new.php" class="add-new-h2"><?php _e( 'Add New User' ); ?></a>
+          <?php } ?>
+        </h2>
         <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
           <thead>
             <tr>
@@ -289,7 +294,16 @@ class WI_Board_Management {
          $job .= $board_member_meta->current_employer;
          ?>
           <tr class="<?php echo $alternate; ?>">
-            <td class="name column-username"><?php echo get_avatar( $board_member->ID, '44' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?></td>
+            <td class="name column-username">
+              <?php echo get_avatar( $board_member->ID, '44' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?>
+              <?php if( current_user_can( 'edit_user', $board_member->ID ) ){ ?>
+              <div class="row-actions">
+                <span class="edit">
+                  <a href="<?php echo admin_url( 'user-edit.php?user_id=' . $board_member->ID ); ?>"><?php _e( 'Edit' ); ?></a>
+                </span>
+              </div>
+              <?php }//if edit user ?>
+            </td>
             <td class="phone column-phone"><?php echo $board_member_meta->phone; ?></td>
             <td class="email column-email"><?php echo $board_member->user_email; ?></td>
             <td class="job column-job"><?php echo $job; ?></td>
@@ -554,9 +568,9 @@ class WI_Board_Management {
      if( $screen->id == 'edit-board_events' || $screen->id == 'toplevel_page_nonprofit-board' || $screen->id == 'edit-board_committees' ){
      ?>
      <div class="updated">
-       <p><?php _e( 'You don\'t have the board member role, so you can\'t RSVP to board events, join committees,
-         or show up in the board member list.' ); ?>
-         <input id="allow-board-serve" type="submit" class="button secondary-button" value="Serve on the Board" />
+       <p><?php _e( 'You don\'t currently have the board member role, so you can\'t RSVP to board events,
+         join committees, or show up in the board member list.' ); ?>
+         <input id="allow-board-serve" type="submit" class="button secondary-button" value="Add Me to the Board" />
        </p>
      </div>
      <?php
