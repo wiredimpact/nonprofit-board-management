@@ -66,6 +66,9 @@ class WI_Board_Events {
     //Add our board events dashboard widget
     add_action('wp_dashboard_setup', array( $this, 'add_board_events_dashboard_widget' ) );
     
+    //Get full event and committee descriptions via ajax
+    add_action( 'wp_ajax_get_full_description', array( $this, 'get_full_description' ) );
+    
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
   }
@@ -445,7 +448,7 @@ class WI_Board_Events {
     
     return $messages;
   }
-
+  
   
   /*
    * Retrieve all the board event meta data.
@@ -521,7 +524,8 @@ class WI_Board_Events {
     
      case 'description':
        
-       echo wp_trim_words( $board_event_meta['event_description'], 15 );
+       echo '<span class="waiting spinner" style="display: none;"></span>'; 
+       echo wp_trim_words( $board_event_meta['event_description'], 15, '&hellip;<a href="#" data-id="' . $post_id . '" class="more-desc">More</a>' );
        
        break;
      
@@ -617,6 +621,31 @@ class WI_Board_Events {
   
   return $vars;
 }
+
+
+  /*
+   * Use ajax to get the full description for an event or committee.
+   * 
+   * @return string The full description or -1 if ajax check fails.
+   */
+  public function get_full_description(){
+    //Use nonce passed through wp_localize_script for added security.
+    //Sends back -1 if fails.
+    check_ajax_referer( 'get_description_nonce', 'security' );
+    
+    //Put data in variables and get post type
+    $post_id = intval( $_POST['post_id'] );
+    $post_type = get_post_type( $post_id );
+
+    //Get the meta description based on the post type.
+    $meta_key = ( $post_type == 'board_events' ) ? '_event_description' : '_committee_description';
+    $result = get_post_meta( $post_id, $meta_key, true );
+
+    //Send back description
+    echo $result;
+
+    die();  
+  }
 
 
 /*

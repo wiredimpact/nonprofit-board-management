@@ -75,6 +75,37 @@ jQuery(document).ready(function(){
     return false;
   });
   
+  
+  //Allow users to read the full description for an event by clicking a more link.
+  jQuery( '.wp-list-table tr.type-board_events .more-desc, .wp-list-table tr.type-board_committees .more-desc' ).click(function(){
+    var $this = jQuery( this ),
+        post_id = $this.data( 'id' ),
+        table_cell = $this.closest( 'td' ),
+        load_spinner = table_cell.find( '.spinner' );
+    
+    //Show spinner while we handle ajax request.
+    load_spinner.show();
+    
+    var data = {
+      action: 'get_full_description',
+      post_id: post_id,
+      security: wi_board_mgmt.get_description_nonce
+    };
+    
+    jQuery.post(ajaxurl, data, function( response ) {
+      if( response !== '-1' ){ 
+        table_cell.html( response );
+        load_spinner.hide();
+      }
+      else{ //If there's an error
+       alert( wi_board_mgmt.error_get_description ); 
+      }
+    });
+    
+    return false;
+  });
+
+  
   //Allow admins to serve on the board by giving them the correct capability.
   jQuery( 'input#allow-board-serve' ).click(function(){
     var data = {

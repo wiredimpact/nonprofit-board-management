@@ -202,6 +202,8 @@ class WI_Board_Management {
       wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
         'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
         'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
+        'get_description_nonce' => wp_create_nonce( 'get_description_nonce' ),
+        'error_get_description' => __( 'Woops. We weren\'t able to show you the description.  Please contact support.' ),
         )
        );
     }

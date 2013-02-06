@@ -317,7 +317,8 @@ class WI_Board_Committees {
 
       case 'description':
 
-        echo wp_trim_words( $board_committee_meta['description'], 15 );
+        echo '<span class="waiting spinner" style="display: none;"></span>'; 
+        echo wp_trim_words( $board_committee_meta['description'], 15, '&hellip;<a href="#" data-id="' . $board_committee_id . '" class="more-desc">More</a>' );
 
         break;
 
