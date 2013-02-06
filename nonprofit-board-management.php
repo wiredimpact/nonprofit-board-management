@@ -281,7 +281,7 @@ class WI_Board_Management {
             <tr class="no-items">
               <td class="colspanchange" colspan="5">
                 <?php _e( 'There aren\'t currently any members on your board (which could definitely limit its effectiveness).  
-                  Why don\'t you <a href="user-new.php">add one now</a>? Oh, and make sure to set the new user\'s role to "Board Member".' ); ?>
+                  Why don\'t you <a href="user-new.php">add one now</a>? <br />Oh, and make sure to set the new user\'s role to "Board Member".' ); ?>
               </td>
             </tr>
         <?php
