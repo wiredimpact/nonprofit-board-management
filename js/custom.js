@@ -1,7 +1,8 @@
 jQuery(document).ready(function(){
   //JavaScript for Board Events Edit Screen
   var start_date_time = jQuery( '#board_event_details #start-date-time' ),
-      end_date_time = jQuery( '#board_event_details #end-date-time' );
+      end_date_time = jQuery( '#board_event_details #end-date-time' ),
+      end_date_time_error = end_date_time.siblings( '.error' );
   
   //Set the end date & time field to match the start date and time if the end is empty.
   //Only do this when focusing out on start time.
@@ -9,7 +10,7 @@ jQuery(document).ready(function(){
   start_date_time.datetimepicker({
     controlType: 'select',
     dateFormat: "D, MM dd, yy",
-    timeFormat: "hh:mm tt",
+    timeFormat: "h:mm tt",
     stepMinute: 5,
     onClose: function(dateText, inst){
       if( end_date_time.val() === '' ){
@@ -21,8 +22,21 @@ jQuery(document).ready(function(){
   end_date_time.datetimepicker({
     controlType: 'select',
     dateFormat: "D, MM dd, yy",
-    timeFormat: "hh:mm tt",
-    stepMinute: 5
+    timeFormat: "h:mm tt",
+    stepMinute: 5,
+    onClose: function(dateText, inst){
+      //Hide error if it's showing
+      end_date_time_error.hide();
+      
+      //Clear the end time if it is before the start time and show an error.
+      var start_ms = Date.parse( start_date_time.val() ),
+          end_ms = Date.parse( end_date_time.val() );
+      
+      if( start_ms > end_ms ){
+        end_date_time.val( '' );
+        end_date_time_error.show();
+      }
+    }
   });
   
   

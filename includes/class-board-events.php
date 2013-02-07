@@ -304,12 +304,15 @@ class WI_Board_Events {
       
       <tr>
         <td><label for="start-date-time">Start Date & Time</label></td>
-        <td><input type="text" id="start-date-time" name="start-date-time" tabindex="50" class="regular-text" value="<?php echo $board_event_meta['start_date_time'] ?>" /></td>
+        <td><input type="text" id="start-date-time" name="start-date-time" tabindex="50" class="regular-text" value="<?php if ( $board_event_meta['start_date_time'] != '' ) echo date( 'D, F d, Y g:i a', $board_event_meta['start_date_time'] ); ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="end-date-time">End Date & Time</label></td>
-        <td><input type="text" id="end-date-time" name="end-date-time" tabindex="60" class="regular-text" value="<?php echo $board_event_meta['end_date_time'] ?>" /></td>
+        <td>
+          <input type="text" id="end-date-time" name="end-date-time" tabindex="60" class="regular-text" value="<?php if( $board_event_meta['end_date_time'] != '' ) echo date( 'D, F d, Y g:i a', $board_event_meta['end_date_time'] ); ?>" />
+          <span class="error" style="display: none;"><?php _e( 'Woops, it looks like you set your event to end before it started.' ); ?></span>
+        </td>
       </tr>
       
     </table>
@@ -464,10 +467,42 @@ class WI_Board_Events {
     $board_event_meta['location'] = ( isset( $board_event_meta_raw['_location'] ) ) ? $board_event_meta_raw['_location'][0] : '';
     $board_event_meta['street'] = ( isset( $board_event_meta_raw['_street'] ) ) ? $board_event_meta_raw['_street'][0] : '';
     $board_event_meta['area'] = ( isset( $board_event_meta_raw['_area'] ) ) ? $board_event_meta_raw['_area'][0] : '';
-    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['_start_date_time'] ) && $board_event_meta_raw['_start_date_time'][0] != '' ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['_start_date_time'][0] ) : '';
-    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['_end_date_time']  ) && $board_event_meta_raw['_end_date_time'][0] != '' ) ? date( 'D, F d, Y h:i a', (int)$board_event_meta_raw['_end_date_time'][0] ) : '';
+    $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['_start_date_time'] ) && $board_event_meta_raw['_start_date_time'][0] != '' ) ? (int)$board_event_meta_raw['_start_date_time'][0] : '';
+    $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['_end_date_time']  ) && $board_event_meta_raw['_end_date_time'][0] != '' ) ? (int)$board_event_meta_raw['_end_date_time'][0] : '';
     
     return $board_event_meta;
+  }
+  
+  
+  /*
+   * Format the start and end time for an event
+   */
+  private function format_event_times( $start_date_time, $end_date_time, $start_only = false ){
+    //Return an empty string if the start date and time is blank.
+    if( $start_date_time == '' ) return '';
+
+    //If they want the start date and time only
+    if( $start_only == true ){
+      $event_time = date( 'D, F d, Y h:i a', $start_date_time);
+      
+      return $event_time;
+    }
+   
+    //If dates are the same then only show date on first date, with time on both
+    if( date( 'Ymd', $start_date_time ) == date( 'Ymd', $end_date_time ) ){
+      $event_time = date( 'D, F d, Y', $start_date_time) . '<br />';
+      $event_time .= date( 'g:i a', $start_date_time);
+      $event_time .= ' - ';
+      $event_time .= date( 'g:i a', $end_date_time);
+    }
+    //If dates are different then show dates for start and end
+    else{
+      $event_time = date( 'D, F d, Y g:i a', $start_date_time);
+      $event_time .= ' - <br />';
+      $event_time .= date( 'D, F d, Y g:i a', $end_date_time);
+    }
+
+    return $event_time;
   }
   
   
@@ -516,9 +551,7 @@ class WI_Board_Events {
      
      case 'date_time':
        
-       echo $board_event_meta['start_date_time'];
-       if( $board_event_meta['start_date_time'] != '' ) echo ' - <br />';
-       echo $board_event_meta['end_date_time'];
+       echo $this->format_event_times( $board_event_meta['start_date_time'], $board_event_meta['end_date_time'] );
        
        break;
     
