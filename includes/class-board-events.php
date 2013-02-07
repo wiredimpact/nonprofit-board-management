@@ -477,13 +477,13 @@ class WI_Board_Events {
   /*
    * Format the start and end time for an event
    */
-  private function format_event_times( $start_date_time, $end_date_time, $start_only = false ){
+  public function format_event_times( $start_date_time, $end_date_time, $start_only = false ){
     //Return an empty string if the start date and time is blank.
     if( $start_date_time == '' ) return '';
 
     //If they want the start date and time only
     if( $start_only == true ){
-      $event_time = date( 'D, F d, Y h:i a', $start_date_time);
+      $event_time = date( 'D, F d, Y g:i a', $start_date_time);
       
       return $event_time;
     }
@@ -725,7 +725,7 @@ class WI_Board_Events {
      ?>
       <li>
         <span class="title"><?php echo $event->post_title; ?></span>
-        <span class="start-time"><?php echo $board_event_meta['start_date_time']; ?></span>
+        <span class="start-time"><?php echo $this->format_event_times( $board_event_meta['start_date_time'], '', true ); ?></span>
         <div class="location"><?php echo $this->get_event_location( $board_event_meta, false ); ?></div>
       </li>
      <?php

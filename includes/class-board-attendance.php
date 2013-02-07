@@ -335,7 +335,7 @@ class WI_Board_Attendance {
                <tr class="<?php echo $alternate; ?>">
                  <td>
                    <strong><?php echo get_the_title( $event->post_id ); ?></strong><br />
-                   <?php echo $board_event_meta['start_date_time']; ?>
+                   <?php echo $wi_board_events->format_event_times( $board_event_meta['start_date_time'], '', true ); ?>
                  </td>
                  <td><?php if( $event->attended == 1 ) _e( 'X' ); ?></td>
                  <td><?php if( $event->attended == 0 ) _e( 'X' ); ?></td>
