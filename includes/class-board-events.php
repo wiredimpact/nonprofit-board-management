@@ -475,7 +475,12 @@ class WI_Board_Events {
   
   
   /*
-   * Format the start and end time for an event
+   * Format the event times to be displayed.
+   * 
+   * @param int $start_date_time Timestamp of the start of the event.
+   * @param int $end_date_time Timestamp of the end of the event.
+   * @param bool $start_only True if we want only the start of the event.
+   * @return string The formatted event times to be displayed.
    */
   public function format_event_times( $start_date_time, $end_date_time, $start_only = false ){
     //Return an empty string if the start date and time is blank.
