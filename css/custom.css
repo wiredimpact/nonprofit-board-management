@@ -1,9 +1,12 @@
 /********************************
 * Board Events
 ********************************/
-/* Event Description Meta Field */
+/* Event Meta Fields */
 .board-event-meta #event-description {
   width: 25em;
+}
+.board-event-meta .error{
+  color: #f00;
 }
 
 /*Timepicker jQuery Add-On*/

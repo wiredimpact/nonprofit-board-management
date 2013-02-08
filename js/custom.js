@@ -16,28 +16,51 @@ jQuery(document).ready(function(){
   
   //JavaScript for Board Events Edit Screen
   var start_date_time = jQuery( '#board_event_details #start-date-time' ),
-      end_date_time = jQuery( '#board_event_details #end-date-time' );
+      end_date_time = jQuery( '#board_event_details #end-date-time' ),
+      end_date_time_error = end_date_time.siblings( '.error' );
   
   //Set the end date & time field to match the start date and time if the end is empty.
   //Only do this when focusing out on start time.
-  //TODO Use restrict start and end date at http://trentrichardson.com/examples/timepicker/ to ensure the end date isn't before start date
   start_date_time.datetimepicker({
     controlType: 'select',
     dateFormat: "D, MM dd, yy",
-    timeFormat: "hh:mm tt",
+    timeFormat: "h:mm tt",
     stepMinute: 5,
-    onClose: function(dateText, inst){
-      if( end_date_time.val() === '' ){
-        end_date_time.val( start_date_time.val() );
+    onClose: function( dateText, inst ) {
+      if ( end_date_time.val() != '' ) {
+       var test_start_date = start_date_time.datetimepicker( 'getDate' );
+       var test_end_date = end_date_time.datetimepicker( 'getDate' );
+       if ( test_start_date > test_end_date )
+        end_date_time.datetimepicker( 'setDate', test_start_date );
       }
-    }
+      else {
+       end_date_time.val( dateText );
+      }
+     },
+     onSelect: function ( selectedDateTime ){
+      end_date_time.datetimepicker( 'option', 'minDate', start_date_time.datetimepicker( 'getDate' ) );
+     }
   }); 
   
   end_date_time.datetimepicker({
     controlType: 'select',
     dateFormat: "D, MM dd, yy",
-    timeFormat: "hh:mm tt",
-    stepMinute: 5
+    timeFormat: "h:mm tt",
+    stepMinute: 5,
+    onClose: function( dateText, inst ) {
+      if ( start_date_time.val() != '' ) {
+       var test_start_date = start_date_time.datetimepicker( 'getDate' );
+       var test_end_date = end_date_time.datetimepicker( 'getDate' );
+       if ( test_start_date > test_end_date )
+        start_date_time.datetimepicker( 'setDate', test_end_date );
+      }
+      else {
+       start_date_time.val( dateText );
+      }
+     },
+     onSelect: function ( selectedDateTime ){
+      start_date_time.datetimepicker( 'option', 'maxDate', end_date_time.datetimepicker( 'getDate' ) );
+     }
   });
   
   
