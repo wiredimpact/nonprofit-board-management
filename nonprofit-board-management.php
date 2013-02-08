@@ -198,14 +198,24 @@ class WI_Board_Management {
     public function insert_js(){      
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
       
-      //wp_localize_script allows us to send PHP info to JS
+      //Send whether the current screen should expand the board mgmt menu.
       $screen = get_current_screen();
+      $screen->expand_board_menu = false;
+      if( $screen->id == 'board_events' ||
+          $screen->id == 'board_committees' ||
+          $screen->id == 'admin_page_nonprofit-board/attendance/member' ||
+          $screen->id == 'admin_page_nonprofit-board/resources/edit' ){
+        
+        $screen->expand_board_menu = true;
+      }
+      
+      //wp_localize_script allows us to send PHP info to JS
       wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
         'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
         'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
         'get_description_nonce' => wp_create_nonce( 'get_description_nonce' ),
         'error_get_description' => __( 'Woops. We weren\'t able to show you the description.  Please contact support.' ),
-        'current_screen' => $screen->id //Send the current screen so we can expand the board mgmt menu on certain pages
+        'expand_board_menu' => $screen->expand_board_menu //Send whether we should expand the board mgmt menu
         )
        );
     }

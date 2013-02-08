@@ -1,16 +1,12 @@
 jQuery(document).ready(function(){
   //Open the Board Management menu on particular pages. 
-  if( wi_board_mgmt.current_screen == 'board_events' ||
-      wi_board_mgmt.current_screen == 'board_committees' ||
-      wi_board_mgmt.current_screen == 'admin_page_nonprofit-board/attendance/member' ||
-      wi_board_mgmt.current_screen == 'admin_page_nonprofit-board/resources/edit' )
-  {
+  if( wi_board_mgmt.expand_board_menu == true ){
     jQuery( 'li.toplevel_page_nonprofit-board' )
           .addClass( 'wp-has-current-submenu wp-menu-open' )
           .removeClass( 'wp-not-current-submenu' )
           .children( '.toplevel_page_nonprofit-board' )
-          .addClass( 'wp-has-current-submenu wp-menu-open' )
-          .removeClass( 'wp-not-current-submenu' );
+            .addClass( 'wp-has-current-submenu wp-menu-open' )
+            .removeClass( 'wp-not-current-submenu' );
   }
   
   
