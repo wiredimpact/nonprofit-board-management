@@ -39,8 +39,8 @@ class WI_Board_Events {
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
     //Load CSS and JS
-    add_action( 'admin_menu', array( $this, 'insert_css') );
-    add_action( 'admin_menu', array( $this, 'insert_js') );
+    add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
+    add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
 
     //Create our board events custom post type
     add_action( 'init', array( $this, 'create_board_events_type' ) );
