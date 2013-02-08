@@ -44,8 +44,8 @@ class WI_Board_Management {
         add_action( 'admin_menu', array( $this, 'create_menu' ), 10 ); 
         
         //Load CSS and JS
-        add_action( 'admin_menu', array( $this, 'insert_css') );
-        add_action( 'admin_menu', array( $this, 'insert_js') );
+        add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
+        add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
         
         //Add our board members dashboard widget
         add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
@@ -187,7 +187,7 @@ class WI_Board_Management {
     /*
      * Enqueue the necessary CSS.
      */
-    public function insert_css(){
+    public function insert_css(){ 
       wp_enqueue_style( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/custom.css' );
     }
 
@@ -199,11 +199,13 @@ class WI_Board_Management {
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
       
       //wp_localize_script allows us to send PHP info to JS
+      $screen = get_current_screen();
       wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
         'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
         'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
         'get_description_nonce' => wp_create_nonce( 'get_description_nonce' ),
         'error_get_description' => __( 'Woops. We weren\'t able to show you the description.  Please contact support.' ),
+        'current_screen' => $screen->id //Send the current screen so we can expand the board mgmt menu on certain pages
         )
        );
     }
