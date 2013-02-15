@@ -51,6 +51,9 @@
 #board-attendance-table .column-username {
   padding-bottom: 4px;
 }
+.member-attendance {
+  font-weight: normal;
+}
 
 /********************************
 * Attendance Tracking

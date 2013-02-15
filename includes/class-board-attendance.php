@@ -202,22 +202,27 @@ class WI_Board_Attendance {
   public function display_board_attendance_page(){ ?>
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Board Event Attedance' ); ?></h2>
+        <h2><?php _e( 'Board Event Attendance' ); ?></h2>
+        <p>
+          <?php _e( 'To see more details about each board member\'s attendance, 
+            click the "View Detailed Event Attendance" link that shows up when you hover over their name.' ); ?><br />
+          <?php echo $this->get_users_tracking_attendance(); ?>
+        </p>
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
               <th scope="col" id="name" class="manage-column column-username">Name</th>
-              <th scope="col" id="attended" class="manage-column column-attended">Attended</th>
-              <th scope="col" id="not-attended" class="manage-column column-not-attended">Didn't Attend</th>
-              <th scope="col" id="total" class="manage-column column-total">Total Events</th>
+              <th scope="col" id="attended" class="manage-column column-attended num">Attended</th>
+              <th scope="col" id="not-attended" class="manage-column column-not-attended num">Didn't Attend</th>
+              <th scope="col" id="total" class="manage-column column-total num">Total Events</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th scope="col" class="manage-column column-username">Name</th>
-              <th scope="col" class="manage-column column-attended">Attended</th>
-              <th scope="col" class="manage-column column-not-attended">Didn't Attend</th>
-              <th scope="col" class="manage-column column-total">Total Events</th>
+              <th scope="col" class="manage-column column-attended num">Attended</th>
+              <th scope="col" class="manage-column column-not-attended num">Didn't Attend</th>
+              <th scope="col" class="manage-column column-total num">Total Events</th>
             </tr>
           </tfoot>
           <tbody>
@@ -246,9 +251,9 @@ class WI_Board_Attendance {
                      </span>
                    </div>
                  </td>
-                 <td class="attended column-attended"><?php echo $attendance['attended'] . ' (' . $attendance['attended_perc'] . '%)'; ?></td>
-                 <td class="not-attended column-attended"><?php echo $attendance['not'] . ' (' . $attendance['not_perc'] . '%)'; ?></td>
-                 <td class="total column-total"><?php echo $attendance['total'] ?></td>
+                 <td class="attended column-attended num"><?php echo $attendance['attended'] . ' (' . $attendance['attended_perc'] . '%)'; ?></td>
+                 <td class="not-attended column-attended num"><?php echo $attendance['not'] . ' (' . $attendance['not_perc'] . '%)'; ?></td>
+                 <td class="total column-total num"><?php echo $attendance['total'] ?></td>
                </tr>
              <?php
              $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
@@ -257,7 +262,6 @@ class WI_Board_Attendance {
           ?>
           </tbody>
         </table>
-        <p><?php echo $this->get_users_tracking_attendance(); ?></p>
     </div>
   <?php  
   }
@@ -290,7 +294,7 @@ class WI_Board_Attendance {
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
         <h2><?php _e( 'Board Member Attedance: ' ); echo $board_member->display_name; ?></h2>
-        <h3>
+        <h3 class="member-attendance">
           <?php
           _e( 'Attended: ' );
           echo $attendance['attended'] . ' (' . $attendance['attended_perc'] . '%) | ';
@@ -305,15 +309,15 @@ class WI_Board_Attendance {
           <thead>
             <tr>
               <th scope="col" id="event" class="manage-column column-event">Board Event</th>
-              <th scope="col" id="attended" class="manage-column column-attended">Attended</th>
-              <th scope="col" id="not-attended" class="manage-column column-not-attended">Didn't Attend</th>
+              <th scope="col" id="attended" class="manage-column column-attended num">Attended</th>
+              <th scope="col" id="not-attended" class="manage-column column-not-attended num">Didn't Attend</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th scope="col" id="event" class="manage-column column-event">Board Event</th>
-              <th scope="col" class="manage-column column-attended">Attended</th>
-              <th scope="col" class="manage-column column-not-attended">Didn't Attend</th>
+              <th scope="col" class="manage-column column-attended num">Attended</th>
+              <th scope="col" class="manage-column column-not-attended num">Didn't Attend</th>
             </tr>
           </tfoot>
           <tbody>
@@ -339,8 +343,8 @@ class WI_Board_Attendance {
                      </a></strong><br />
                    <?php echo $wi_board_events->format_event_times( $board_event_meta['start_date_time'], '', true ); ?>
                  </td>
-                 <td><?php if( $event->attended == 1 ) _e( 'X' ); ?></td>
-                 <td><?php if( $event->attended == 0 ) _e( 'X' ); ?></td>
+                 <td class="num"><?php if( $event->attended == 1 ) _e( 'X' ); ?></td>
+                 <td class="num"><?php if( $event->attended == 0 ) _e( 'X' ); ?></td>
                </tr>
              <?php
              $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
@@ -458,11 +462,11 @@ class WI_Board_Attendance {
     }
     
     if( empty( $attendance_trackers ) ){
-      return _( 'No one is currently able to track attendance.  A WordPress admin can give a 
+      return __( 'No one is currently able to track attendance.  A WordPress admin can give a 
         board member permission to do this on the member\'s profile edit page.' );
     }
     else{
-      $trackers_string = _( 'The following board members are able to track event attendance: ' );
+      $trackers_string = sprintf( __( 'The following board members are able to track event attendance through <a href="%s">each past event\'s edit screen</a>: ' ), admin_url( 'edit.php?post_type=board_events' ) );
       $trackers_string .= implode( ', ', $attendance_trackers );
       
       return $trackers_string;

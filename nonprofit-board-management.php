@@ -367,8 +367,8 @@ class WI_Board_Management {
       <div class="wrap board-resources">
         <?php screen_icon( 'options-general' ); ?>
         <h2><?php _e( 'Board Resources' ); ?></h2>
-        <p><?php _e( 'We\'ve provided two resource sections.  One for you to include your own resources
-          and one where we\'ve included resources we think are helpful.' ); ?></p>
+        <p><?php _e( 'We\'ve provided two resource sections.  
+          One for you to include your own resources and one for some resources we think are helpful.' ); ?></p>
         <h3>
           <?php _e( 'Your Board Resources' ); ?>
           <a class="button secondary-button" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources/edit' ); ?>">
