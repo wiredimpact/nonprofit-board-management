@@ -19,7 +19,7 @@ jQuery(document).ready(function(){
   //Only do this when focusing out on start time.
   start_date_time.datetimepicker({
     controlType: 'select',
-    dateFormat: "D, MM dd, yy",
+    dateFormat: "D, MM dd, yy '@'",
     timeFormat: "h:mm tt",
     stepMinute: 5,
     onClose: function( dateText, inst ) {
@@ -40,7 +40,7 @@ jQuery(document).ready(function(){
   
   end_date_time.datetimepicker({
     controlType: 'select',
-    dateFormat: "D, MM dd, yy",
+    dateFormat: "D, MM dd, yy '@'",
     timeFormat: "h:mm tt",
     stepMinute: 5,
     onClose: function( dateText, inst ) {

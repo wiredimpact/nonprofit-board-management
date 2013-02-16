@@ -304,13 +304,13 @@ class WI_Board_Events {
       
       <tr>
         <td><label for="start-date-time">Start Date & Time</label></td>
-        <td><input type="text" id="start-date-time" name="start-date-time" tabindex="50" class="regular-text" value="<?php if ( $board_event_meta['start_date_time'] != '' ) echo date( 'D, F d, Y g:i a', $board_event_meta['start_date_time'] ); ?>" /></td>
+        <td><input type="text" id="start-date-time" name="start-date-time" tabindex="50" class="regular-text" value="<?php if ( $board_event_meta['start_date_time'] != '' ) echo $this->format_event_times( $board_event_meta['start_date_time'], '', true ); ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="end-date-time">End Date & Time</label></td>
         <td>
-          <input type="text" id="end-date-time" name="end-date-time" tabindex="60" class="regular-text" value="<?php if( $board_event_meta['end_date_time'] != '' ) echo date( 'D, F d, Y g:i a', $board_event_meta['end_date_time'] ); ?>" />
+          <input type="text" id="end-date-time" name="end-date-time" tabindex="60" class="regular-text" value="<?php if( $board_event_meta['end_date_time'] != '' ) echo $this->format_event_times( $board_event_meta['end_date_time'], '', true ); ?>" />
           <span class="error" style="display: none;"><?php _e( 'Woops, it looks like you set your event to end before it started.' ); ?></span>
         </td>
       </tr>
@@ -358,12 +358,14 @@ class WI_Board_Events {
     }
     //Start Date & Time stored as UNIX timestamp
     if( isset($_REQUEST['start-date-time'] ) ) {
-      $start_date_time = strtotime( $_REQUEST['start-date-time'] );
+      $no_at_start = sanitize_text_field( str_replace( '@', '', $_REQUEST['start-date-time'] ) );
+      $start_date_time = strtotime( $no_at_start );
       update_post_meta( $board_event_id, '_start_date_time', $start_date_time );
     }
     //End Date & Time stored as UNIX timestamp
     if( isset($_REQUEST['end-date-time'] ) ) {
-      $end_date_time = strtotime( $_REQUEST['end-date-time'] );
+      $no_at_end = sanitize_text_field( str_replace( '@', '', $_REQUEST['end-date-time'] ) );
+      $end_date_time = strtotime( $no_at_end );
       update_post_meta( $board_event_id, '_end_date_time', $end_date_time );
     }
   }
@@ -488,7 +490,7 @@ class WI_Board_Events {
 
     //If they want the start date and time only
     if( $start_only == true ){
-      $event_time = date( 'D, F d, Y g:i a', $start_date_time);
+      $event_time = date( 'D, F d, Y \&#64; g:i a', $start_date_time);
       
       return $event_time;
     }
