@@ -202,6 +202,7 @@ class WI_Board_Management {
       $screen = get_current_screen();
       $screen->expand_board_menu = false;
       if( $screen->id == 'board_events' ||
+          $screen->id == 'edit-board_events' ||
           $screen->id == 'board_committees' ||
           $screen->id == 'admin_page_nonprofit-board/attendance/member' ||
           $screen->id == 'admin_page_nonprofit-board/resources/edit' ){
@@ -232,7 +233,7 @@ class WI_Board_Management {
       add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
       
       //Add Board Events page
-      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' );
+      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events&orderby=date_time&order=desc' );
       
       //Add Event Attendance pages
       global $wi_board_attendance;
