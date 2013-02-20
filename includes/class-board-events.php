@@ -58,6 +58,8 @@ class WI_Board_Events {
     add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
     
     //Adjust the columns and content shown when viewing the board events post type list.
+    add_filter( 'parse_query', array( $this, 'edit_board_events_query' ) );
+    add_filter( 'views_edit-board_events', array( $this, 'add_views_links' ) );
     add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
     add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
     add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
@@ -511,6 +513,87 @@ class WI_Board_Events {
 
     return $event_time;
   }
+  
+  
+  /*
+   * Edit query used to load table for Board Events.
+   * 
+   * When the list of board events loads we default to showing only
+   * upcoming events.  We also handle when someone wants all events
+   * or only past events.
+   * 
+   * @param object $query The post query for the edit screen.
+   */
+  public function edit_board_events_query( $query ){
+    global $pagenow;
+    
+    //On board events list show all future or currently happening events.
+    if( $pagenow == 'edit.php' && $_GET['post_type'] == 'board_events' ) {
+      
+      //Determine if we want upcoming or past events.  Default to upcoming events.
+      $events_to_show = '>';
+      if( isset( $_GET['events'] ) && $_GET['events'] == 'past' ){
+        $events_to_show = '<';
+      }
+      
+      //Only restrict events based on date if we aren't showing all events
+      //and we aren't looking at posts of a certain status
+      if( (!isset( $_GET['events'] ) || $_GET['events'] != 'all') && !isset( $_GET['post_status'] ) ){
+        $query->query_vars['meta_query'] = array(
+                                              array(
+                                                'key' => '_end_date_time',
+                                                'value' => current_time( 'timestamp' ),
+                                                'compare' => $events_to_show
+                                              ));
+      }
+      
+      //If the user isn't trying to order by something then show based on start date of event.
+      if( !isset( $_GET['orderby'] ) ){
+        $query->query_vars['meta_key'] = '_start_date_time';
+        $query->query_vars['orderby'] = 'meta_value_num';
+        $query->query_vars['order'] = 'desc';
+      }//End if the user is trying to order by something.      
+    }//End if on board events list
+  }
+  
+  
+  /*
+   * Add views for upcoming, all or past events on the board events list screen.
+   * 
+   * To make it easier on users to go through events we created views
+   * to see upcoming, all or past events.  This will be very helpful to users
+   * when the number of events becomes large.
+   * 
+   * @param array $views Links to all the views for board events list.
+   * @return $views Updated list of views with upcoming, past and all added.
+   */
+  public function add_views_links( $views ) {
+    
+    //Store our new views in an array
+    $new_views = array();
+    
+    //View all events
+    $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'all' ) ? 'current' : '';
+    $all_query_string = remove_query_arg( 'post_status' );
+		$all_query_string = add_query_arg( 'events', urlencode('all'), $all_query_string );    
+    $new_views['all_board_events'] = '<a href="'. $all_query_string . '" class="' . $class . '">All Events</a>';
+    
+    //View future events
+    $class = ( !isset( $_GET['post_status'] ) && !isset( $_GET['events'] ) ) ? 'current' : '';
+		$future_query_string = remove_query_arg( array( 'events', 'post_status' ) );
+		$new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">Upcoming Events</a>';
+    
+		//View past events
+    $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'past' ) ? 'current' : '';
+    $past_query_string = remove_query_arg( 'post_status' );
+		$past_query_string = add_query_arg( 'events', urlencode('past'), $past_query_string );
+		$new_views['past_board_events'] = '<a href="'. $past_query_string . '" class="' . $class . '">Past Events</a>';
+    
+    //Make the array have the order we want.
+    array_splice($views, 0, 1, $new_views);
+    
+		return $views;
+	}
   
   
  /*
