@@ -530,15 +530,20 @@ class WI_Board_Attendance {
    * @return int Number attended or not attended.
    */
   private function get_num_events_attendance( $board_member_id, $attended = 1 ){
-    global $wpdb;
+    global $wpdb, $wi_board_events;
 
     $attendance_table = $this->table_name;
+    $postmeta_table = $wi_board_events->get_table_prefix() . 'postmeta';
     $num_attendance = $wpdb->get_var(
             "
-              SELECT COUNT( attended )
+              SELECT COUNT( {$attendance_table}.attended )
               FROM {$attendance_table}
+              INNER JOIN {$postmeta_table}
+              ON {$attendance_table}.post_id = {$postmeta_table}.post_id
               WHERE user_id = {$board_member_id}
               AND attended = {$attended}
+              AND {$postmeta_table}.meta_key = '_start_date_time'
+              AND {$postmeta_table}.meta_value < " . current_time( 'timestamp' ) . "
             "
             );  
 
@@ -571,6 +576,7 @@ class WI_Board_Attendance {
                         ON {$attendance_table}.post_id = {$postmeta_table}.post_id
                         WHERE {$attendance_table}.user_id = {$board_member_id}
                         AND {$postmeta_table}.meta_key = '_start_date_time'
+                        AND {$postmeta_table}.meta_value < " . current_time( 'timestamp' ) . "
                         ORDER BY {$postmeta_table}.meta_value DESC
                         "
                        );
