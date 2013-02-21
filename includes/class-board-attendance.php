@@ -81,7 +81,7 @@ class WI_Board_Attendance {
   public function create_attendance_meta_boxes(){
     if( current_user_can( 'track_event_attendance' ) ){
       add_meta_box( 'board_event_attendance',
-          'Track Attendance',
+          __( 'Track Attendance', 'nonprofit-board-management' ),
           array( $this, 'display_attendance_tracking_meta' ),
           'board_events', 'normal', 'default'
       );
@@ -103,7 +103,7 @@ class WI_Board_Attendance {
     $event_end_time = get_post_meta( $board_event->ID, '_end_date_time', true );
     $current_time = current_time( 'timestamp' );
     if( $event_end_time > $current_time ){
-      _e( 'You will be able to track attendance once the event has passed the end date and time.' );
+      _e( 'You will be able to track attendance once the event has passed the end date and time.', 'nonprofit-board-management' );
       
       return false;
     }
@@ -128,13 +128,13 @@ class WI_Board_Attendance {
         <td><?php echo esc_html( $board_member->display_name ); ?></td>
         <td>
           <input type="radio" id="attended-<?php echo $board_member->ID; ?>" name="attendance-<?php echo $board_member->ID; ?>" <?php checked( $attended, 1 ); ?> value="1" />
-          <label for="attended-<?php echo $board_member->ID; ?>"> <?php _e( 'Attended' ); ?></label>
+          <label for="attended-<?php echo $board_member->ID; ?>"> <?php _e( 'Attended', 'nonprofit-board-management' ); ?></label>
           
           <input type="radio" id="not-<?php echo $board_member->ID; ?>" name="attendance-<?php echo $board_member->ID; ?>" <?php checked( $attended, 0 ); ?> value="0" />
-          <label for="not-<?php echo $board_member->ID; ?>"> <?php _e( 'Didn\'t Attend' ); ?></label>
+          <label for="not-<?php echo $board_member->ID; ?>"> <?php _e( "Didn't Attend", 'nonprofit-board-management' ); ?></label>
           
           <input type="radio" id="na-<?php echo $board_member->ID; ?>" name="attendance-<?php echo $board_member->ID; ?>" <?php checked( $attended, false ); ?> value="na" />
-          <label for="na-<?php echo $board_member->ID; ?>"> <?php _e( 'N/A' ); ?></label>
+          <label for="na-<?php echo $board_member->ID; ?>"> <?php _e( 'N/A', 'nonprofit-board-management' ); ?></label>
         </td>
       </tr> 
     <?php
@@ -203,27 +203,27 @@ class WI_Board_Attendance {
   public function display_board_attendance_page(){ ?>
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Board Event Attendance' ); ?></h2>
+        <h2><?php _e( 'Board Event Attendance', 'nonprofit-board-management' ); ?></h2>
         <p>
           <?php _e( 'To see more details about each board member\'s attendance, 
-            click the "View Detailed Event Attendance" link that shows up when you hover over their name.' ); ?><br />
+            click the "View Detailed Event Attendance" link that shows up when you hover over their name.', 'nonprofit-board-management' ); ?><br />
           <?php echo $this->get_users_tracking_attendance(); ?>
         </p>
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" id="name" class="manage-column column-username">Name</th>
-              <th scope="col" id="attended" class="manage-column column-attended num">Attended</th>
-              <th scope="col" id="not-attended" class="manage-column column-not-attended num">Didn't Attend</th>
-              <th scope="col" id="total" class="manage-column column-total num">Total Events</th>
+              <th scope="col" id="name" class="manage-column column-username"><?php _e( 'Name', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="attended" class="manage-column column-attended num"><?php _e( 'Attended', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="not-attended" class="manage-column column-not-attended num"><?php _e( "Didn't Attend", 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="total" class="manage-column column-total num"><?php _e( 'Total Events', 'nonprofit-board-management' ); ?></th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th scope="col" class="manage-column column-username">Name</th>
-              <th scope="col" class="manage-column column-attended num">Attended</th>
-              <th scope="col" class="manage-column column-not-attended num">Didn't Attend</th>
-              <th scope="col" class="manage-column column-total num">Total Events</th>
+              <th scope="col" class="manage-column column-username"><?php _e( 'Name', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-attended num"><?php _e( 'Attended', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-not-attended num"><?php _e( "Didn't Attend", 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-total num"><?php _e( 'Total Events', 'nonprofit-board-management' ); ?></th>
             </tr>
           </tfoot>
           <tbody>
@@ -234,7 +234,7 @@ class WI_Board_Attendance {
             //If no board members were found then give them a message.
             if( empty( $board_members ) ){ ?>
                 <tr class="no-items">
-                  <td class="colspanchange" colspan="5"><?php _e( 'No board members were found.  You should create some users and set their role to "Board Member".' ); ?></td>
+                  <td class="colspanchange" colspan="5"><?php _e( 'No board members were found.  You should create some users and set their role to "Board Member".', 'nonprofit-board-management' ); ?></td>
                 </tr>
             <?php
             }
@@ -248,7 +248,7 @@ class WI_Board_Attendance {
                    <?php echo get_avatar( $board_member->ID, '44' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?><br />
                    <div class="row-actions">
                      <span class="view">
-                       <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance/member&id=' . $board_member->ID ); ?>">View Detailed Event Attendance</a>
+                       <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance/member&id=' . $board_member->ID ); ?>"><?php _e( 'View Detailed Event Attendance', 'nonprofit-board-management' ); ?></a>
                      </span>
                    </div>
                  </td>
@@ -281,7 +281,7 @@ class WI_Board_Attendance {
     //Show an error if the id of the user isn't present or isn't a number.
     if( !isset( $_GET['id'] ) || !is_numeric( $_GET['id'] ) ){ ?>
       <div id="message" class="error">
-        <p><?php _e( 'Oops.  You shouldn\'t be on this page right now.' ); ?></p>
+        <p><?php _e( 'Oops.  You shouldn\'t be on this page right now.', 'nonprofit-board-management' ); ?></p>
       </div>
     <?php 
       return false;
@@ -294,31 +294,33 @@ class WI_Board_Attendance {
     ?>
     <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Board Member Attedance: ' ); echo $board_member->display_name; ?></h2>
+        <h2><?php _e( 'Board Member Attedance: ', 'nonprofit-board-management' ); echo $board_member->display_name; ?></h2>
         <h3 class="member-attendance">
           <?php
-          _e( 'Attended: ' );
+          _e( 'Attended: ', 'nonprofit-board-management' );
           echo $attendance['attended'] . ' (' . $attendance['attended_perc'] . '%) | ';
-          _e( 'Didn\'t Attend: ' );
+          _e( 'Didn\'t Attend: ', 'nonprofit-board-management' );
           echo $attendance['not'] . ' (' . $attendance['not_perc'] . '%) | ';
-          _e( 'Total Events Tracked: ' );
+          _e( 'Total Events Tracked: ', 'nonprofit-board-management' );
           echo $attendance['total'];
           ?>
         </h3>
-        <p>Back to <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/attendance' ); ?>">Event Attendance Summary</a>.</p>
+        <p>
+          <?php printf( __( 'Back to <a href="%s">Event Attendance Summary</a>.', 'nonprofit-board-management' ), admin_url( 'admin.php?page=nonprofit-board/attendance' ) ); ?>
+        </p>
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" id="event" class="manage-column column-event">Board Event</th>
-              <th scope="col" id="attended" class="manage-column column-attended num">Attended</th>
-              <th scope="col" id="not-attended" class="manage-column column-not-attended num">Didn't Attend</th>
+              <th scope="col" id="event" class="manage-column column-event"><?php _e( 'Board Event', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="attended" class="manage-column column-attended num"><?php _e( 'Attended', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="not-attended" class="manage-column column-not-attended num"><?php _e( "Didn't Attend", 'nonprofit-board-management' ); ?></th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th scope="col" id="event" class="manage-column column-event">Board Event</th>
-              <th scope="col" class="manage-column column-attended num">Attended</th>
-              <th scope="col" class="manage-column column-not-attended num">Didn't Attend</th>
+              <th scope="col" id="event" class="manage-column column-event"><?php _e( 'Board Event', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-attended num"><?php _e( 'Attended', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-not-attended num"><?php _e( "Didn't Attend", 'nonprofit-board-management' ); ?></th>
             </tr>
           </tfoot>
           <tbody>
@@ -344,8 +346,8 @@ class WI_Board_Attendance {
                      </a></strong><br />
                    <?php echo $wi_board_events->format_event_times( $board_event_meta['start_date_time'], '', true ); ?>
                  </td>
-                 <td class="num"><?php if( $event->attended == 1 ) _e( 'X' ); ?></td>
-                 <td class="num"><?php if( $event->attended == 0 ) _e( 'X' ); ?></td>
+                 <td class="num"><?php if( $event->attended == 1 ) _e( 'X', 'nonprofit-board-management' ); ?></td>
+                 <td class="num"><?php if( $event->attended == 0 ) _e( 'X', 'nonprofit-board-management' ); ?></td>
                </tr>
              <?php
              $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
@@ -354,7 +356,7 @@ class WI_Board_Attendance {
           ?>
           </tbody>
         </table>
-        <p><?php _e( '*Events that have been permanently deleted will not show in the list of events.' ); ?></p>
+        <p><?php _e( '*Events that have been permanently deleted will not show in the list of events.', 'nonprofit-board-management' ); ?></p>
     </div>
   <?php
   }
@@ -464,10 +466,10 @@ class WI_Board_Attendance {
     
     if( empty( $attendance_trackers ) ){
       return __( 'No one is currently able to track attendance.  A WordPress admin can give a 
-        board member permission to do this on the member\'s profile edit page.' );
+        board member permission to do this on the member\'s profile edit page.', 'nonprofit-board-management' );
     }
     else{
-      $trackers_string = sprintf( __( 'The following board members are able to track event attendance through <a href="%s">each past event\'s edit screen</a>: ' ), admin_url( 'edit.php?post_type=board_events' ) );
+      $trackers_string = sprintf( __( 'The following board members are able to track event attendance through <a href="%s">each past event\'s edit screen</a>: ', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) );
       $trackers_string .= implode( ', ', $attendance_trackers );
       
       return $trackers_string;

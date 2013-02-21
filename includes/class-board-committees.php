@@ -52,19 +52,19 @@ class WI_Board_Committees {
    */
   public function create_board_committees_type(){
     $labels = array(
-      'name' => 'Board Committees',
-      'singular_name' => 'Board Committee',
-      'add_new' => 'Add Board Committee',
-      'add_new_item' => 'Add Board Committee',
-      'edit_item' => 'Edit Board Committee',
-      'new_item' => 'New Board Committee',
-      'all_items' => 'All Board Committees',
-      'view_item' => 'View Board Committee',
-      'search_items' => 'Search Board Committees',
-      'not_found' =>  'No board committees found',
-      'not_found_in_trash' => 'No board committees found in trash', 
+      'name' => __( 'Board Committees', 'nonprofit-board-management' ),
+      'singular_name' => __( 'Board Committee', 'nonprofit-board-management' ),
+      'add_new' => __( 'Add Board Committee', 'nonprofit-board-management' ),
+      'add_new_item' => __( 'Add Board Committee', 'nonprofit-board-management' ),
+      'edit_item' => __( 'Edit Board Committee', 'nonprofit-board-management' ),
+      'new_item' => __( 'New Board Committee', 'nonprofit-board-management' ),
+      'all_items' => __( 'All Board Committees', 'nonprofit-board-management' ),
+      'view_item' => __( 'View Board Committee', 'nonprofit-board-management' ),
+      'search_items' => __( 'Search Board Committees', 'nonprofit-board-management' ),
+      'not_found' =>  __( 'No board committees found', 'nonprofit-board-management' ),
+      'not_found_in_trash' => __( 'No board committees found in trash', 'nonprofit-board-management' ), 
       'parent_item_colon' => '',
-      'menu_name' => 'Board Committees'
+      'menu_name' => __( 'Board Committees', 'nonprofit-board-management' )
     );
 
     $args = array(
@@ -144,14 +144,14 @@ class WI_Board_Committees {
   public function create_board_committee_meta_boxes(){
     //Committee description
     add_meta_box( 'board_committee_desc',
-        'Committee Description',
+        __( 'Committee Description', 'nonprofit-board-management' ),
         array( $this, 'display_board_committee_desc' ),
         'board_committees', 'normal', 'high'
     );
     
     //List of board members on the committee
     add_meta_box( 'board_committee_members',
-        'Committee Members',
+        __( 'Committee Members', 'nonprofit-board-management' ),
         array( $this, 'display_board_committee_members' ),
         'board_committees', 'normal', 'default'
     );
@@ -269,17 +269,17 @@ class WI_Board_Committees {
   public function change_updated_messages( $messages ){    
     $messages['board_committees'] = array(
       0 => '', // Unused. Messages start at index 1.
-      1 => sprintf( __( 'Committee updated. <a href="%s">View all of your committees</a>.' ), admin_url( 'edit.php?post_type=board_committees' ) ),
-      2 => __( 'Custom field updated.' ),
-      3 => __( 'Custom field deleted.' ),
-      4 => sprintf( __( 'Committee updated. <a href="%s">View all of your committees</a>.' ), admin_url( 'edit.php?post_type=board_committees' ) ),
+      1 => sprintf( __( 'Committee updated. <a href="%s">View all of your committees</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_committees' ) ),
+      2 => __( 'Custom field updated.', 'nonprofit-board-management' ),
+      3 => __( 'Custom field deleted.', 'nonprofit-board-management' ),
+      4 => sprintf( __( 'Committee updated. <a href="%s">View all of your committees</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_committees' ) ),
      /* translators: %s: date and time of the revision */
-      5 => isset( $_GET['revision'] ) ? sprintf( __( 'Committee restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-      6 => sprintf( __( 'Committee published. <a href="%s">View all of your committees</a>.' ), admin_url( 'edit.php?post_type=board_committees' ) ),
-      7 => __( 'Committee saved.' ),
-      8 => __( 'Committee submitted.' ),
-      9 => __( 'You should not be scheduling committees.  It just won\'t work.'),
-     10 => __( 'Committee draft updated.' )
+      5 => isset( $_GET['revision'] ) ? sprintf( __( 'Committee restored to revision from %s', 'nonprofit-board-management' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+      6 => sprintf( __( 'Committee published. <a href="%s">View all of your committees</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_committees' ) ),
+      7 => __( 'Committee saved.', 'nonprofit-board-management' ),
+      8 => __( 'Committee submitted.', 'nonprofit-board-management' ),
+      9 => __( 'You should not be scheduling committees.  It just won\'t work.', 'nonprofit-board-management' ),
+     10 => __( 'Committee draft updated.', 'nonprofit-board-management' )
     );
     
     return $messages;
@@ -295,9 +295,9 @@ class WI_Board_Committees {
   public function edit_board_committees_columns( $columns ) {
     $columns = array(
       'cb' => '<input type="checkbox" />',
-      'title' => __( 'Title' ),
-      'description' => __( 'Description' ),
-      'committee_members' => __( 'Committee Members' ),
+      'title' => __( 'Title', 'nonprofit-board-management' ),
+      'description' => __( 'Description', 'nonprofit-board-management' ),
+      'committee_members' => __( 'Committee Members', 'nonprofit-board-management' ),
     );
 
     return $columns;
@@ -338,7 +338,7 @@ class WI_Board_Committees {
    * @return array A new list of contact methods with our methods added.
    */
   public function add_phone_contactmethod( $user_contactmethods ){
-    $user_contactmethods['phone'] = 'Phone Number';
+    $user_contactmethods['phone'] = __( 'Phone Number', 'nonprofit-board-management' );
 
     return $user_contactmethods;
   }
@@ -364,21 +364,21 @@ class WI_Board_Committees {
     $job_title = get_user_meta($board_member->ID, 'job_title', true);
 
     ?>
-    <h3><?php _e( 'Additional Info for the Board' ); ?></h3>
+    <h3><?php _e( 'Additional Info for the Board', 'nonprofit-board-management' ); ?></h3>
 
     <table class="form-table">
       <tr>
-        <th><label for="current-employer">Current Employer</label></th>
+        <th><label for="current-employer"><?php _e( 'Current Employer', 'nonprofit-board-management' ); ?></label></th>
         <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo sanitize_text_field( $current_employer ); ?>" /></td>
       </tr>
 
       <tr>
-        <th><label for="job-title">Job Title</label></th>
+        <th><label for="job-title"><?php _e( 'Job Title', 'nonprofit-board-management' ); ?></label></th>
         <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo sanitize_text_field( $job_title ); ?>" /></td>
       </tr>
 
       <tr>
-        <th><label>Your Committees</label></th>
+        <th><label><?php _e( 'Your Committees', 'nonprofit-board-management' ); ?></label></th>
         <td>
           <?php echo $this->get_all_committee_inputs( $board_member->ID ); ?>
         </td>
@@ -388,9 +388,9 @@ class WI_Board_Committees {
       //Only show checkbox to no longer serve on the board if user is admin
       if( user_can( $board_member, 'manage_options' ) ){ ?>
         <tr>
-          <th>Serving on Board</th>
+          <th><?php _e( 'Serving on Board', 'nonprofit-board-management' ); ?></th>
           <td>
-            <label><input type="checkbox" name="serve-on-board" checked="checked" /> Uncheck this box and click the "Update Profile" button to no longer serve on the board.</label>
+            <label><input type="checkbox" name="serve-on-board" checked="checked" /> <?php _e( 'Uncheck this box and click the "Update Profile" button to no longer serve on the board.', 'nonprofit-board-management' ); ?></label>
             <input type="hidden" name="serve-on-board-available" value="1" />
           </td>
         </tr>
@@ -404,9 +404,9 @@ class WI_Board_Committees {
         }
       ?>
       <tr>
-        <th>Tracking Attendance</th>
+        <th><?php _e( 'Tracking Attendance', 'nonprofit-board-management' ); ?></th>
         <td>
-          <label><input type="checkbox" name="track-attendance" <?php checked( $can_track ); ?> /> Allow board member to track event attendance</label>
+          <label><input type="checkbox" name="track-attendance" <?php checked( $can_track ); ?> /> <?php _e( 'Allow board member to track event attendance', 'nonprofit-board-management' ); ?></label>
           <input type="hidden" name="track-attendance-available" value="1" />
         </td>
       </tr>
@@ -471,7 +471,7 @@ class WI_Board_Committees {
   */
  public function add_board_committees_dashboard_widget(){
    if( current_user_can( 'view_board_content' ) ){
-    wp_add_dashboard_widget('board_committees_db_widget', 'Board Committees', array( $this, 'display_board_committees_dashboard_widget' ) );
+    wp_add_dashboard_widget('board_committees_db_widget', __( 'Board Committees', 'nonprofit-board-management' ), array( $this, 'display_board_committees_dashboard_widget' ) );
    }
  }
 
@@ -486,10 +486,7 @@ class WI_Board_Committees {
    
    //If no committees show the user a message.
    if( empty( $board_committees ) ){
-     _e( 'There are no board committees. ' );
-     echo '<a href="' . admin_url( 'edit.php?post_type=board_committees' ) . '">';
-     _e( 'Go ahead and add some.' );
-     echo '</a>';
+     printf( __( 'There are no board committees. <a href="%s">Go ahead and add some.</a>', 'nonprofit-board-management' ),  admin_url( 'edit.php?post_type=board_committees' ) );
      
      return;
    }
@@ -499,7 +496,7 @@ class WI_Board_Committees {
      echo '<p>' . $this->get_committee_member_list( $board_committee->ID ) . '</p>';
    }
    
-   echo '<p class="note"><a href="' . admin_url( 'edit.php?post_type=board_committees' ) . '">View and edit the committees</a></p>';
+   echo '<p class="note"><a href="' . admin_url( 'edit.php?post_type=board_committees' ) . '">' . __( 'View and edit the committees', 'nonprofit-board-management' ) . '</a></p>';
  }
     
   
@@ -631,9 +628,9 @@ class WI_Board_Committees {
     global $wi_board_mgmt;
     $board_members = $wi_board_mgmt->board_members;
     
-    //Provide mesage if no board members exist
+    //Provide message if no board members exist
     if( empty( $board_members ) ){
-      return _( '<p>There aren\'t currently any members on your board so no one can join a committee.</p>' );
+      return '<p>' . __( "There aren't currently any members on your board so no one can join a committee.", 'nonprofit-board-management' ) . '</p>';
     }
     
     //Loop through users and add them
@@ -670,7 +667,7 @@ class WI_Board_Committees {
 
     //If there aren't any committees then we tell the user
     if( empty( $board_committees ) ){
-      $committee_inputs = _( 'No committees have been created yet.' );
+      $committee_inputs = __( 'No committees have been created yet.', 'nonprofit-board-management' );
       
       return $committee_inputs;
     }

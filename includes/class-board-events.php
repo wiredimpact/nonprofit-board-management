@@ -440,17 +440,17 @@ class WI_Board_Events {
   public function change_updated_messages( $messages ){    
     $messages['board_events'] = array(
       0 => '', // Unused. Messages start at index 1.
-      1 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.' ), admin_url( 'edit.php?post_type=board_events' ) ),
-      2 => __( 'Custom field updated.' ),
-      3 => __( 'Custom field deleted.' ),
-      4 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.' ), admin_url( 'edit.php?post_type=board_events' ) ),
+      1 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
+      2 => __( 'Custom field updated.', 'nonprofit-board-management' ),
+      3 => __( 'Custom field deleted.', 'nonprofit-board-management' ),
+      4 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
      /* translators: %s: date and time of the revision */
-      5 => isset( $_GET['revision'] ) ? sprintf( __( 'Event restored to revision from %s'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-      6 => sprintf( __( 'Event published. <a href="%s">View all of your events</a>.' ), admin_url( 'edit.php?post_type=board_events' ) ),
-      7 => __( 'Event saved.' ),
-      8 => __( 'Event submitted.' ),
-      9 => __( 'You should not be scheduling events this way.  It just won\'t work.'),
-     10 => __( 'Event draft updated.' )
+      5 => isset( $_GET['revision'] ) ? sprintf( __( 'Event restored to revision from %s', 'nonprofit-board-management' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+      6 => sprintf( __( 'Event published. <a href="%s">View all of your events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
+      7 => __( 'Event saved.', 'nonprofit-board-management' ),
+      8 => __( 'Event submitted.', 'nonprofit-board-management' ),
+      9 => __( 'You should not be scheduling events this way.  It just won\'t work.', 'nonprofit-board-management' ),
+     10 => __( 'Event draft updated.', 'nonprofit-board-management' )
     );
     
     return $messages;
@@ -492,23 +492,23 @@ class WI_Board_Events {
 
     //If they want the start date and time only
     if( $start_only == true ){
-      $event_time = date( 'D, F d, Y \&#64; g:i a', $start_date_time);
+      $event_time = date( __( 'D, F d, Y \&#64; g:i a', 'nonprofit-board-management' ), $start_date_time);
       
       return $event_time;
     }
    
     //If dates are the same then only show date on first date, with time on both
     if( date( 'Ymd', $start_date_time ) == date( 'Ymd', $end_date_time ) ){
-      $event_time = date( 'D, F d, Y', $start_date_time) . '<br />';
-      $event_time .= date( 'g:i a', $start_date_time);
+      $event_time = date( __( 'D, F d, Y', 'nonprofit-board-management' ), $start_date_time) . '<br />';
+      $event_time .= date( __( 'g:i a', 'nonprofit-board-management' ), $start_date_time);
       $event_time .= ' - ';
-      $event_time .= date( 'g:i a', $end_date_time);
+      $event_time .= date( __( 'g:i a', 'nonprofit-board-management' ), $end_date_time);
     }
     //If dates are different then show dates for start and end
     else{
-      $event_time = date( 'D, F d, Y g:i a', $start_date_time);
+      $event_time = date( __( 'D, F d, Y g:i a', 'nonprofit-board-management' ), $start_date_time);
       $event_time .= ' - <br />';
-      $event_time .= date( 'D, F d, Y g:i a', $end_date_time);
+      $event_time .= date( __( 'D, F d, Y g:i a', 'nonprofit-board-management' ), $end_date_time);
     }
 
     return $event_time;
@@ -605,11 +605,11 @@ class WI_Board_Events {
  public function edit_board_events_columns( $columns ) {
    $columns = array(
      'cb' => '<input type="checkbox" />',
-     'title' => __( 'Title' ),
-     'location' => __( 'Location' ),
-     'date_time' => __( 'Date & Time' ),
-     'description' => __( 'Description' ),
-     'attending' => __( 'Who\'s Coming?' ),
+     'title' => __( 'Title', 'nonprofit-board-management' ),
+     'location' => __( 'Location', 'nonprofit-board-management' ),
+     'date_time' => __( 'Date & Time', 'nonprofit-board-management' ),
+     'description' => __( 'Description', 'nonprofit-board-management' ),
+     'attending' => __( 'Who\'s Coming?', 'nonprofit-board-management' ),
    );
    
    //Only show the RSVP column if the user has that capability.
