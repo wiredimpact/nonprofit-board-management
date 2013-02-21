@@ -442,7 +442,7 @@ class WI_Board_Committees {
     }
     //Board committees
     if( isset( $_REQUEST['board-committees'] ) ){
-      update_user_meta( $board_member_id, 'board_committees', $_REQUEST['board-committees'] );
+      update_user_meta( $board_member_id, 'board_committees', array_map( 'absint', $_REQUEST['board-committees'] ) );
     }
     else{
       delete_user_meta( $board_member_id, 'board_committees' );
