@@ -504,7 +504,7 @@ class WI_Board_Management {
      */
     public function add_board_members_dashboard_widget(){
       if( current_user_can( 'view_board_content' ) ){
-        wp_add_dashboard_widget('board_members_db_widget', 'Board Members', array( $this, 'display_board_members_dashboard_widget' ) );
+        wp_add_dashboard_widget('board_members_db_widget', __( 'Board Members', 'nonprofit-board-management' ), array( $this, 'display_board_members_dashboard_widget' ) );
       }
     }
     

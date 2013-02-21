@@ -141,7 +141,7 @@ class WI_Board_Events {
     wp_localize_script( 'board-mgmt', 'wi_board_events', array(
       // generate a nonces that can be checked later on save
       'save_rsvp_nonce' => wp_create_nonce( 'save_rsvp_nonce' ),  
-      'error_rsvp' => __( 'Woops.  We failed to RSVP for you.  Please try again.' ),
+      'error_rsvp' => __( 'Woops.  We failed to RSVP for you.  Please try again.', 'nonprofit-board-management' ),
       )
      );
   }
@@ -152,19 +152,19 @@ class WI_Board_Events {
    */
   public function create_board_events_type(){
     $labels = array(
-      'name' => 'Board Events',
-      'singular_name' => 'Board Event',
-      'add_new' => 'Add Board Event',
-      'add_new_item' => 'Add Board Event',
-      'edit_item' => 'Edit Board Event',
-      'new_item' => 'New Board Event',
-      'all_items' => 'All Board Events',
-      'view_item' => 'View Board Event',
-      'search_items' => 'Search Board Events',
-      'not_found' =>  'No board events found',
-      'not_found_in_trash' => 'No board events found in trash', 
+      'name' => __( 'Board Events', 'nonprofit-board-management' ),
+      'singular_name' => __( 'Board Event', 'nonprofit-board-management' ),
+      'add_new' => __( 'Add Board Event', 'nonprofit-board-management' ),
+      'add_new_item' => __( 'Add Board Event', 'nonprofit-board-management' ),
+      'edit_item' => __( 'Edit Board Event', 'nonprofit-board-management' ),
+      'new_item' => __( 'New Board Event', 'nonprofit-board-management' ),
+      'all_items' => __( 'All Board Events', 'nonprofit-board-management' ),
+      'view_item' => __( 'View Board Event', 'nonprofit-board-management' ),
+      'search_items' => __( 'Search Board Events', 'nonprofit-board-management' ),
+      'not_found' =>  __( 'No board events found', 'nonprofit-board-management' ),
+      'not_found_in_trash' => __( 'No board events found in trash', 'nonprofit-board-management' ), 
       'parent_item_colon' => '',
-      'menu_name' => 'Board Events'
+      'menu_name' => __( 'Board Events', 'nonprofit-board-management' )
     );
 
     $args = array(
@@ -248,7 +248,7 @@ class WI_Board_Events {
   public function create_board_events_meta_boxes(){
     //Details of board event
     add_meta_box( 'board_event_details',
-        'Board Event Details',
+        __( 'Board Event Details', 'nonprofit-board-management' ),
         array( $this, 'display_board_event_details' ),
         'board_events', 'normal', 'high'
     );
@@ -265,7 +265,7 @@ class WI_Board_Events {
   public function create_existing_event_meta_boxes(){
     //Current signup info for board event
     add_meta_box( 'board_event_rsvps',
-        'RSVP List',
+        __( 'RSVP List', 'nonprofit-board-management' ),
         array( $this, 'display_board_event_rsvps' ),
         'board_events', 'side', 'default'
     );
@@ -285,35 +285,35 @@ class WI_Board_Events {
     <input type="hidden" id="_event_details_nonce" name="_event_details_nonce" value="<?php echo $nonce ?>" />
     <table class="board-event-meta">
       <tr>
-        <td><label for="event-description">Event Description</label></td>
+        <td><label for="event-description"><?php _e( 'Event Description', 'nonprofit-board-management' ); ?></label></td>
         <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo sanitize_text_field( $board_event_meta['event_description'] ); ?></textarea></td>
       </tr>
       
       <tr>
-        <td><label for="location">Location Name</label></td>
+        <td><label for="location"><?php _e( 'Location Name', 'nonprofit-board-management' ); ?></label></td>
         <td><input type="text" id="location" name="location" tabindex="20" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['location'] ); ?>" /></td>
       </tr>
       
       <tr>
-        <td><label for="street">Street Address</label></td>
+        <td><label for="street"><?php _e( 'Street Address', 'nonprofit-board-management' ); ?></label></td>
         <td><input type="text" id="street" name="street" tabindex="30" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['street'] ); ?>" /></td>
       </tr>
       
       <tr>
-        <td><label for="area">City, State Zip</label></td>
+        <td><label for="area"><?php _e( 'City, State Zip', 'nonprofit-board-management' ); ?></label></td>
         <td><input type="text" id="area" name="area" tabindex="40" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['area'] ); ?>" /></td>
       </tr>
       
       <tr>
-        <td><label for="start-date-time">Start Date & Time</label></td>
+        <td><label for="start-date-time"><?php _e( 'Start Date & Time', 'nonprofit-board-management' ); ?></label></td>
         <td><input type="text" id="start-date-time" name="start-date-time" tabindex="50" class="regular-text" value="<?php if ( $board_event_meta['start_date_time'] != '' ) echo $this->format_event_times( $board_event_meta['start_date_time'], '', true ); ?>" /></td>
       </tr>
       
       <tr>
-        <td><label for="end-date-time">End Date & Time</label></td>
+        <td><label for="end-date-time"><?php _e( 'End Date & Time', 'nonprofit-board-management' ); ?></label></td>
         <td>
           <input type="text" id="end-date-time" name="end-date-time" tabindex="60" class="regular-text" value="<?php if( $board_event_meta['end_date_time'] != '' ) echo $this->format_event_times( $board_event_meta['end_date_time'], '', true ); ?>" />
-          <span class="error" style="display: none;"><?php _e( 'Woops, it looks like you set your event to end before it started.' ); ?></span>
+          <span class="error" style="display: none;"><?php _e( 'Woops, it looks like you set your event to end before it started.', 'nonprofit-board-management' ); ?></span>
         </td>
       </tr>
       
@@ -404,11 +404,11 @@ class WI_Board_Events {
     }
     
     //Display all the board members
-    echo '<h4>Going (' . count( $attending ) . ')</h4>';
+    echo '<h4>' . __( 'Going', 'nonprofit-board-management' ) . ' (' . count( $attending ) . ')</h4>';
     echo implode( ', ', $attending );
-    echo '<h4>Not Going (' . count( $not_attending ) . ')</h4>';
+    echo '<h4>' . __( 'Not Going', 'nonprofit-board-management' ) . ' (' . count( $not_attending ) . ')</h4>';
     echo implode( ', ', $not_attending );
-    echo '<h4>Not Responsed (' . count( $no_response ) . ')</h4>';
+    echo '<h4>' . __( 'Not Responded', 'nonprofit-board-management' ) . ' (' . count( $no_response ) . ')</h4>';
     echo implode( ', ', $no_response );
   }
   
@@ -576,18 +576,18 @@ class WI_Board_Events {
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'all' ) ? 'current' : '';
     $all_query_string = remove_query_arg( 'post_status' );
 		  $all_query_string = add_query_arg( 'events', urlencode('all'), $all_query_string );    
-    $new_views['all_board_events'] = '<a href="'. $all_query_string . '" class="' . $class . '">All Events</a>';
+    $new_views['all_board_events'] = '<a href="'. $all_query_string . '" class="' . $class . '">' . __( 'All Events', 'nonprofit-board-management' ) . '</a>';
     
     //View future events
     $class = ( !isset( $_GET['post_status'] ) && !isset( $_GET['events'] ) ) ? 'current' : '';
 		  $future_query_string = remove_query_arg( array( 'events', 'post_status' ) );
-		  $new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">Upcoming Events</a>';
+		  $new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">' . __( 'Upcoming Events', 'nonprofit-board-management' ) . '</a>';
     
 		//View past events
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'past' ) ? 'current' : '';
     $past_query_string = remove_query_arg( 'post_status' );
 		  $past_query_string = add_query_arg( 'events', urlencode('past'), $past_query_string );
-		  $new_views['past_board_events'] = '<a href="'. $past_query_string . '" class="' . $class . '">Past Events</a>';
+		  $new_views['past_board_events'] = '<a href="'. $past_query_string . '" class="' . $class . '">' . __( 'Past Events', 'nonprofit-board-management' ) . '</a>';
     
     //Make the array have the order we want.
     array_splice($views, 0, 1, $new_views);
@@ -683,14 +683,14 @@ class WI_Board_Events {
        if( $rsvp_status === 1 ){
          echo 'button-primary active';
        }
-       echo '" value="I\'m Going" />';
+       echo '" value="' . __( "I'm Going", 'nonprofit-board-management' ) . '" />';
        
        //Not attending RSVP button
        echo '<input id="not-attending" type="submit" class="button secondary-button ';
        if( $rsvp_status === 0 ){
          echo 'button-primary active';
        }
-       echo '" value="I\'m Not Going" />';
+       echo '" value="' . __( "I'm Not Going", 'nonprofit-board-management' ) . '" />';
        
        //Add the spinner for use during ajax loading.
        echo '<span class="waiting spinner" style="display: none;"></span>';
@@ -776,7 +776,7 @@ class WI_Board_Events {
  */
  public function add_board_events_dashboard_widget(){
    if( current_user_can( 'view_board_content' ) ){
-    wp_add_dashboard_widget('board_events_db_widget', 'Upcoming Board Events', array( $this, 'display_board_events_dashboard_widget' ) );
+    wp_add_dashboard_widget('board_events_db_widget', __( 'Upcoming Board Events', 'nonprofit-board-management' ), array( $this, 'display_board_events_dashboard_widget' ) );
    }
  }
 
@@ -801,10 +801,7 @@ class WI_Board_Events {
    
    //If no upcoming events show the user a message.
    if( empty( $upcoming_events ) ){
-     _e( 'There are no upcoming events. ' );
-     echo '<a href="' . admin_url( 'edit.php?post_type=board_events' ) . '">';
-     _e( 'Go ahead and add some.' );
-     echo '</a>';
+     printf( __( 'There are no upcoming events. <a href="%s">Go ahead and add some.</a>', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) );
      
      return;
    }
@@ -821,7 +818,7 @@ class WI_Board_Events {
      <?php
    }
    echo '</ul>';
-   echo '<p class="note"><a href="' . admin_url( 'edit.php?post_type=board_events' ) . '">View, edit and RSVP to events</a></p>';
+   echo '<p class="note"><a href="' . admin_url( 'edit.php?post_type=board_events' ) . '">' . __( 'View, edit and RSVP to events', 'nonprofit-board-management' ) . '</a></p>';
  }
  
  
