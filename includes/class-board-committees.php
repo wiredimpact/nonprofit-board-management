@@ -171,7 +171,7 @@ class WI_Board_Committees {
     <input type="hidden" id="committee_desc_nonce" name="committee_desc_nonce" value="<?php echo $nonce ?>" />
     <table class="committee-description-meta">
       <tr>
-        <td><textarea id="committee-description" name="committee-description" rows="6" tabindex="10"><?php echo $board_committee_meta['description']; ?></textarea></td>
+        <td><textarea id="committee-description" name="committee-description" rows="6" tabindex="10"><?php echo esc_textarea( $board_committee_meta['description'] ); ?></textarea></td>
       </tr>      
     </table>
     <?php
@@ -369,12 +369,12 @@ class WI_Board_Committees {
     <table class="form-table">
       <tr>
         <th><label for="current-employer">Current Employer</label></th>
-        <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo $current_employer; ?>" /></td>
+        <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo sanitize_text_field( $current_employer ); ?>" /></td>
       </tr>
 
       <tr>
         <th><label for="job-title">Job Title</label></th>
-        <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo $job_title; ?>" /></td>
+        <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo sanitize_text_field( $job_title ); ?>" /></td>
       </tr>
 
       <tr>
@@ -495,7 +495,7 @@ class WI_Board_Committees {
    }
    
    foreach( $board_committees as $board_committee ){
-     echo '<h4>' . $board_committee->post_title . '</h4>';
+     echo '<h4>' . esc_html( $board_committee->post_title ) . '</h4>';
      echo '<p>' . $this->get_committee_member_list( $board_committee->ID ) . '</p>';
    }
    
@@ -587,7 +587,7 @@ class WI_Board_Committees {
     if( $num_on_committee != 0 ) $committee_member_list .= ' - ';
     $committee_member_list .= implode( ', ', $members_on_committee );
     
-    return $committee_member_list;
+    return esc_html( $committee_member_list );
   }
  
   
@@ -613,7 +613,7 @@ class WI_Board_Committees {
       }
     }
     
-    return implode( ', ', $committees );
+    return esc_html( implode( ', ', $committees ) );
   }
 
   
@@ -645,9 +645,9 @@ class WI_Board_Committees {
       $committee_inputs .= '<label><input type="checkbox" tabindex="' . $tabindex . '" ';
       $committee_inputs .= checked( $this->is_user_on_committee( $user_committees, $board_committee_id ), true, false );
       $committee_inputs .= ' name="committee-members[]" value="';
-      $committee_inputs .= $board_member->ID;
+      $committee_inputs .= intval( $board_member->ID );
       $committee_inputs .= '" /> ';
-      $committee_inputs .= $board_member->display_name;
+      $committee_inputs .= esc_html( $board_member->display_name );
       $committee_inputs .= '</label><br />';
       
       $tabindex += 10;
@@ -688,9 +688,9 @@ class WI_Board_Committees {
       $committee_inputs .= '<label><input type="checkbox" ';
       $committee_inputs .= $checked;
       $committee_inputs .= ' name="board-committees[]" value="';
-      $committee_inputs .= $board_committee->ID;
+      $committee_inputs .= intval( $board_committee->ID );
       $committee_inputs .= '" /> ';
-      $committee_inputs .= $board_committee->post_title;
+      $committee_inputs .= esc_html( $board_committee->post_title );
       $committee_inputs .= '</label><br />';
     }
     

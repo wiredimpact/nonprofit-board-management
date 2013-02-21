@@ -122,9 +122,10 @@ class WI_Board_Attendance {
     <?php 
       foreach( $board_members as $board_member ){
         $attended = $this->get_user_event_attendance( $board_event->ID, $board_member->ID );
+        $board_member->ID = intval( $board_member->ID );
     ?>
       <tr>
-        <td><?php echo $board_member->display_name; ?></td>
+        <td><?php echo esc_html( $board_member->display_name ); ?></td>
         <td>
           <input type="radio" id="attended-<?php echo $board_member->ID; ?>" name="attendance-<?php echo $board_member->ID; ?>" <?php checked( $attended, 1 ); ?> value="1" />
           <label for="attended-<?php echo $board_member->ID; ?>"> <?php _e( 'Attended' ); ?></label>
@@ -251,9 +252,9 @@ class WI_Board_Attendance {
                      </span>
                    </div>
                  </td>
-                 <td class="attended column-attended num"><?php echo $attendance['attended'] . ' (' . $attendance['attended_perc'] . '%)'; ?></td>
-                 <td class="not-attended column-attended num"><?php echo $attendance['not'] . ' (' . $attendance['not_perc'] . '%)'; ?></td>
-                 <td class="total column-total num"><?php echo $attendance['total'] ?></td>
+                 <td class="attended column-attended num"><?php echo intval( $attendance['attended'] ) . ' (' . $attendance['attended_perc'] . '%)'; ?></td>
+                 <td class="not-attended column-attended num"><?php echo intval( $attendance['not'] ) . ' (' . $attendance['not_perc'] . '%)'; ?></td>
+                 <td class="total column-total num"><?php echo intval( $attendance['total'] ); ?></td>
                </tr>
              <?php
              $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
@@ -547,7 +548,7 @@ class WI_Board_Attendance {
             "
             );  
 
-    return $num_attendance;  
+    return intval( $num_attendance );  
   }
   
   

@@ -270,20 +270,20 @@ class WI_Board_Management {
         <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" id="name" class="manage-column column-name">Name</th>
-              <th scope="col" id="phone" class="manage-column column-phone">Phone</th>
-              <th scope="col" id="email" class="manage-column column-email">Email</th>
-              <th scope="col" id="job" class="manage-column column-job">Job</th>
-              <th scope="col" id="committees" class="manage-column column-committees">Committees</th>
+              <th scope="col" id="name" class="manage-column column-name"><?php _e( 'Name' ); ?></th>
+              <th scope="col" id="phone" class="manage-column column-phone"><?php _e( 'Phone' ); ?></th>
+              <th scope="col" id="email" class="manage-column column-email"><?php _e( 'Email' ); ?></th>
+              <th scope="col" id="job" class="manage-column column-job"><?php _e( 'Job' ); ?></th>
+              <th scope="col" id="committees" class="manage-column column-committees"><?php _e( 'Committees' ); ?></th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th scope="col" class="manage-column column-name">Name</th>
-              <th scope="col" class="manage-column column-phone">Phone</th>
-              <th scope="col" class="manage-column column-email">Email</th>
-              <th scope="col" class="manage-column column-job">Job</th>
-              <th scope="col" class="manage-column column-committees">Committees</th>
+              <th scope="col" class="manage-column column-name"><?php _e( 'Name' ); ?></th>
+              <th scope="col" class="manage-column column-phone"><?php _e( 'Phone' ); ?></th>
+              <th scope="col" class="manage-column column-email"><?php _e( 'Email' ); ?></th>
+              <th scope="col" class="manage-column column-job"><?php _e( 'Job' ); ?></th>
+              <th scope="col" class="manage-column column-committees"><?php _e( 'Committees' ); ?></th>
             </tr>
           </tfoot>
           <tbody>
@@ -322,9 +322,9 @@ class WI_Board_Management {
               </div>
               <?php }//if edit user ?>
             </td>
-            <td class="phone column-phone"><?php echo $board_member_meta->phone; ?></td>
-            <td class="email column-email"><?php echo $board_member->user_email; ?></td>
-            <td class="job column-job"><?php echo $job; ?></td>
+            <td class="phone column-phone"><?php echo esc_html( $board_member_meta->phone ); ?></td>
+            <td class="email column-email"><?php echo esc_html( $board_member->user_email ); ?></td>
+            <td class="job column-job"><?php echo esc_html( $job ); ?></td>
             <td class="committees column-committees"><?php echo WI_Board_Committees::get_user_committees( $board_member->ID ); ?></td>
           </tr>
         <?php
@@ -524,9 +524,9 @@ class WI_Board_Management {
       ?>
         <table class="widefat">
           <thead>
-            <th scope="col" class="column-name">Name</th>
-            <th scope="col" class="column-phone">Phone</th>
-            <th scope="col" lass="column-email">Email</th>
+            <th scope="col" class="column-name"><?php _e( 'Name' ); ?></th>
+            <th scope="col" class="column-phone"><?php _e( 'Phone' ); ?></th>
+            <th scope="col" class="column-email"><?php _e( 'Email' ); ?></th>
           </thead>
           <tbody>
       <?php
@@ -536,9 +536,9 @@ class WI_Board_Management {
         $board_member_meta = $this->get_board_member_meta( $board_member->ID );
         ?>
         <tr class="<?php echo $alternate; ?>">
-          <td><?php echo $board_member->display_name; ?></td>
-          <td><?php echo $board_member_meta->phone; ?></td>
-          <td><?php echo $board_member->user_email; ?></td>
+          <td><?php echo esc_html( $board_member->display_name ); ?></td>
+          <td><?php echo esc_html( $board_member_meta->phone ); ?></td>
+          <td><?php echo esc_html( $board_member->user_email ); ?></td>
         </tr>
         <?php
       $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';  
@@ -546,7 +546,7 @@ class WI_Board_Management {
       
       ?>
       </tbody></table>
-        <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>">View more board member details</a></p>
+        <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>"><?php _e( 'View more board member details' ); ?></a></p>
       <?php
     }
 

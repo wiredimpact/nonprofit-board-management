@@ -286,22 +286,22 @@ class WI_Board_Events {
     <table class="board-event-meta">
       <tr>
         <td><label for="event-description">Event Description</label></td>
-        <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo $board_event_meta['event_description']; ?></textarea></td>
+        <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo sanitize_text_field( $board_event_meta['event_description'] ); ?></textarea></td>
       </tr>
       
       <tr>
         <td><label for="location">Location Name</label></td>
-        <td><input type="text" id="location" name="location" tabindex="20" class="regular-text" value="<?php echo $board_event_meta['location']; ?>" /></td>
+        <td><input type="text" id="location" name="location" tabindex="20" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['location'] ); ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="street">Street Address</label></td>
-        <td><input type="text" id="street" name="street" tabindex="30" class="regular-text" value="<?php echo $board_event_meta['street']; ?>" /></td>
+        <td><input type="text" id="street" name="street" tabindex="30" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['street'] ); ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="area">City, State Zip</label></td>
-        <td><input type="text" id="area" name="area" tabindex="40" class="regular-text" value="<?php echo $board_event_meta['area']; ?>" /></td>
+        <td><input type="text" id="area" name="area" tabindex="40" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['area'] ); ?>" /></td>
       </tr>
       
       <tr>
@@ -388,19 +388,19 @@ class WI_Board_Events {
     //Attending Array
     $attending = array();
     foreach( $rsvps['attending'] as $event_rsvp ){
-      $attending[] = $event_rsvp->display_name;
+      $attending[] = esc_html( $event_rsvp->display_name );
     }
     
     //Not Attending Array
     $not_attending = array();
     foreach( $rsvps['not_attending'] as $event_rsvp ){
-      $not_attending[] = $event_rsvp->display_name;
+      $not_attending[] = esc_html( $event_rsvp->display_name );
     }
     
     //No Response Array
     $no_response = array();
     foreach( $rsvps['no_response'] as $event_rsvp ){
-      $no_response[] = $event_rsvp->display_name;
+      $no_response[] = esc_html( $event_rsvp->display_name );
     }
     
     //Display all the board members
@@ -575,24 +575,24 @@ class WI_Board_Events {
     //View all events
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'all' ) ? 'current' : '';
     $all_query_string = remove_query_arg( 'post_status' );
-		$all_query_string = add_query_arg( 'events', urlencode('all'), $all_query_string );    
+		  $all_query_string = add_query_arg( 'events', urlencode('all'), $all_query_string );    
     $new_views['all_board_events'] = '<a href="'. $all_query_string . '" class="' . $class . '">All Events</a>';
     
     //View future events
     $class = ( !isset( $_GET['post_status'] ) && !isset( $_GET['events'] ) ) ? 'current' : '';
-		$future_query_string = remove_query_arg( array( 'events', 'post_status' ) );
-		$new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">Upcoming Events</a>';
+		  $future_query_string = remove_query_arg( array( 'events', 'post_status' ) );
+		  $new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">Upcoming Events</a>';
     
 		//View past events
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'past' ) ? 'current' : '';
     $past_query_string = remove_query_arg( 'post_status' );
-		$past_query_string = add_query_arg( 'events', urlencode('past'), $past_query_string );
-		$new_views['past_board_events'] = '<a href="'. $past_query_string . '" class="' . $class . '">Past Events</a>';
+		  $past_query_string = add_query_arg( 'events', urlencode('past'), $past_query_string );
+		  $new_views['past_board_events'] = '<a href="'. $past_query_string . '" class="' . $class . '">Past Events</a>';
     
     //Make the array have the order we want.
     array_splice($views, 0, 1, $new_views);
     
-		return $views;
+		  return $views;
 	}
   
   
@@ -648,7 +648,7 @@ class WI_Board_Events {
      case 'description':
        
        echo '<span class="waiting spinner" style="display: none;"></span>'; 
-       echo wp_trim_words( $board_event_meta['event_description'], 15, '&hellip;<br /><a href="#" data-id="' . $post_id . '" class="more-desc">Read full description</a>' );
+       echo wp_trim_words( esc_html( $board_event_meta['event_description'] ), 15, '&hellip;<br /><a href="#" data-id="' . $post_id . '" class="more-desc">Read full description</a>' );
        
        break;
      
@@ -656,7 +656,7 @@ class WI_Board_Events {
        
        //Show how many are going and who it is.
        if( $board_event->post_status == 'publish' ){
-         echo $this->get_attending_rsvps( $post_id );
+         echo esc_html( $this->get_attending_rsvps( $post_id ) );
        }
        else{
          _e( 'Event must be published prior to accepting RSVPs.' );
@@ -765,7 +765,7 @@ class WI_Board_Events {
     $result = get_post_meta( $post_id, $meta_key, true );
 
     //Send back description
-    echo $result;
+    echo esc_html( $result );
 
     die();  
   }
@@ -814,7 +814,7 @@ class WI_Board_Events {
      $board_event_meta = $this->retrieve_board_event_meta( $event->ID );
      ?>
       <li>
-        <span class="title"><?php echo $event->post_title; ?></span>
+        <span class="title"><?php echo esc_html( $event->post_title ); ?></span>
         <span class="start-time"><?php echo $this->format_event_times( $board_event_meta['start_date_time'], '', true ); ?></span>
         <div class="location"><?php echo $this->get_event_location( $board_event_meta, false ); ?></div>
       </li>
@@ -844,15 +844,15 @@ class WI_Board_Events {
   }
   
   //Add location name
-  $event_location .= $board_event_meta['location'];
+  $event_location .= esc_html( $board_event_meta['location'] );
   if( $board_event_meta['location'] != '' && $line_breaks == true ){
     $event_location .= '<br />';
   }
-  else if( $board_event_meta['location'] != '' ){
+  else if( $board_event_meta['location'] != '' && ( $board_event_meta['street'] != '' || $board_event_meta['area'] != '' ) ){
     $event_location .= ', ';
   }
   //Add street
-  $event_location .= $board_event_meta['street'];
+  $event_location .= esc_html( $board_event_meta['street'] );
   if( $board_event_meta['street'] != '' && $line_breaks == true ){
     $event_location .= '<br />';
   }
@@ -860,7 +860,7 @@ class WI_Board_Events {
     $event_location .= ', ';
   }
   //Add area (city, state zip)
-  $event_location .= $board_event_meta['area'];
+  $event_location .= esc_html( $board_event_meta['area'] );
   
   //Close the Google Maps link if we added one.
   if( $board_event_meta['area'] != '' || $board_event_meta['street'] != '' ){
@@ -906,7 +906,7 @@ class WI_Board_Events {
             array( '%d', '%d', '%d' ) //All of these should be saved as integers
            );
     
-    $result = $this->get_attending_rsvps( $post_id );
+    $result = esc_html( $this->get_attending_rsvps( $post_id ) );
   }
   else if( $rsvp_status != $rsvp ) { //Only do the db update if there RSVP status in the db will change
     $wpdb->update(
@@ -917,7 +917,7 @@ class WI_Board_Events {
             array( '%d', '%d' )
            );
     
-    $result = $this->get_attending_rsvps( $post_id );
+    $result = esc_html( $this->get_attending_rsvps( $post_id ) );
   }
   
   //0 means that nothing changed, a returned string is the list of RSVPs
