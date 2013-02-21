@@ -197,7 +197,7 @@ class WI_Board_Committees {
   public function save_board_committees_meta( $board_committee_id, $board_committee ){
     
     //Check autosave, post type, user caps, nonce
-    if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+    if( wp_is_post_autosave( $board_committee_id ) || wp_is_post_revision( $board_committee_id ) ) {
       return;
     }
     if( $board_committee->post_type != 'board_committees' ){

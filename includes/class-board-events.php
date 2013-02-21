@@ -328,7 +328,7 @@ class WI_Board_Events {
   public function save_board_events_meta( $board_event_id, $board_event ){
     
     //Check autosave, post type, user caps, nonce
-    if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+    if( wp_is_post_autosave( $board_event_id ) || wp_is_post_revision( $board_event_id ) ) {
       return false;
     }
     if( $board_event->post_type != 'board_events' ){
