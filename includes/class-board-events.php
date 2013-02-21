@@ -648,7 +648,7 @@ class WI_Board_Events {
      case 'description':
        
        echo '<span class="waiting spinner" style="display: none;"></span>'; 
-       echo wp_trim_words( $board_event_meta['event_description'], 15, '&hellip;<a href="#" data-id="' . $post_id . '" class="more-desc">Read full description</a>' );
+       echo wp_trim_words( $board_event_meta['event_description'], 15, '&hellip;<br /><a href="#" data-id="' . $post_id . '" class="more-desc">Read full description</a>' );
        
        break;
      
