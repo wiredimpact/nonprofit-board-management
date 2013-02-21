@@ -34,6 +34,9 @@ class WI_Board_Management {
     
   
     public function __construct(){
+        //Load translations
+        load_plugin_textdomain( 'nonprofit-board-management', false, basename( dirname( __FILE__ ) ) . '/languages' );
+      
         //Put all the user objects for every board member in a variable.
         $this->board_members = $this->get_users_who_serve();
       
@@ -213,9 +216,9 @@ class WI_Board_Management {
       //wp_localize_script allows us to send PHP info to JS
       wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
         'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
-        'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.' ),
+        'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.', 'nonprofit-board-management' ),
         'get_description_nonce' => wp_create_nonce( 'get_description_nonce' ),
-        'error_get_description' => __( 'Woops. We weren\'t able to show you the description.  Please contact support.' ),
+        'error_get_description' => __( 'Woops. We weren\'t able to show you the description.  Please contact support.', 'nonprofit-board-management' ),
         'expand_board_menu' => $screen->expand_board_menu //Send whether we should expand the board mgmt menu
         )
        );
@@ -227,31 +230,31 @@ class WI_Board_Management {
      */
     public function create_menu(){
       //Create top level menu item
-      add_menu_page( 'Nonprofit Board Management', 'Board Mgmt', 'view_board_content', 'nonprofit-board' );
+      add_menu_page( __( 'Nonprofit Board Management', 'nonprofit-board-management' ), __( 'Board Mgmt', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board' );
       
       //Create Board Members page
-      add_submenu_page( 'nonprofit-board', 'Board Members', 'Board Members', 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
+      add_submenu_page( 'nonprofit-board', __( 'Board Members', 'nonprofit-board-management' ), __( 'Board Members', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
       
       //Add Board Events page
-      add_submenu_page( 'nonprofit-board', 'Board Events', 'Board Events', 'edit_board_events' , 'edit.php?post_type=board_events' );
+      add_submenu_page( 'nonprofit-board', __( 'Board Events', 'nonprofit-board-management' ), __( 'Board Events', 'nonprofit-board-management' ), 'edit_board_events' , 'edit.php?post_type=board_events' );
       
       //Add Event Attendance pages
       global $wi_board_attendance;
-      add_submenu_page( 'nonprofit-board', 'Board Event Attendance', 'Event Attendance', 'view_board_content', 'nonprofit-board/attendance', array( $wi_board_attendance, 'display_board_attendance_page' ) );
+      add_submenu_page( 'nonprofit-board', __( 'Board Event Attendance', 'nonprofit-board-management' ), __( 'Event Attendance', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/attendance', array( $wi_board_attendance, 'display_board_attendance_page' ) );
       add_submenu_page( 'options.php', 'Board Member Attendance', 'Board Member Attendance', 'view_board_content', 'nonprofit-board/attendance/member', array( $wi_board_attendance, 'display_member_attendance_page' ) );
       
       //Add Board Committees page
-      add_submenu_page( 'nonprofit-board', 'Board Committees', 'Board Committees', 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
+      add_submenu_page( 'nonprofit-board', __( 'Board Committees', 'nonprofit-board-management' ), __( 'Board Committees', 'nonprofit-board-management' ), 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
       
       //Add new board event and board committee pages
-      add_submenu_page( 'nonprofit-board', 'Add Board Event', 'Add Board Event', 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
-      add_submenu_page( 'nonprofit-board', 'Add Board Committee', 'Add Board Committee', 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
+      add_submenu_page( 'nonprofit-board', __( 'Add Board Event', 'nonprofit-board-management' ), __( 'Add Board Event', 'nonprofit-board-management' ), 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
+      add_submenu_page( 'nonprofit-board', __( 'Add Board Committee', 'nonprofit-board-management' ), __( 'Add Board Committee', 'nonprofit-board-management' ), 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
       
       //Add Resources and Support pages
-      add_submenu_page( 'nonprofit-board', 'Board Resources', 'Board Resources', 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
+      add_submenu_page( 'nonprofit-board', __( 'Board Resources', 'nonprofit-board-management' ), __( 'Board Resources', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
       //Use options.php as the parent page so it doesn't show in any menu.
-      add_submenu_page( 'options.php', 'Edit Your Board Resources', 'Edit Your Board Resources', 'edit_board_content', 'nonprofit-board/resources/edit', array( $this, 'edit_resources_page' ) );
-      add_submenu_page( 'nonprofit-board', 'Support', 'Support', 'view_board_content', 'nonprofit-board/support', array( $this, 'display_support_page' ) );
+      add_submenu_page( 'options.php', __( 'Edit Your Board Resources', 'nonprofit-board-management' ), __( 'Edit Your Board Resources', 'nonprofit-board-management' ), 'edit_board_content', 'nonprofit-board/resources/edit', array( $this, 'edit_resources_page' ) );
+      add_submenu_page( 'nonprofit-board', __( 'Support', 'nonprofit-board-management' ), __( 'Support', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/support', array( $this, 'display_support_page' ) );
     }
     
     
@@ -262,19 +265,19 @@ class WI_Board_Management {
       <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
         <h2>
-          <?php _e( 'Board Members ' ); ?>
+          <?php _e( 'Board Members ', 'nonprofit-board-management' ); ?>
           <?php if( current_user_can( 'create_users' ) ){ ?>
-            <a href="user-new.php" class="add-new-h2"><?php _e( 'Add New User' ); ?></a>
+            <a href="user-new.php" class="add-new-h2"><?php _e( 'Add New User', 'nonprofit-board-management' ); ?></a>
           <?php } ?>
         </h2>
         <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
           <thead>
             <tr>
-              <th scope="col" id="name" class="manage-column column-name"><?php _e( 'Name' ); ?></th>
-              <th scope="col" id="phone" class="manage-column column-phone"><?php _e( 'Phone' ); ?></th>
-              <th scope="col" id="email" class="manage-column column-email"><?php _e( 'Email' ); ?></th>
-              <th scope="col" id="job" class="manage-column column-job"><?php _e( 'Job' ); ?></th>
-              <th scope="col" id="committees" class="manage-column column-committees"><?php _e( 'Committees' ); ?></th>
+              <th scope="col" id="name" class="manage-column column-name"><?php _e( 'Name', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="phone" class="manage-column column-phone"><?php _e( 'Phone', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="email" class="manage-column column-email"><?php _e( 'Email', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="job" class="manage-column column-job"><?php _e( 'Job', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" id="committees" class="manage-column column-committees"><?php _e( 'Committees', 'nonprofit-board-management' ); ?></th>
             </tr>
           </thead>
           <tfoot>
@@ -296,7 +299,7 @@ class WI_Board_Management {
             <tr class="no-items">
               <td class="colspanchange" colspan="5">
                 <?php _e( 'There aren\'t currently any members on your board (which could definitely limit its effectiveness).  
-                  Why don\'t you <a href="user-new.php">add one now</a>? <br />Oh, and make sure to set the new user\'s role to "Board Member".' ); ?>
+                  Why don\'t you <a href="user-new.php">add one now</a>? <br />Oh, and make sure to set the new user\'s role to "Board Member".', 'nonprofit-board-management' ); ?>
               </td>
             </tr>
         <?php
@@ -307,7 +310,7 @@ class WI_Board_Management {
          $board_member_meta = $this->get_board_member_meta( $board_member->ID );
          $job = $board_member_meta->job_title;
          if( $board_member_meta->current_employer != '' and $board_member_meta->job_title != ''){
-           $job .= __(' at ');
+           $job .= __( ' at ', 'nonprofit-board-management' );
          }
          $job .= $board_member_meta->current_employer;
          ?>
@@ -317,7 +320,7 @@ class WI_Board_Management {
               <?php if( current_user_can( 'edit_user', $board_member->ID ) ){ ?>
               <div class="row-actions">
                 <span class="edit">
-                  <a href="<?php echo admin_url( 'user-edit.php?user_id=' . $board_member->ID ); ?>"><?php _e( 'Edit' ); ?></a>
+                  <a href="<?php echo admin_url( 'user-edit.php?user_id=' . $board_member->ID ); ?>"><?php _e( 'Edit', 'nonprofit-board-management' ); ?></a>
                 </span>
               </div>
               <?php }//if edit user ?>
@@ -336,8 +339,8 @@ class WI_Board_Management {
         </table>
         <p><?php 
           _e( '<strong>Your Photo:</strong> You can set your photo by creating a <a href="http://en.gravatar.com/" target="_blank">Gravatar account</a>
-            using the same email address you used here.<br />' );
-          _e( '<strong>Your Name:</strong> You can adjust your name by changing the "Display name publicly as" dropdown in <a href="profile.php">your profile</a>.' );
+            using the same email address you used here.<br />', 'nonprofit-board-management' );
+          _e( '<strong>Your Name:</strong> You can adjust your name by changing the "Display name publicly as" dropdown in <a href="profile.php">your profile</a>.', 'nonprofit-board-management' );
           ?>
         </p>
       </div>
@@ -367,29 +370,29 @@ class WI_Board_Management {
       ?>
       <div class="wrap board-resources">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Board Resources' ); ?></h2>
+        <h2><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h2>
         <p><?php _e( 'We\'ve provided two resource sections.  
-          One for you to include your own resources and one for some resources we think are helpful.' ); ?></p>
+          One for you to include your own resources and one for some resources we think are helpful.', 'nonprofit-board-management' ); ?></p>
         <h3>
-          <?php _e( 'Your Board Resources' ); ?>
+          <?php _e( 'Your Board Resources', 'nonprofit-board-management' ); ?>
           <a class="button secondary-button" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources/edit' ); ?>">
-            <?php _e( 'Edit your board resources' ); ?>
+            <?php _e( 'Edit your board resources', 'nonprofit-board-management' ); ?>
           </a>
         </h3>
         <div class="custom-board-resources">
           <?php echo wpautop( wp_kses_post( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
         </div>
         
-        <h3><?php _e( 'Some Other Helpful Resources' ); ?></h3>
+        <h3><?php _e( 'Some Other Helpful Resources', 'nonprofit-board-management' ); ?></h3>
         <div class="fixed-board-resources">
-          <p><a href="http://asana.com/" target="_blank">Asana</a> – A shared task list for your board.</p>
-          <p><a href="http://www.boardsource.org/" target="_blank">BoardSource</a> – A collection of articles and tools on running a board.</p>
-          <p><a href="http://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – Featured content dedicated to nonprofit boards.</p>
-          <p><a href="http://doodle.com/" target="_blank">Doodle</a> – An easy way to find a good time to meet.</p>
-          <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – A great way to share files.</p>
-          <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – A good way to share and collaborate on documents.</p>
-          <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – A tool to find great talent to join your board.</p>
-          <p><a href="http://wiredimpact.com/" target="_blank">Wired Impact</a> – Library articles and blog posts on how nonprofits can use the web to do more good.</p>
+          <p><a href="http://asana.com/" target="_blank">Asana</a> – <?php _e( 'A shared task list for your board.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="http://www.boardsource.org/" target="_blank">BoardSource</a> – <?php _e( 'A collection of articles and tools on running a board.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="http://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="http://doodle.com/" target="_blank">Doodle</a> – <?php _e( 'An easy way to find a good time to meet.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – <?php _e( 'A great way to share files.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
+          <p><a href="http://wiredimpact.com/" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
         </div>
       </div><!-- /wrap -->
       <?php
@@ -408,9 +411,9 @@ class WI_Board_Management {
         ?>
         <div class="updated">
           <p>
-            <?php _e( 'Your board resources have been updated.' ); ?>
+            <?php _e( 'Your board resources have been updated.', 'nonprofit-board-management' ); ?>
             <a href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources' ); ?>">
-              <?php _e( 'View your board resources.' ); ?>
+              <?php _e( 'View your board resources.', 'nonprofit-board-management' ); ?>
             </a>
           </p>
         </div>
@@ -420,8 +423,8 @@ class WI_Board_Management {
       ?>
       <div class="wrap edit-board-resources">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Edit Your Board Resources' ); ?></h2>
-        <p><?php _e( 'Edit the content in your board resources section.' ); ?></p>
+        <h2><?php _e( 'Edit Your Board Resources', 'nonprofit-board-management' ); ?></h2>
+        <p><?php _e( 'Edit the content in your board resources section.', 'nonprofit-board-management' ); ?></p>
         <form method="post" action="">
         <div id="poststuff">
           <div class="postbox">
@@ -431,7 +434,7 @@ class WI_Board_Management {
             <div class="inside">
               <input type="submit" class="button button-primary button-large" value="Update" />
               <a class="button secondary-button button-large" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources' ); ?>">
-                <?php _e( 'Back to Resources' ); ?>
+                <?php _e( 'Back to Resources', 'nonprofit-board-management' ); ?>
               </a>
             </div>
           </div><!-- /postbox -->
@@ -481,16 +484,16 @@ class WI_Board_Management {
       ?>
       <div class="wrap">
         <?php screen_icon( 'options-general' ); ?>
-        <h2><?php _e( 'Support' ); ?></h2>
-        <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.' ); ?></p>
+        <h2><?php _e( 'Support', 'nonprofit-board-management' ); ?></h2>
+        <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
         
-        <h3><?php _e( 'Getting Started with Nonprofit Board Management' ); ?></h3>
+        <h3><?php _e( 'Getting Started with Nonprofit Board Management', 'nonprofit-board-management' ); ?></h3>
         <iframe width="640" height="360" src="http://www.youtube.com/embed/66TuSJo4dZM" frameborder="0" allowfullscreen></iframe>
         
-        <h3><?php _e( 'Allowing Admins to Serve on the Board' ); ?></h3>
+        <h3><?php _e( 'Allowing Admins to Serve on the Board', 'nonprofit-board-management' ); ?></h3>
         <iframe width="640" height="360" src="http://www.youtube.com/embed/yQ5U8suTUw0" frameborder="0" allowfullscreen></iframe>
         
-        <h3><?php _e( 'RSVP to Board Events' ); ?></h3>
+        <h3><?php _e( 'RSVP to Board Events', 'nonprofit-board-management' ); ?></h3>
         <iframe width="640" height="360" src="http://www.youtube.com/embed/lB95KLmpLR4" frameborder="0" allowfullscreen></iframe>
       <?php     
     }
@@ -516,7 +519,7 @@ class WI_Board_Management {
       
       //If we don't have any board members then the user needs a message.
       if( empty( $board_members ) ){
-        _e( 'You don\'t have any board members.  You should create some users and set their role to "Board Member".' );
+        _e( 'You don\'t have any board members.  You should create some users and set their role to "Board Member".', 'nonprofit-board-management' );
         
         return;
       }
@@ -524,9 +527,9 @@ class WI_Board_Management {
       ?>
         <table class="widefat">
           <thead>
-            <th scope="col" class="column-name"><?php _e( 'Name' ); ?></th>
-            <th scope="col" class="column-phone"><?php _e( 'Phone' ); ?></th>
-            <th scope="col" class="column-email"><?php _e( 'Email' ); ?></th>
+            <th scope="col" class="column-name"><?php _e( 'Name', 'nonprofit-board-management' ); ?></th>
+            <th scope="col" class="column-phone"><?php _e( 'Phone', 'nonprofit-board-management' ); ?></th>
+            <th scope="col" class="column-email"><?php _e( 'Email', 'nonprofit-board-management' ); ?></th>
           </thead>
           <tbody>
       <?php
@@ -546,7 +549,7 @@ class WI_Board_Management {
       
       ?>
       </tbody></table>
-        <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>"><?php _e( 'View more board member details' ); ?></a></p>
+        <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>"><?php _e( 'View more board member details', 'nonprofit-board-management' ); ?></a></p>
       <?php
     }
 
@@ -599,7 +602,7 @@ class WI_Board_Management {
      ?>
      <div class="updated">
        <p><?php _e( 'You don\'t currently have the board member role, so you can\'t RSVP to board events,
-         join committees, or show up in the board member list.' ); ?>
+         join committees, or show up in the board member list.', 'nonprofit-board-management' ); ?>
          <input id="allow-board-serve" type="submit" class="button secondary-button" value="Add Me to the Board" />
        </p>
      </div>
