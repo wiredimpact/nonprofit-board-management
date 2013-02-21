@@ -19,8 +19,9 @@ jQuery(document).ready(function(){
   //Only do this when focusing out on start time.
   start_date_time.datetimepicker({
     controlType: 'select',
-    dateFormat: "D, MM dd, yy '@'",
+    dateFormat: "D, MM dd, yy",
     timeFormat: "h:mm tt",
+    separator: ' @ ',
     stepMinute: 5,
     onClose: function( dateText, inst ) {
       if ( end_date_time.val() != '' ) {
@@ -32,16 +33,14 @@ jQuery(document).ready(function(){
       else {
        end_date_time.val( dateText );
       }
-     },
-     onSelect: function ( selectedDateTime ){
-      end_date_time.datetimepicker( 'option', 'minDate', start_date_time.datetimepicker( 'getDate' ) );
      }
   }); 
   
   end_date_time.datetimepicker({
     controlType: 'select',
-    dateFormat: "D, MM dd, yy '@'",
+    dateFormat: "D, MM dd, yy",
     timeFormat: "h:mm tt",
+    separator: ' @ ',
     stepMinute: 5,
     onClose: function( dateText, inst ) {
       if ( start_date_time.val() != '' ) {
@@ -53,9 +52,6 @@ jQuery(document).ready(function(){
       else {
        start_date_time.val( dateText );
       }
-     },
-     onSelect: function ( selectedDateTime ){
-      start_date_time.datetimepicker( 'option', 'maxDate', end_date_time.datetimepicker( 'getDate' ) );
      }
   });
   
