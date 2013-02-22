@@ -440,13 +440,13 @@ class WI_Board_Events {
   public function change_updated_messages( $messages ){    
     $messages['board_events'] = array(
       0 => '', // Unused. Messages start at index 1.
-      1 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
+      1 => sprintf( __( 'Event updated. <a href="%s">View your upcoming events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
       2 => __( 'Custom field updated.', 'nonprofit-board-management' ),
       3 => __( 'Custom field deleted.', 'nonprofit-board-management' ),
-      4 => sprintf( __( 'Event updated. <a href="%s">View all of your events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
+      4 => sprintf( __( 'Event updated. <a href="%s">View your upcoming events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
      /* translators: %s: date and time of the revision */
       5 => isset( $_GET['revision'] ) ? sprintf( __( 'Event restored to revision from %s', 'nonprofit-board-management' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-      6 => sprintf( __( 'Event published. <a href="%s">View all of your events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
+      6 => sprintf( __( 'Event published. <a href="%s">View your upcoming events</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ),
       7 => __( 'Event saved.', 'nonprofit-board-management' ),
       8 => __( 'Event submitted.', 'nonprofit-board-management' ),
       9 => __( 'You should not be scheduling events this way.  It just won\'t work.', 'nonprofit-board-management' ),
@@ -552,6 +552,11 @@ class WI_Board_Events {
         $query->query_vars['meta_key'] = '_start_date_time';
         $query->query_vars['orderby'] = 'meta_value_num';
         $query->query_vars['order'] = 'desc';
+        
+        //If viewing upcoming events put the closest event to current time at the top
+        if( !isset( $_GET['events'] ) && !isset( $_GET['post_status'] ) ){
+          $query->query_vars['order'] = 'asc';
+        }
       }//End if the user is trying to order by something.      
     }//End if on board events list
   }

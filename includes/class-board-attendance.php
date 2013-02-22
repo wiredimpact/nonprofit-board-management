@@ -103,7 +103,7 @@ class WI_Board_Attendance {
     $event_end_time = get_post_meta( $board_event->ID, '_end_date_time', true );
     $current_time = current_time( 'timestamp' );
     if( $event_end_time > $current_time ){
-      _e( 'You will be able to track attendance once the event has passed the end date and time.', 'nonprofit-board-management' );
+      _e( '<p>You will be able to track attendance once the event has passed the end date and time.</p>', 'nonprofit-board-management' );
       
       return false;
     }
@@ -112,9 +112,16 @@ class WI_Board_Attendance {
     global $wi_board_mgmt;
     $board_members = $wi_board_mgmt->board_members;
     
-    //Get all the meta data
-    $nonce = wp_create_nonce( 'event_attendance_nonce' );
+    //Show message if no board members exist
+    //This only happens if a user has the ability to track attendance and then every user is removed from the board
+    if( empty( $board_members) ){
+      _e( '<p>It looks like you don\'t have any users set up as board members.  Once you have some you can track their attendance.
+        To add a board member create a user and set their role to "Board Member".</p>', 'nonprofit-board-management' );
+
+      return false;
+    }
     
+    $nonce = wp_create_nonce( 'event_attendance_nonce' );
     //Loop through users to display each one with three radio buttons needed.
     ?>
     <input type="hidden" id="_event_attendance_nonce" name="_event_attendance_nonce" value="<?php echo $nonce ?>" />
