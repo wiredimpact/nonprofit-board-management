@@ -154,7 +154,7 @@ class WI_Board_Events {
     $labels = array(
       'name' => __( 'Board Events', 'nonprofit-board-management' ),
       'singular_name' => __( 'Board Event', 'nonprofit-board-management' ),
-      'add_new' => __( 'Add Board Event', 'nonprofit-board-management' ),
+      'add_new' => __( '&#43; Add Board Event', 'nonprofit-board-management' ),
       'add_new_item' => __( 'Add Board Event', 'nonprofit-board-management' ),
       'edit_item' => __( 'Edit Board Event', 'nonprofit-board-management' ),
       'new_item' => __( 'New Board Event', 'nonprofit-board-management' ),
@@ -422,7 +422,8 @@ class WI_Board_Events {
     if( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'board_events' ){
       ?>
       <style>
-        .tablenav.top .actions + .actions {
+        .tablenav.top .actions + .actions,
+        .tablenav .view-switch {
           display: none;
         }
       </style>

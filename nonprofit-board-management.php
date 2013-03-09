@@ -267,7 +267,7 @@ class WI_Board_Management {
         <h2>
           <?php _e( 'Board Members ', 'nonprofit-board-management' ); ?>
           <?php if( current_user_can( 'create_users' ) ){ ?>
-            <a href="user-new.php" class="add-new-h2"><?php _e( 'Add New User', 'nonprofit-board-management' ); ?></a>
+            <a href="user-new.php" class="add-new-h2"><?php _e( '&#43; Add New User', 'nonprofit-board-management' ); ?></a>
           <?php } ?>
         </h2>
         <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
@@ -380,7 +380,7 @@ class WI_Board_Management {
           </a>
         </h3>
         <div class="custom-board-resources">
-          <?php echo wpautop( wp_kses_post( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
+          <?php echo apply_filters( 'the_content', stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
         </div>
         
         <h3><?php _e( 'Some Other Helpful Resources', 'nonprofit-board-management' ); ?></h3>

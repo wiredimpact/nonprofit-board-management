@@ -54,7 +54,7 @@ class WI_Board_Committees {
     $labels = array(
       'name' => __( 'Board Committees', 'nonprofit-board-management' ),
       'singular_name' => __( 'Board Committee', 'nonprofit-board-management' ),
-      'add_new' => __( 'Add Board Committee', 'nonprofit-board-management' ),
+      'add_new' => __( '&#43; Add Board Committee', 'nonprofit-board-management' ),
       'add_new_item' => __( 'Add Board Committee', 'nonprofit-board-management' ),
       'edit_item' => __( 'Edit Board Committee', 'nonprofit-board-management' ),
       'new_item' => __( 'New Board Committee', 'nonprofit-board-management' ),
@@ -251,7 +251,8 @@ class WI_Board_Committees {
     if( isset( $_GET['post_type'] ) && $_GET['post_type'] == 'board_committees' ){
       ?>
       <style>
-        .tablenav.top .actions + .actions {
+        .tablenav.top .actions + .actions,
+        .tablenav .view-switch {
           display: none;
         }
       </style>

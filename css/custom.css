@@ -28,7 +28,17 @@ li.toplevel_page_nonprofit-board:hover img {
   color: #f00;
 }
 
-/*Timepicker jQuery Add-On*/
+/* Datepicker styles */
+body .ui-datepicker-calendar .ui-state-highlight {
+  border: 1px solid #fff;
+  background: #fff;
+}
+body .ui-datepicker-calendar .ui-state-active {
+  background: #21759b;
+  color: #fff;
+}
+
+/* Timepicker jQuery Add-On */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }
 .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
@@ -40,7 +50,7 @@ li.toplevel_page_nonprofit-board:hover img {
 .ui-timepicker-rtl dl { text-align: right; }
 .ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
 
-/*Board Events List*/
+/* Board Events List */
 #the-list #attending {
   margin: 0 5px 5px 0;
 }
