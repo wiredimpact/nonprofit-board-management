@@ -209,7 +209,7 @@ class WI_Board_Attendance {
   */
   public function display_board_attendance_page(){ ?>
     <div class="wrap">
-        <?php screen_icon( 'options-general' ); ?>
+        <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Board Event Attendance', 'nonprofit-board-management' ); ?></h2>
         <p>
           <?php _e( 'To see more details about each board member\'s attendance, 
@@ -300,7 +300,7 @@ class WI_Board_Attendance {
     $attendance = $this->get_attendance_totals_percentages( $board_member_id );
     ?>
     <div class="wrap">
-        <?php screen_icon( 'options-general' ); ?>
+        <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Board Member Attedance: ', 'nonprofit-board-management' ); echo $board_member->display_name; ?></h2>
         <h3 class="member-attendance">
           <?php

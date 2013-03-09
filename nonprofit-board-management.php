@@ -230,7 +230,7 @@ class WI_Board_Management {
      */
     public function create_menu(){
       //Create top level menu item
-      add_menu_page( __( 'Nonprofit Board Management', 'nonprofit-board-management' ), __( 'Board Mgmt', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board' );
+      add_menu_page( __( 'Nonprofit Board Management', 'nonprofit-board-management' ), __( 'Board Mgmt', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board', '', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/images/nonprofit-board-gavel-menu.png'  );
       
       //Create Board Members page
       add_submenu_page( 'nonprofit-board', __( 'Board Members', 'nonprofit-board-management' ), __( 'Board Members', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
@@ -263,7 +263,7 @@ class WI_Board_Management {
      */
     public function display_members_page(){ ?>
       <div class="wrap">
-        <?php screen_icon( 'options-general' ); ?>
+        <?php screen_icon( 'board-mgmt' ); ?>
         <h2>
           <?php _e( 'Board Members ', 'nonprofit-board-management' ); ?>
           <?php if( current_user_can( 'create_users' ) ){ ?>
@@ -369,7 +369,7 @@ class WI_Board_Management {
     public function display_resources_page(){
       ?>
       <div class="wrap board-resources">
-        <?php screen_icon( 'options-general' ); ?>
+        <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h2>
         <p><?php _e( 'We\'ve provided two resource sections.  
           One for you to include your own resources and one for some resources we think are helpful.', 'nonprofit-board-management' ); ?></p>
@@ -422,7 +422,7 @@ class WI_Board_Management {
       
       ?>
       <div class="wrap edit-board-resources">
-        <?php screen_icon( 'options-general' ); ?>
+        <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Edit Your Board Resources', 'nonprofit-board-management' ); ?></h2>
         <p><?php _e( 'Edit the content in your board resources section.', 'nonprofit-board-management' ); ?></p>
         <form method="post" action="">
@@ -483,7 +483,7 @@ class WI_Board_Management {
     public function display_support_page(){
       ?>
       <div class="wrap">
-        <?php screen_icon( 'options-general' ); ?>
+        <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Support', 'nonprofit-board-management' ); ?></h2>
         <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
         

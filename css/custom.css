@@ -1,4 +1,23 @@
 /********************************
+* General Board Mgmt
+********************************/
+.wrap #icon-nonprofit-board,
+.wrap #icon-board-mgmt,
+.wrap #icon-edit.icon32-posts-board_events,
+.wrap #icon-edit.icon32-posts-board_committees {
+  background: url('images/nonprofit-board-gavel.png') no-repeat 0 0;
+}
+li.toplevel_page_nonprofit-board .wp-menu-image {
+  overflow: hidden;
+}
+li.toplevel_page_nonprofit-board img {
+  margin-top: -35px;
+}
+li.toplevel_page_nonprofit-board:hover img {
+  margin-top: 0;
+}
+
+/********************************
 * Board Events
 ********************************/
 /* Event Meta Fields */
