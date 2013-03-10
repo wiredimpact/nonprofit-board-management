@@ -106,7 +106,7 @@ jQuery(document).ready(function(){
   });
   
   
-  //Allow users to read the full description for an event by clicking a more link.
+  //Allow users to read the full description for an event or committee by clicking a more link.
   jQuery( '.wp-list-table tr.type-board_events .more-desc, .wp-list-table tr.type-board_committees .more-desc' ).click(function(){
     var $this = jQuery( this ),
         post_id = $this.data( 'id' ),
@@ -130,6 +130,31 @@ jQuery(document).ready(function(){
       else{ //If there's an error
        alert( wi_board_mgmt.error_get_description ); 
       }
+    });
+    
+    return false;
+  });
+  
+  
+  //Allow users to see all attending for an event by clicking an "x others" link.
+  jQuery( '.wp-list-table tr.type-board_events .get-names' ).click(function(){
+    var $this = jQuery( this ),
+        post_id = $this.data( 'id' ),
+        table_cell = $this.closest( 'td' ),
+        load_spinner = table_cell.find( '.spinner' );
+    
+    //Show spinner while we handle ajax request.
+    load_spinner.show();
+    
+    var data = {
+      action: 'show_all_attendees',
+      post_id: post_id,
+      security: wi_board_mgmt.see_attendees_nonce
+    };
+    
+    jQuery.post(ajaxurl, data, function( response ) {
+        table_cell.html( response );
+        load_spinner.hide();
     });
     
     return false;

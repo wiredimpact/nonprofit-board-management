@@ -219,6 +219,8 @@ class WI_Board_Management {
         'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.', 'nonprofit-board-management' ),
         'get_description_nonce' => wp_create_nonce( 'get_description_nonce' ),
         'error_get_description' => __( 'Woops. We weren\'t able to show you the description.  Please contact support.', 'nonprofit-board-management' ),
+        'see_attendees_nonce' => wp_create_nonce( 'see_attendees_nonce' ),
+        'error_see_attendees' => __( 'Woops. We weren\'t able to show you the attendees.  Please contact support.', 'nonprofit-board-management' ),
         'expand_board_menu' => $screen->expand_board_menu //Send whether we should expand the board mgmt menu
         )
        );

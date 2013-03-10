@@ -73,6 +73,9 @@ class WI_Board_Events {
     
     //Save RSVPs for the events via ajax
     add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
+    
+    //Show all event attendees via ajax
+    add_action( 'wp_ajax_show_all_attendees', array( $this, 'show_all_attendees' ) );
   }
   
   
@@ -662,7 +665,8 @@ class WI_Board_Events {
        
        //Show how many are going and who it is.
        if( $board_event->post_status == 'publish' ){
-         echo esc_html( $this->get_attending_rsvps( $post_id ) );
+         echo '<span class="waiting spinner" style="display: none;"></span>'; 
+         echo $this->get_attending_rsvps( $post_id );
        }
        else{
          _e( 'Event must be published prior to accepting RSVPs.' );
@@ -909,7 +913,7 @@ class WI_Board_Events {
             array( '%d', '%d', '%d' ) //All of these should be saved as integers
            );
     
-    $result = esc_html( $this->get_attending_rsvps( $post_id ) );
+    $result = esc_html( $this->get_attending_rsvps( $post_id, true, true ) );
   }
   else if( $rsvp_status != $rsvp ) { //Only do the db update if there RSVP status in the db will change
     $wpdb->update(
@@ -920,7 +924,7 @@ class WI_Board_Events {
             array( '%d', '%d' )
            );
     
-    $result = esc_html( $this->get_attending_rsvps( $post_id ) );
+    $result = esc_html( $this->get_attending_rsvps( $post_id, true, true ) );
   }
   
   //0 means that nothing changed, a returned string is the list of RSVPs
@@ -1027,9 +1031,10 @@ class WI_Board_Events {
   * 
   * @param int $post_id ID of the board event.
   * @param bool $include_num Optional Whether we want the number coming too.
+  * @param bool $all_names Optional Whether to include all names or a link to get them all.
   * @return string Number coming in parentheses, along with list of names attending.
   */
- private function get_attending_rsvps( $post_id, $include_num = true ){
+ private function get_attending_rsvps( $post_id, $include_num = true, $all_names = false ){
     $attending_rsvps = '';
    
     //Include the number of people attending if $include_num == true.
@@ -1051,11 +1056,42 @@ class WI_Board_Events {
       foreach( $rsvps['attending'] as $event_rsvp ){
         $attending[] = $event_rsvp->display_name;
       }
-
-      $attending_rsvps .= implode( ', ', $attending );
+      
+      //If more than 3 people coming and we don't want all names then show the "and x others" message
+      //with the first 3 names
+      if( count( $attending ) > 3 && $all_names == false ){
+        $attending_rsvps .= implode( ', ', array( $attending[0], $attending[1], $attending[2] ) );
+        unset( $attending[0], $attending[1], $attending[2] );
+        $and_x_others = count( $attending );
+        $attending_rsvps .= sprintf( _n( ' and <a href="#" class="get-names" data-id="%d">%s other</a>.', ' and <a href="#" class="get-names" data-id="%d">%s others</a>.', $and_x_others, 'nonprofit-board-managemant' ), $post_id, $and_x_others );
+      }
+      //If we want all the names
+      else {
+        $attending_rsvps .= implode( ', ', $attending );
+      }
+      
     }
 
     return $attending_rsvps;
+ }
+ 
+ 
+ /*
+  * Ajax method used to show the entire list of attendees for an event.
+  * 
+  * @return string String is num and list of RSVPs.
+  * @see get_attending_rsvps()
+  */
+ public function show_all_attendees(){
+   //Use nonce passed through wp_localize_script for added security.
+   check_ajax_referer( 'see_attendees_nonce', 'security' );
+   
+   //Put data in variables
+   $post_id = intval( $_POST['post_id'] );
+   
+   echo $this->get_attending_rsvps( $post_id, true, true );
+   
+   die();
  }
  
  
