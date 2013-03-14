@@ -95,7 +95,7 @@ jQuery(document).ready(function(){
         $this.siblings().removeClass('button-primary active'); 
         
         //Put the new list of who's coming in the attending column.
-        post_attending_col.html( response );
+        post_attending_col.html( wi_board_mgmt.load_spinner_html + response );
         
         //Hide the load spinner
         load_spinner.hide();
@@ -137,7 +137,7 @@ jQuery(document).ready(function(){
   
   
   //Allow users to see all attending for an event by clicking an "x others" link.
-  jQuery( '.wp-list-table tr.type-board_events .get-names' ).click(function(){
+  jQuery( '.wp-list-table tr.type-board_events' ).on( "click", ".get-names", function(){
     var $this = jQuery( this ),
         post_id = $this.data( 'id' ),
         table_cell = $this.closest( 'td' ),

@@ -913,7 +913,7 @@ class WI_Board_Events {
             array( '%d', '%d', '%d' ) //All of these should be saved as integers
            );
     
-    $result = esc_html( $this->get_attending_rsvps( $post_id, true, true ) );
+    $result = $this->get_attending_rsvps( $post_id );
   }
   else if( $rsvp_status != $rsvp ) { //Only do the db update if there RSVP status in the db will change
     $wpdb->update(
@@ -924,7 +924,7 @@ class WI_Board_Events {
             array( '%d', '%d' )
            );
     
-    $result = esc_html( $this->get_attending_rsvps( $post_id, true, true ) );
+    $result = $this->get_attending_rsvps( $post_id );
   }
   
   //0 means that nothing changed, a returned string is the list of RSVPs
@@ -1053,8 +1053,16 @@ class WI_Board_Events {
       $rsvps = $this->board_event_rsvps( $post_id );
 
       $attending = array();
+      $current_user = wp_get_current_user();
       foreach( $rsvps['attending'] as $event_rsvp ){
-        $attending[] = $event_rsvp->display_name;
+        //If the user isn't the current user, then add to the end
+        if( $event_rsvp->ID != $current_user->ID ){
+          $attending[] = $event_rsvp->display_name;
+        }
+        //If current user put at front of the list
+        else{
+          array_unshift( $attending, $event_rsvp->display_name );
+        }
       }
       
       //If more than 3 people coming and we don't want all names then show the "and x others" message
