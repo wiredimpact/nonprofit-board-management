@@ -10,10 +10,13 @@
 li.toplevel_page_nonprofit-board .wp-menu-image {
   overflow: hidden;
 }
-li.toplevel_page_nonprofit-board img {
+#adminmenu li.toplevel_page_nonprofit-board img {
   margin-top: -35px;
+  padding: 7px 0 0 2px;
 }
-li.toplevel_page_nonprofit-board:hover img {
+#adminmenu li.toplevel_page_nonprofit-board:hover img,
+#adminmenu li.wp-has-current-submenu.toplevel_page_nonprofit-board img {
+  padding-top: 0;
   margin-top: 0;
 }
 
