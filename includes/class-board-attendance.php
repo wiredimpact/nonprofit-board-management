@@ -476,7 +476,7 @@ class WI_Board_Attendance {
         board member permission to do this on the member\'s profile edit page.', 'nonprofit-board-management' );
     }
     else{
-      $trackers_string = sprintf( __( 'The following board members are able to track event attendance through <a href="%s">each past event\'s edit screen</a>: ', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) );
+      $trackers_string = sprintf( __( 'The following board members are able to track event attendance through <a href="%s">each past event\'s edit screen</a>: ', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events&events=past' ) );
       $trackers_string .= implode( ', ', $attendance_trackers );
       
       return $trackers_string;
