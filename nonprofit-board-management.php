@@ -490,14 +490,50 @@ class WI_Board_Management {
         <h2><?php _e( 'Support', 'nonprofit-board-management' ); ?></h2>
         <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
         
-        <h3><?php _e( 'Getting Started with Nonprofit Board Management', 'nonprofit-board-management' ); ?></h3>
-        <iframe width="640" height="360" src="http://www.youtube.com/embed/66TuSJo4dZM" frameborder="0" allowfullscreen></iframe>
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'Getting Started with Nonprofit Board Management', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/j1EHA5T4rQA" frameborder="0" allowfullscreen></iframe>
+        </div>
         
-        <h3><?php _e( 'Allowing Admins to Serve on the Board', 'nonprofit-board-management' ); ?></h3>
-        <iframe width="640" height="360" src="http://www.youtube.com/embed/yQ5U8suTUw0" frameborder="0" allowfullscreen></iframe>
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Member', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/kCwsqWrwkaA" frameborder="0" allowfullscreen></iframe>
+        </div>
         
-        <h3><?php _e( 'RSVP to Board Events', 'nonprofit-board-management' ); ?></h3>
-        <iframe width="640" height="360" src="http://www.youtube.com/embed/lB95KLmpLR4" frameborder="0" allowfullscreen></iframe>
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Change Your Personal Information', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/GPwL7A-3d-M" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Serve on the Board as a WordPress Admin', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/ZYYaIFYtG88" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Event', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/TfQIeeIVyt8" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to RSVP to an Upcoming Event', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/Nk6blZ3Zopc" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Track Attendance for an Event', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/WLz6axkCW1Y" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Create a Committee and Add Committee Members', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/yInKtr36Y5s" frameborder="0" allowfullscreen></iframe>
+        </div>
+        
+        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Edit Your Board Resources', 'nonprofit-board-management' ); ?></a></h3>
+        <div class="support-content hide">
+          <iframe width="640" height="360" src="https://www.youtube.com/embed/XsXXEHAs9TU" frameborder="0" allowfullscreen></iframe>
+        </div>
       <?php     
     }
     

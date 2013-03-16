@@ -180,5 +180,23 @@ jQuery(document).ready(function(){
     
     return false;
   });
+  
+  
+  //Add accordion for Support page
+	jQuery('.support-heading').click( function() {
+
+    jQuery('.support-heading').children().html('+ ')
+	 	jQuery('.support-content').slideUp('normal');
+   
+    var heading = jQuery(this),
+    content = heading.parent().next();
+		if( content.is(':hidden') === true ) {
+      
+      heading.children().html('- ');
+			content.slideDown('normal');
+      
+		}
+		  
+	 }); //End click for support
 });
 
