@@ -616,8 +616,21 @@ class WI_Board_Management {
 
       //Combine board members with admins opted to rsvp
       $users_serving = array_merge( $board_members, $admins );
+      //Since we added the admins at the end, we need to sort again by display_name
+      usort( $users_serving, array( $this, "sort_users" ) );
 
       return $users_serving;
+    }
+    
+    
+    /*
+     * Sort users based on display name.
+     * 
+     * @return int Info on which name should be ordered first.
+     */
+    private function sort_users( $user_one, $user_two ){
+      
+      return strcmp( $user_one->display_name, $user_two->display_name );
     }
     
     

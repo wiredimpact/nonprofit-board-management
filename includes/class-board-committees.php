@@ -483,7 +483,7 @@ class WI_Board_Committees {
   * @see add_board_committees_dashboard_widget()
   */
  public function display_board_committees_dashboard_widget(){
-   $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
+   $board_committees = get_posts( array( 'post_type' => 'board_committees', 'nopaging' => true ) );
    
    //If no committees show the user a message.
    if( empty( $board_committees ) ){
@@ -663,7 +663,7 @@ class WI_Board_Committees {
    */
   private function get_all_committee_inputs( $board_member_id ){
     //Get all the committees
-    $board_committees = get_posts( array( 'post_type' => 'board_committees' ) );
+    $board_committees = get_posts( array( 'post_type' => 'board_committees', 'nopaging' => true ) );
     $user_committees = get_user_meta( $board_member_id, 'board_committees', true );
 
     //If there aren't any committees then we tell the user
