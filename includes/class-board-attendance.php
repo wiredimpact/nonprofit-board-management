@@ -301,7 +301,7 @@ class WI_Board_Attendance {
     ?>
     <div class="wrap">
         <?php screen_icon( 'board-mgmt' ); ?>
-        <h2><?php _e( 'Board Member Attedance: ', 'nonprofit-board-management' ); echo $board_member->display_name; ?></h2>
+        <h2><?php _e( 'Board Member Attendance: ', 'nonprofit-board-management' ); echo $board_member->display_name; ?></h2>
         <h3 class="member-attendance">
           <?php
           _e( 'Attended: ', 'nonprofit-board-management' );
