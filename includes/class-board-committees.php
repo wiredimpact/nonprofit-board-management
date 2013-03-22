@@ -68,7 +68,7 @@ class WI_Board_Committees {
     );
 
     $args = array(
-      'labels' => $labels,
+      'labels' => apply_filters( 'winbm_committee_labels', $labels ),
       'public' => false,
       'show_ui' => true,
       'show_in_menu' => false, //Done through add_submenu_page for more flexibility
@@ -184,7 +184,7 @@ class WI_Board_Committees {
    * @param object $board_committee The $post object for the board committee.
    */
   public function display_board_committee_members( $board_committee ){
-    echo $this->get_all_user_inputs( $board_committee->ID );
+    echo apply_filters( 'winbm_committee_members', $this->get_all_user_inputs( $board_committee->ID ), $board_committee );
   }
 
   
@@ -283,7 +283,7 @@ class WI_Board_Committees {
      10 => __( 'Committee draft updated.', 'nonprofit-board-management' )
     );
     
-    return $messages;
+    return apply_filters( 'winbm_committee_messages', $messages );
   }
   
   
@@ -301,7 +301,7 @@ class WI_Board_Committees {
       'committee_members' => __( 'Committee Members', 'nonprofit-board-management' ),
     );
 
-    return $columns;
+    return apply_filters( 'winbm_committee_columns', $columns );
   }
   
  
@@ -317,7 +317,7 @@ class WI_Board_Committees {
     switch( $column ){
 
       case 'description':
-
+        
         echo '<span class="waiting spinner" style="display: none;"></span>'; 
         echo wp_trim_words( $board_committee_meta['description'], 15, '&hellip;<br /><a href="#" data-id="' . $board_committee_id . '" class="more-desc">Read full description</a>' );
 
@@ -368,6 +368,9 @@ class WI_Board_Committees {
     <h3><?php _e( 'Additional Info for the Board', 'nonprofit-board-management' ); ?></h3>
 
     <table class="form-table">
+      
+      <?php do_action( 'winbm_before_profile_fields' ); ?>
+      
       <tr>
         <th><label for="current-employer"><?php _e( 'Current Employer', 'nonprofit-board-management' ); ?></label></th>
         <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo sanitize_text_field( $current_employer ); ?>" /></td>
@@ -411,7 +414,11 @@ class WI_Board_Committees {
           <input type="hidden" name="track-attendance-available" value="1" />
         </td>
       </tr>
-      <?php } ?>
+      <?php
+      }
+      
+      do_action( 'winbm_after_profile_fields' ); ?>
+      
     </table>
 
   <?php
@@ -511,7 +518,7 @@ class WI_Board_Committees {
     $board_committee_meta_raw = get_post_custom( $board_committee_id );
     $board_committee_meta['description'] = ( isset( $board_committee_meta_raw['_committee_description'] ) ) ? $board_committee_meta_raw['_committee_description'][0] : '';
     
-    return $board_committee_meta;
+    return apply_filters( 'winbm_board_committee_meta', $board_committee_meta, $board_committee_id );
   }
   
   
@@ -534,6 +541,8 @@ class WI_Board_Committees {
     $new_committees = array_merge( $prev_committees, $new_committees );
     
     update_user_meta( $board_member_id, 'board_committees', $new_committees );
+    
+    do_action( 'winbm_add_committee_to_user', $board_member_id, $board_committee_id );
   }
   
   
@@ -558,6 +567,8 @@ class WI_Board_Committees {
     else {
       update_user_meta( $board_member_id, 'board_committees', $new_committees );
     }
+    
+    do_action( 'winbm_remove_committee_from_user', $board_member_id, $board_committee_id );
   }
   
   
@@ -583,7 +594,7 @@ class WI_Board_Committees {
     
     $committee_member_list = '(' . $num_on_committee . ')';
     if( $num_on_committee != 0 ) $committee_member_list .= ' - ';
-    $committee_member_list .= implode( ', ', $members_on_committee );
+    $committee_member_list .= implode( ', ', apply_filters( 'winbm_members_on_committee', $members_on_committee, $board_committee_id ) );
     
     return esc_html( $committee_member_list );
   }
@@ -611,7 +622,7 @@ class WI_Board_Committees {
       }
     }
     
-    return esc_html( implode( ', ', $committees ) );
+    return esc_html( implode( ', ', apply_filters( 'winbm_user_committees', $committees, $board_member_id ) ) );
   }
 
   
@@ -651,7 +662,7 @@ class WI_Board_Committees {
       $tabindex += 10;
     }
     
-    return $committee_inputs;
+    return apply_filters( 'winbm_member_committee_checkboxes', $committee_inputs, $board_committee_id );
   }
   
   
@@ -692,7 +703,7 @@ class WI_Board_Committees {
       $committee_inputs .= '</label><br />';
     }
     
-    return $committee_inputs;
+    return apply_filters( 'winbm_profile_committee_checkboxes', $committee_inputs, $board_member_id );
   }
   
   
