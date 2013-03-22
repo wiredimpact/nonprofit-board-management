@@ -72,7 +72,7 @@ class WI_Board_Management {
       add_role( 
               'board_member',
               'Board Member', 
-              array( 
+              apply_filters( 'winbm_board_member_caps', array( 
                   'read' => true,
                   'view_board_content' => true,
                   'edit_board_content' => true,
@@ -103,7 +103,7 @@ class WI_Board_Management {
                   'delete_others_board_committees' => true,
                   'edit_private_board_committees' => true,
                   'edit_published_board_committees' => true
-                  )
+                  ) )
               );
       
       //Give admin access to view and edit all board content.
@@ -137,6 +137,8 @@ class WI_Board_Management {
         $role->add_cap( 'delete_others_board_committees' );
         $role->add_cap( 'edit_private_board_committees' );
         $role->add_cap( 'edit_published_board_committees' );
+        
+        do_action( 'winbm_add_admin_caps', $role );
       }
     }
 
@@ -183,6 +185,8 @@ class WI_Board_Management {
         $role->remove_cap( 'delete_others_board_committees' );
         $role->remove_cap( 'edit_private_board_committees' );
         $role->remove_cap( 'edit_published_board_committees' );
+        
+        do_action( 'winbm_remove_admin_caps', $role );
       }
     }
     
@@ -207,14 +211,13 @@ class WI_Board_Management {
       if( $screen->id == 'board_events' ||
           $screen->id == 'edit-board_events' ||
           $screen->id == 'board_committees' ||
-          $screen->id == 'admin_page_nonprofit-board/attendance/member' ||
           $screen->id == 'admin_page_nonprofit-board/resources/edit' ){
         
         $screen->expand_board_menu = true;
       }
       
       //wp_localize_script allows us to send PHP info to JS
-      wp_localize_script( 'board-mgmt', 'wi_board_mgmt', array(
+      wp_localize_script( 'board-mgmt', 'wi_board_mgmt', apply_filters( 'winbm_local_scripts', array(
         'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
         'error_allow_serve' => __( 'Woops. We weren\'t able to allow you to RSVP.  Please try again.', 'nonprofit-board-management' ),
         'get_description_nonce' => wp_create_nonce( 'get_description_nonce' ),
@@ -223,7 +226,7 @@ class WI_Board_Management {
         'load_spinner_html' => '<span class="waiting spinner" style="display: none;"></span>',
         'error_see_attendees' => __( 'Woops. We weren\'t able to show you the attendees.  Please contact support.', 'nonprofit-board-management' ),
         'expand_board_menu' => $screen->expand_board_menu //Send whether we should expand the board mgmt menu
-        )
+        ), $screen )
        );
     }
     
@@ -237,21 +240,28 @@ class WI_Board_Management {
       
       //Create Board Members page
       add_submenu_page( 'nonprofit-board', __( 'Board Members', 'nonprofit-board-management' ), __( 'Board Members', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
-      
+          
+      //Add action to add new menu items after the board members page.
+      do_action( 'winbm_add_page_after_members' );
+
       //Add Board Events page
       add_submenu_page( 'nonprofit-board', __( 'Board Events', 'nonprofit-board-management' ), __( 'Board Events', 'nonprofit-board-management' ), 'edit_board_events' , 'edit.php?post_type=board_events' );
       
-      //Add Event Attendance pages
-      global $wi_board_attendance;
-      add_submenu_page( 'nonprofit-board', __( 'Board Event Attendance', 'nonprofit-board-management' ), __( 'Event Attendance', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/attendance', array( $wi_board_attendance, 'display_board_attendance_page' ) );
-      add_submenu_page( 'options.php', 'Board Member Attendance', 'Board Member Attendance', 'view_board_content', 'nonprofit-board/attendance/member', array( $wi_board_attendance, 'display_member_attendance_page' ) );
+      //Add action to add new menu items after events.
+      do_action( 'winbm_add_page_after_events' );
       
       //Add Board Committees page
       add_submenu_page( 'nonprofit-board', __( 'Board Committees', 'nonprofit-board-management' ), __( 'Board Committees', 'nonprofit-board-management' ), 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
       
+      //Add action to add new menu items after committees.
+      do_action( 'winbm_add_page_after_committees' );
+      
       //Add new board event and board committee pages
       add_submenu_page( 'nonprofit-board', __( 'Add Board Event', 'nonprofit-board-management' ), __( 'Add Board Event', 'nonprofit-board-management' ), 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
       add_submenu_page( 'nonprofit-board', __( 'Add Board Committee', 'nonprofit-board-management' ), __( 'Add Board Committee', 'nonprofit-board-management' ), 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
+      
+      //Add action to add new menu items after add new events and new committees.
+      do_action( 'winbm_add_page_after_add_new' );
       
       //Add Resources and Support pages
       add_submenu_page( 'nonprofit-board', __( 'Board Resources', 'nonprofit-board-management' ), __( 'Board Resources', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
@@ -273,6 +283,9 @@ class WI_Board_Management {
             <a href="user-new.php" class="add-new-h2"><?php _e( '&#43; Add New User', 'nonprofit-board-management' ); ?></a>
           <?php } ?>
         </h2>
+        
+        <?php do_action( 'winbm_before_members_table' ); ?>
+        
         <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
           <thead>
             <tr>
@@ -340,6 +353,9 @@ class WI_Board_Management {
         
           </tbody>
         </table>
+        
+        <?php do_action( 'winbm_after_members_table' ); ?>
+        
         <p><?php 
           _e( '<strong>Your Photo:</strong> You can set your photo by creating a <a href="http://en.gravatar.com/" target="_blank">Gravatar account</a>
             using the same email address you used here.<br />', 'nonprofit-board-management' );
@@ -362,7 +378,7 @@ class WI_Board_Management {
       $board_member_meta->current_employer = get_user_meta( $board_member_id, 'current_employer', true );
       $board_member_meta->job_title = get_user_meta( $board_member_id, 'job_title', true );
       
-      return $board_member_meta;
+      return apply_filters( 'winbm_board_member_meta', $board_member_meta, $board_member_id );
     }
    
     
@@ -396,6 +412,9 @@ class WI_Board_Management {
           <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
           <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
           <p><a href="http://wiredimpact.com/" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
+          
+          <?php do_action( 'winbm_in_helpful_resources' ); ?>
+          
         </div>
       </div><!-- /wrap -->
       <?php
@@ -468,6 +487,9 @@ class WI_Board_Management {
       
       //Sanitize the board resources content, then save or delete it.
       $clean_content = wp_kses_post( $_POST['board_resources'] );
+      
+      do_action( 'winbm_save_board_resources', $clean_content );
+      
       if( $clean_content != '' ){
         $result = update_option( 'board_resources_content', $clean_content );
       }
@@ -495,6 +517,8 @@ class WI_Board_Management {
           <iframe width="640" height="360" src="https://www.youtube.com/embed/j1EHA5T4rQA" frameborder="0" allowfullscreen></iframe>
         </div>
         
+        <?php do_action( 'winbm_at_support_early' ); ?>
+        
         <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Member', 'nonprofit-board-management' ); ?></a></h3>
         <div class="support-content hide">
           <iframe width="640" height="360" src="https://www.youtube.com/embed/kCwsqWrwkaA" frameborder="0" allowfullscreen></iframe>
@@ -520,10 +544,7 @@ class WI_Board_Management {
           <iframe width="640" height="360" src="https://www.youtube.com/embed/Nk6blZ3Zopc" frameborder="0" allowfullscreen></iframe>
         </div>
         
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Track Attendance for an Event', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/WLz6axkCW1Y" frameborder="0" allowfullscreen></iframe>
-        </div>
+        <?php do_action( 'winbm_at_support_middle' ); ?>
         
         <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Create a Committee and Add Committee Members', 'nonprofit-board-management' ); ?></a></h3>
         <div class="support-content hide">
@@ -534,6 +555,11 @@ class WI_Board_Management {
         <div class="support-content hide">
           <iframe width="640" height="360" src="https://www.youtube.com/embed/XsXXEHAs9TU" frameborder="0" allowfullscreen></iframe>
         </div>
+        
+        <?php
+        //Add action to add support content at the end.
+        do_action( 'winbm_at_support_end' );
+        ?>
       <?php     
     }
     
@@ -619,7 +645,7 @@ class WI_Board_Management {
       //Since we added the admins at the end, we need to sort again by display_name
       usort( $users_serving, array( $this, "sort_users" ) );
 
-      return $users_serving;
+      return apply_filters( 'winbm_users_serving', $users_serving );
     }
     
     
@@ -679,6 +705,8 @@ class WI_Board_Management {
 
      $current_user = wp_get_current_user();
      $current_user->add_cap( 'serve_on_board' );
+     
+     do_action( 'winbm_allow_user_serve', $current_user );
 
      echo '1';
 
@@ -702,6 +730,8 @@ if( is_admin() ){
   //Instantiate each of our classes.
   $wi_board_mgmt = new WI_Board_Management();
   $wi_board_events = new WI_Board_Events();
-  $wi_board_attendance = new WI_Board_Attendance();
   $wi_board_committees = new WI_Board_Committees();
+  
+  //Allow other plugins to run after our classes have been instantiated.
+  do_action( 'winbm_init' );
 }
