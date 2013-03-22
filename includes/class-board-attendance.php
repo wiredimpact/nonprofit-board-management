@@ -32,13 +32,22 @@ class WI_Board_Attendance {
     //Set our table name for the db from the start.
     $this->table_name = $this->get_table_prefix() . 'board_attendance';
     
+    //Add subpage items below events
+    add_action( 'winbm_add_page_after_events', array( $this, 'add_subpages' ) );
+    
     //Add database table on activation to hold Attendance tracking.
     //We must use a constant instead of __FILE__ because this file is loaded using require_once.
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
+    //Add individual attendance page to expand menu hook.
+    add_filter( 'winbm_local_scripts', array( $this, 'expand_menu' ), 10, 2 );
+    
     //Add and save meta box
     add_action( 'load-post.php', array( $this, 'create_attendance_meta_boxes' ) );
     add_action( 'save_post', array( $this, 'save_board_attendance_meta' ), 10, 2 );
+    
+    //Add support video onto the support page.
+    add_action( 'winbm_at_support_middle', array( $this, 'add_support_content' ) );
   }
   
   
@@ -72,6 +81,31 @@ class WI_Board_Attendance {
       //We set a variable in options in case we need to update the database in the future.
       add_option('board_attendance_db_version', 0.1);
     }
+  }
+  
+  
+  /*
+   * Add two attendance subpages to the sidebar menu just under the "Board Events" menu item.
+   */
+  public function add_subpages(){
+    add_submenu_page( 'nonprofit-board', __( 'Board Event Attendance', 'nonprofit-board-management' ), __( 'Event Attendance', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/attendance', array( $this, 'display_board_attendance_page' ) );
+    add_submenu_page( 'options.php', 'Board Member Attendance', 'Board Member Attendance', 'view_board_content', 'nonprofit-board/attendance/member', array( $this, 'display_member_attendance_page' ) );
+  }
+  
+  
+  /*
+   * Expand the Board management menu for an individual board member's attendance page.
+   * 
+   * @param array $local_scripts The js that is sent locally to our plugin.
+   * @param object $screen Information about the current screen.
+   * @return bool True to expand the screen and false not to expand it.
+   */
+  public function expand_menu( $local_scripts, $screen ){
+    if( $screen->id == 'admin_page_nonprofit-board/attendance/member' ){
+      $local_scripts['expand_board_menu'] = true;
+    }
+      
+    return $local_scripts;
   }
   
   
@@ -128,7 +162,10 @@ class WI_Board_Attendance {
     <table class="record-attendance">
     <?php 
       foreach( $board_members as $board_member ){
-        $attended = $this->get_user_event_attendance( $board_event->ID, $board_member->ID );
+        $attended = apply_filters( 'winbm_user_event_attendance_radios',
+                $this->get_user_event_attendance( $board_event->ID, $board_member->ID ),
+                $board_member, $board_event
+                );
         $board_member->ID = intval( $board_member->ID );
     ?>
       <tr>
@@ -216,6 +253,9 @@ class WI_Board_Attendance {
             click the "View Detailed Event Attendance" link that shows up when you hover over their name.', 'nonprofit-board-management' ); ?><br />
           <?php echo $this->get_users_tracking_attendance(); ?>
         </p>
+        
+        <?php do_action( 'winbm_before_attendance_table' ); ?>
+        
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
@@ -248,7 +288,9 @@ class WI_Board_Attendance {
             
             $alternate = 'alternate';
             foreach( $board_members as $board_member ){
-              $attendance = $this->get_attendance_totals_percentages( $board_member->ID );
+              $attendance = apply_filters ( 'winbm_user_attendance_totals',
+                      $this->get_attendance_totals_percentages( $board_member->ID ),
+                      $board_member );
               ?>
                <tr class="<?php echo $alternate; ?>">
                  <td class="name column-username">
@@ -270,6 +312,9 @@ class WI_Board_Attendance {
           ?>
           </tbody>
         </table>
+        
+        <?php do_action( 'winbm_after_attendance_table' ); ?>
+        
     </div>
   <?php  
   }
@@ -315,6 +360,9 @@ class WI_Board_Attendance {
         <p>
           <?php printf( __( 'Back to <a href="%s">Event Attendance Summary</a>.', 'nonprofit-board-management' ), admin_url( 'admin.php?page=nonprofit-board/attendance' ) ); ?>
         </p>
+        
+        <?php do_action( 'winbm_before_individual_attendance_table', $board_member ); ?>
+        
         <table class="wp-list-table widefat fixed posts" id="board-attendance-table" cellspacing="0">
           <thead>
             <tr>
@@ -333,7 +381,9 @@ class WI_Board_Attendance {
           <tbody>
             <?php
             
-            $attendance_record = $this->get_user_attendance_record( $board_member_id );
+            $attendance_record = apply_filters( 'winbm_individual_attendance_record', 
+                    $this->get_user_attendance_record( $board_member_id ),
+                    $board_member_id );
             //If no board members were found then give them a message.
             if( empty( $attendance_record ) ){ ?>
                 <tr class="no-items">
@@ -363,6 +413,9 @@ class WI_Board_Attendance {
           ?>
           </tbody>
         </table>
+        
+        <?php do_action( 'winbm_after_individual_attendance_table', $board_member ); ?>
+        
         <p><?php _e( '*Events that have been permanently deleted will not show in the list of events.', 'nonprofit-board-management' ); ?></p>
     </div>
   <?php
@@ -394,7 +447,9 @@ class WI_Board_Attendance {
             $this->table_name,
             array( 'user_id' => $board_member_id, 'post_id' => $board_event_id, 'attended' => $attended ),
             array( '%d', '%d', '%d' ) //All of these should be saved as integers
-           );  
+           ); 
+    
+    do_action( 'winbm_insert_user_attendance', $board_member_id, $board_event_id, $attended );
   }
   
   
@@ -414,6 +469,8 @@ class WI_Board_Attendance {
             array( '%d' ),
             array( '%d', '%d' )
            );
+    
+    do_action( 'winbm_update_user_attendance', $board_member_id, $board_event_id, $attended );
   }
   
   
@@ -435,6 +492,8 @@ class WI_Board_Attendance {
               $board_member_id, $board_event_id
               )
            );
+    
+    do_action( 'winbm_delete_user_attendance', $board_member_id, $board_event_id );
   }
   
   
@@ -592,5 +651,25 @@ class WI_Board_Attendance {
                        );
                         
     return $attendance_record;
-  }  
+  }
+  
+  
+  /*
+   * Add a support video on how to track attendance.
+   */
+  public function add_support_content(){
+    ?>
+    <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Track Attendance for an Event', 'nonprofit-board-management' ); ?></a></h3>
+    <div class="support-content hide">
+      <iframe width="640" height="360" src="https://www.youtube.com/embed/WLz6axkCW1Y" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <?php
+  }
 }//WI_Board_Attendance
+
+
+//Initiate board attendance
+add_action('winbm_init', 'wi_board_management_attendance_init' );
+function wi_board_management_attendance_init(){
+   $wi_board_attendance = new WI_Board_Attendance(); 
+}
