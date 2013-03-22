@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Nonprofit Board Management
-Plugin URI: WIRED IMPACT URL GOES HERE
+Plugin URI: http://wiredimpact.com
 Description: Manage your board of directors or young friends board directly from WordPress.
 Version: 0.1
 Author: Wired Impact
