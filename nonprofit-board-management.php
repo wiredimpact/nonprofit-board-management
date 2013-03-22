@@ -64,9 +64,8 @@ class WI_Board_Management {
     /*
      * Add the board roles when the plugin is first activated.
      * 
-     * The only capability that can be added later is the ability to track
-     * event attendance.  This capability can only be given by an admin. The
-     * checkbox to allow this capability shows on the bottom of the profile page.
+     * Additional capabilities can be added at a later time or can be
+     * added using the filter below.
      */
     public function add_board_roles(){   
       add_role( 
@@ -724,7 +723,6 @@ if( is_admin() ){
 
   //Add board events and committees classes
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
-  require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-attendance.php';
   require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-committees.php';
 
   //Instantiate each of our classes.

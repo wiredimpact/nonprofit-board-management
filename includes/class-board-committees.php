@@ -369,7 +369,7 @@ class WI_Board_Committees {
 
     <table class="form-table">
       
-      <?php do_action( 'winbm_before_profile_fields' ); ?>
+      <?php do_action( 'winbm_before_profile_fields', $board_member ); ?>
       
       <tr>
         <th><label for="current-employer"><?php _e( 'Current Employer', 'nonprofit-board-management' ); ?></label></th>
@@ -400,24 +400,8 @@ class WI_Board_Committees {
         </tr>
       
       <?php }
-      //Only show tracking attendance checkbox if user is admin.
-      if( current_user_can( 'manage_options' ) ){ 
-        $can_track = false;
-        if( user_can( $board_member->ID, 'track_event_attendance' ) ){
-          $can_track = true;
-        }
-      ?>
-      <tr>
-        <th><?php _e( 'Tracking Attendance', 'nonprofit-board-management' ); ?></th>
-        <td>
-          <label><input type="checkbox" name="track-attendance" <?php checked( $can_track ); ?> /> <?php _e( 'Allow board member to track event attendance', 'nonprofit-board-management' ); ?></label>
-          <input type="hidden" name="track-attendance-available" value="1" />
-        </td>
-      </tr>
-      <?php
-      }
       
-      do_action( 'winbm_after_profile_fields' ); ?>
+      do_action( 'winbm_after_profile_fields', $board_member ); ?>
       
     </table>
 
@@ -455,22 +439,13 @@ class WI_Board_Committees {
     else{
       delete_user_meta( $board_member_id, 'board_committees' );
     }
-    //Ability to track event attendance
-    if( isset( $_REQUEST['track-attendance-available'] ) ){
-      if( isset( $_REQUEST['track-attendance'] ) && !user_can( $board_member_id, 'track_event_attendance' ) ){
-        $board_member = new WP_User( $board_member_id );
-        $board_member->add_cap( 'track_event_attendance' );
-      }
-      else if( !isset( $_REQUEST['track-attendance'] ) && user_can( $board_member_id, 'track_event_attendance' ) ){
-        $board_member = new WP_User( $board_member_id );
-        $board_member->remove_cap( 'track_event_attendance' );
-      }
-    }
    //Remove the admin from the board if they unchecked the serve-on-board checkbox
    if( isset( $_REQUEST['serve-on-board-available'] ) && !isset( $_REQUEST['serve-on-board'] ) ){ 
      $board_member = new WP_User( $board_member_id );
      $board_member->remove_cap( 'serve_on_board' );  
    }
+   
+   do_action( 'winbm_save_profile_fields', $board_member_id );
   }
   
   
