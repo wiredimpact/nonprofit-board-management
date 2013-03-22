@@ -171,7 +171,7 @@ class WI_Board_Events {
     );
 
     $args = array(
-      'labels' => $labels,
+      'labels' => apply_filters( 'winbm_event_labels', $labels ),
       'public' => false,
       'show_ui' => true,
       'show_in_menu' => false, //Done through add_submenu_page
@@ -287,6 +287,7 @@ class WI_Board_Events {
     ?>
     <input type="hidden" id="_event_details_nonce" name="_event_details_nonce" value="<?php echo $nonce ?>" />
     <table class="board-event-meta">
+      <?php do_action( 'winbm_before_event_meta_fields', $board_event ); ?>
       <tr>
         <td><label for="event-description"><?php _e( 'Event Description', 'nonprofit-board-management' ); ?></label></td>
         <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo sanitize_text_field( $board_event_meta['event_description'] ); ?></textarea></td>
@@ -319,7 +320,7 @@ class WI_Board_Events {
           <span class="error" style="display: none;"><?php _e( 'Woops, it looks like you set your event to end before it started.', 'nonprofit-board-management' ); ?></span>
         </td>
       </tr>
-      
+      <?php do_action( 'winbm_after_event_meta_fields', $board_event ); ?>
     </table>
     <?php
   }
@@ -407,12 +408,16 @@ class WI_Board_Events {
     }
     
     //Display all the board members
+    do_action( 'winbm_before_rsvp_meta_list', $board_event );
+    
     echo '<h4>' . __( 'Going', 'nonprofit-board-management' ) . ' (' . count( $attending ) . ')</h4>';
     echo implode( ', ', $attending );
     echo '<h4>' . __( 'Not Going', 'nonprofit-board-management' ) . ' (' . count( $not_attending ) . ')</h4>';
     echo implode( ', ', $not_attending );
     echo '<h4>' . __( 'Not Responded', 'nonprofit-board-management' ) . ' (' . count( $no_response ) . ')</h4>';
     echo implode( ', ', $no_response );
+    
+    do_action( 'winbm_after_rsvp_meta_list', $board_event );
   }
   
   
@@ -457,7 +462,7 @@ class WI_Board_Events {
      10 => __( 'Event draft updated.', 'nonprofit-board-management' )
     );
     
-    return $messages;
+    return apply_filters( 'winbm_event_messages', $messages );
   }
   
   
@@ -478,7 +483,7 @@ class WI_Board_Events {
     $board_event_meta['start_date_time'] = ( isset( $board_event_meta_raw['_start_date_time'] ) && $board_event_meta_raw['_start_date_time'][0] != '' ) ? (int)$board_event_meta_raw['_start_date_time'][0] : '';
     $board_event_meta['end_date_time'] = ( isset( $board_event_meta_raw['_end_date_time']  ) && $board_event_meta_raw['_end_date_time'][0] != '' ) ? (int)$board_event_meta_raw['_end_date_time'][0] : '';
     
-    return $board_event_meta;
+    return apply_filters( 'winbm_board_event_meta', $board_event_meta, $post_id );
   }
   
   
@@ -498,7 +503,7 @@ class WI_Board_Events {
     if( $start_only == true ){
       $event_time = date( __( 'D, F d, Y \&#64; g:i a', 'nonprofit-board-management' ), $start_date_time);
       
-      return $event_time;
+      return apply_filters( 'winbm_event_time', $event_time, $start_date_time, $end_date_time, $start_only );
     }
    
     //If dates are the same then only show date on first date, with time on both
@@ -515,7 +520,7 @@ class WI_Board_Events {
       $event_time .= date( __( 'D, F d, Y g:i a', 'nonprofit-board-management' ), $end_date_time);
     }
 
-    return $event_time;
+    return apply_filters( 'winbm_event_time', $event_time, $start_date_time, $end_date_time, $start_only );
   }
   
   
@@ -561,7 +566,9 @@ class WI_Board_Events {
         if( !isset( $_GET['events'] ) && !isset( $_GET['post_status'] ) ){
           $query->query_vars['order'] = 'asc';
         }
-      }//End if the user is trying to order by something.      
+      }//End if the user is trying to order by something.  
+      
+      do_action( 'winbm_after_events_query', $query );
     }//End if on board events list
   }
   
@@ -601,7 +608,7 @@ class WI_Board_Events {
     //Make the array have the order we want.
     array_splice($views, 0, 1, $new_views);
     
-		  return $views;
+		return apply_filters( 'winbm_event_views', $views );
 	}
   
   
@@ -626,7 +633,7 @@ class WI_Board_Events {
      $columns['rsvp'] = __( 'RSVP' );
    }
 
-   return $columns;
+   return apply_filters( 'winbm_event_columns', $columns );
  }
  
  
@@ -874,7 +881,7 @@ class WI_Board_Events {
    $event_location .= '</a>';
   }
 
-  return $event_location;
+  return apply_filters( 'winbm_event_location', $event_location, $board_event_meta, $line_breaks );
  } 
  
  
@@ -929,6 +936,8 @@ class WI_Board_Events {
   
   //0 means that nothing changed, a returned string is the list of RSVPs
   echo $result;
+  
+  do_action( 'winbm_after_event_rsvp' );
   
   die();
  }
@@ -1002,7 +1011,7 @@ class WI_Board_Events {
     }
   }
    
-   return $rsvps;
+   return apply_filters( 'winbm_event_rsvp_statuses', $rsvps, $post_id );
  }
  
  
