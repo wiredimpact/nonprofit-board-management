@@ -8,7 +8,7 @@
  *
  * @package Nonprofit Board Management
  *
- * @version 0.1
+ * @version beta1.1
  * @author Wired Impact
  */
 class WI_Board_Events {
@@ -795,6 +795,12 @@ class WI_Board_Events {
    if( current_user_can( 'view_board_content' ) ){
     wp_add_dashboard_widget('board_events_db_widget', __( 'Upcoming Board Events', 'nonprofit-board-management' ), array( $this, 'display_board_events_dashboard_widget' ) );
    }
+   
+   //Make our widget show on the right side of the dashboard by adding to 'side' array.
+   global $wp_meta_boxes;
+   $widget = $wp_meta_boxes['dashboard']['normal']['core']['board_events_db_widget'];
+   unset($wp_meta_boxes['dashboard']['normal']['core']['board_events_db_widget']);
+   $wp_meta_boxes['dashboard']['side']['core']['board_events_db_widget'] = $widget;
  }
 
 

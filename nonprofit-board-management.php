@@ -3,7 +3,7 @@
 Plugin Name: Nonprofit Board Management
 Plugin URI: http://wiredimpact.com
 Description: Manage your board of directors or young friends board directly from WordPress.
-Version: 0.1
+Version: beta1.1
 Author: Wired Impact
 Author URI: http://wiredimpact.com/
 License: GPLv2
@@ -42,6 +42,7 @@ class WI_Board_Management {
       
         register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
+        add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
         
         //Setup top level menu
         add_action( 'admin_menu', array( $this, 'create_menu' ), 10 ); 
@@ -187,6 +188,21 @@ class WI_Board_Management {
         
         do_action( 'winbm_remove_admin_caps', $role );
       }
+    }
+    
+    
+    /*
+     * Remove unnecessary dashboard widgets for board members.
+     * 
+     * Checks to see if the user is role "board_member"
+     * and if so, then doesn't show the WordPress blog or 
+     * WordPress news widgets.
+     */
+    public function remove_dashboard_widgets(){
+      if( current_user_can( 'board_member' ) ){
+        remove_meta_box ( 'dashboard_primary', 'dashboard', 'side' ); 
+        remove_meta_box ( 'dashboard_secondary', 'dashboard', 'side' );
+      }      
     }
     
     
@@ -712,6 +728,30 @@ class WI_Board_Management {
      die();
    }  
 } //WI_Board_Management
+
+
+/*
+ * Redirect board members to the dashboard on login.
+ * 
+ * This happens outside of the class because the filter doesn't
+ * work inside of the is_admin function.
+ */
+add_filter( 'login_redirect', 'winbm_redirect_to_dashboard', 10, 3 );
+function winbm_redirect_to_dashboard( $redirect_to, $request, $user ){
+  if( isset( $user->roles ) && is_array( $user->roles ) ) {
+      if( in_array( "board_member", $user->roles ) ) {
+          // redirect them to the dashboard
+          return admin_url('index.php');
+      }
+      else {
+          return $redirect_to;
+      }
+  }
+  else{
+    return $redirect_to;
+  }
+}
+
 
 if( is_admin() ){
   //Setup some constants for us to more easily work with files
