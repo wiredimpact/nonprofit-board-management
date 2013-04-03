@@ -65,6 +65,9 @@ body .ui-datepicker-calendar .ui-state-active {
 #board_event_rsvps h4 {
   margin-bottom: .25em;
 }
+#board_event_rsvps .rsvp-link {
+  font-style: italic;
+}
 
 /********************************
 * Board Committees
