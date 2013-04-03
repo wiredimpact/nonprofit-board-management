@@ -221,14 +221,23 @@ class WI_Board_Management {
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
       
       //Send whether the current screen should expand the board mgmt menu.
+      $current_user = wp_get_current_user();
       $screen = get_current_screen();
       $screen->expand_board_menu = false;
       if( $screen->id == 'board_events' ||
           $screen->id == 'edit-board_events' ||
           $screen->id == 'board_committees' ||
-          $screen->id == 'admin_page_nonprofit-board/resources/edit' ){
+          $screen->id == 'admin_page_nonprofit-board/resources/edit' ||
+          user_can( $current_user, 'board_member' ) ){
         
         $screen->expand_board_menu = true;
+      }
+        
+      //Pass whether we are editing a profile of a board member
+      global $profileuser;
+      $editing_board_member_profile = false;  
+      if( isset( $profileuser->allcaps['serve_on_board'] ) && $profileuser->allcaps['serve_on_board'] == true && !user_can( $profileuser, 'manage_options' ) ){
+            $editing_board_member_profile = true;
       }
       
       //wp_localize_script allows us to send PHP info to JS
@@ -240,7 +249,8 @@ class WI_Board_Management {
         'see_attendees_nonce' => wp_create_nonce( 'see_attendees_nonce' ),
         'load_spinner_html' => '<span class="waiting spinner" style="display: none;"></span>',
         'error_see_attendees' => __( 'Woops. We weren\'t able to show you the attendees.  Please contact support.', 'nonprofit-board-management' ),
-        'expand_board_menu' => $screen->expand_board_menu //Send whether we should expand the board mgmt menu
+        'expand_board_menu' => $screen->expand_board_menu, //Send whether we should expand the board mgmt menu
+        'editing_board_member_profile' => $editing_board_member_profile
         ), $screen )
        );
     }

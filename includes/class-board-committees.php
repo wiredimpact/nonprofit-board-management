@@ -33,7 +33,7 @@ class WI_Board_Committees {
     add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
     
     //Add filter for putting phone number on profile.
-    add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ) );
+    add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ), 10, 2 );
 
     //Add user fields for job and job title, along with committee info
     add_action( 'show_user_profile', array( $this, 'display_profile_fields' ) );
@@ -333,13 +333,25 @@ class WI_Board_Committees {
  
   
   /*
-   * Add the phone number as a contact method for all WP users, not only board members.
+   * Add and remove certain fields for board members and serving admins.
    * 
    * @param array $user_contactmethods List of current WP contact methods.
+   * @param object $user Current user having their profile edited.
    * @return array A new list of contact methods with our methods added.
    */
-  public function add_phone_contactmethod( $user_contactmethods ){
-    $user_contactmethods['phone'] = __( 'Phone Number', 'nonprofit-board-management' );
+  public function add_phone_contactmethod( $user_contactmethods, $user ){
+    
+    //If the user serves on the board we need to add and remove certain fields.
+    if( isset( $user->allcaps['serve_on_board'] ) && $user->allcaps['serve_on_board'] == true ){
+      $user_contactmethods['phone'] = __( 'Phone Number', 'nonprofit-board-management' );
+      
+      //If user serves and isn't an admin then remove all the fields we don't want.
+      if( !user_can( $user, 'manage_options' ) ){
+        unset($user_contactmethods['aim']);
+        unset($user_contactmethods['jabber']);
+        unset($user_contactmethods['yim']);
+      }
+    }
 
     return $user_contactmethods;
   }

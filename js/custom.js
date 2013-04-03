@@ -198,5 +198,17 @@ jQuery(document).ready(function(){
 		}
 		  
 	 }); //End click for support
+  
+  
+  //Remove fields from profile edit screen only when editing a board members profile
+  //This does not evaluate to true when editing an admin who serves on the board.
+  if( wi_board_mgmt.editing_board_member_profile === "1" ){
+    jQuery( '#your-profile table:first' ).hide();
+    jQuery( '#your-profile h3:first' ).hide();
+    jQuery( '#your-profile #url' ).closest( 'tr' ).hide();
+    jQuery( '#your-profile #description' ).closest( 'tr' ).hide();
+    jQuery( '#your-profile h3' ).hide();
+  }
+  
 });
 
