@@ -96,9 +96,11 @@ body .ui-datepicker-calendar .ui-state-active {
 #board-attendance-table .row-actions {
   visibility: visible;
 }
-
 #board_event_attendance tr input {
   margin-left: 8px;
+}
+#board_event_attendance p {
+  font-style: italic;
 }
 
 /********************************
