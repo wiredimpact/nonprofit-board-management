@@ -24,6 +24,12 @@ class WI_Board_Committees {
     
     //Remove the filter field from the board committees list screen
     add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
+    
+    //Remove visibility settings for committees.
+    add_action( 'admin_head-post.php', array( $this, 'hide_visibility_options' ) );
+    add_action( 'admin_head-post-new.php', array( $this, 'hide_visibility_options' ) );
+    
+    //Remove quick edit from the table list of committees
     add_filter( 'post_row_actions', array( $this, 'remove_quick_edit' ), 10, 2 );
     
     //Change post updated content.
@@ -258,6 +264,24 @@ class WI_Board_Committees {
         }
       </style>
       <?php
+    }
+  }
+  
+  
+  /*
+   * Hide the visibility options when creating or editing a board committee.
+   */
+  public function hide_visibility_options(){
+    global $post;
+    if( $post->post_type == 'board_committees' ){
+        ?>
+            <style type="text/css">
+                #visibility,
+                .misc-pub-section.curtime {
+                    display:none;
+                }
+            </style>
+        <?php
     }
   }
   
