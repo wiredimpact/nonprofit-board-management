@@ -93,6 +93,10 @@ body .ui-datepicker-calendar .ui-state-active {
 /********************************
 * Attendance Tracking
 ********************************/
+#board-attendance-table .row-actions {
+  visibility: visible;
+}
+
 #board_event_attendance tr input {
   margin-left: 8px;
 }
