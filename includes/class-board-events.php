@@ -53,6 +53,7 @@ class WI_Board_Events {
     
     //Remove the filter field from the board events list screen
     add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
+    add_filter( 'post_row_actions', array( $this, 'remove_quick_edit' ), 10, 2 );
     
     //Change post updated content.
     add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
@@ -439,6 +440,22 @@ class WI_Board_Events {
       </style>
       <?php
     }
+  }
+  
+  
+  /*
+   * Remove quick edit link from each post in the events list.
+   * 
+   * @param array $actions List of action links to list for users.
+   * @param object $post The post being listed in the table.
+   * @return $actions Our actions with the quick edit link removed.
+   */
+  public function remove_quick_edit( $actions, $post ){
+    if( $post->post_type == 'board_events' ){
+      unset( $actions['inline hide-if-no-js']);
+    }
+    
+    return $actions;
   }
   
   
