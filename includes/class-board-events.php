@@ -424,7 +424,7 @@ class WI_Board_Events {
     echo '<h4>' . __( 'Not Responded', 'nonprofit-board-management' ) . ' (' . count( $no_response ) . ')</h4>';
     echo implode( ', ', $no_response );
     
-    echo '<p class="rsvp-link">' . sprintf( __( '*RSVP to every upcoming event <a href="%s">here</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ) . '</p>';
+    echo '<p class="rsvp-link">' . sprintf( __( '*RSVP to upcoming events <a href="%s">here</a>.', 'nonprofit-board-management' ), admin_url( 'edit.php?post_type=board_events' ) ) . '</p>';
     
     do_action( 'winbm_after_rsvp_meta_list', $board_event );
   }
