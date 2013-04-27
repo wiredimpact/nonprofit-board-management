@@ -578,19 +578,20 @@ class WI_Board_Events {
    */
   public function edit_board_events_query( $query ){
     global $pagenow;
+    $events_type = $this->get_events_type();
     
     //On board events list show all future or currently happening events.
     if( $pagenow == 'edit.php' && $_GET['post_type'] == 'board_events' ) {
       
       //Determine if we want upcoming or past events.  Default to upcoming events.
       $events_to_show = '>';
-      if( isset( $_GET['events'] ) && $_GET['events'] == 'past' ){
+      if( $events_type == 'past' ){
         $events_to_show = '<';
       }
       
       //Only restrict events based on date if we aren't showing all events
       //and we aren't looking at posts of a certain status
-      if( (!isset( $_GET['events'] ) || $_GET['events'] != 'all') && !isset( $_GET['post_status'] ) ){
+      if( $events_type != 'all' && $events_type != 'status' ){
         $query->query_vars['meta_query'] = array(
                                               array(
                                                 'key' => '_end_date_time',
@@ -606,13 +607,36 @@ class WI_Board_Events {
         $query->query_vars['order'] = 'desc';
         
         //If viewing upcoming events put the closest event to current time at the top
-        if( !isset( $_GET['events'] ) && !isset( $_GET['post_status'] ) ){
+        if( $events_type == 'upcoming' ){
           $query->query_vars['order'] = 'asc';
         }
       }//End if the user is trying to order by something.  
       
       do_action( 'winbm_after_events_query', $query );
     }//End if on board events list
+  }
+  
+  
+  /*
+   * Determine whether we want to show a list of upcoming events,
+   * past events, all events or a post status events list based on query strings.
+   * 
+   * return $events_type String telling us what type of events we're listing.
+   */
+  public function get_events_type(){
+    $events_type = 'upcoming';
+    
+    if( isset( $_GET['events'] ) && $_GET['events'] == 'all' ){
+      $events_type = 'all';
+    }
+    else if ( isset( $_GET['post_status'] ) ) {
+      $events_type = 'status';
+    }
+    else if( isset( $_GET['events'] ) && $_GET['events'] == 'past' ){
+      $events_type = 'past';
+    }
+    
+    return $events_type;
   }
   
   
@@ -642,7 +666,7 @@ class WI_Board_Events {
 		  $future_query_string = remove_query_arg( array( 'events', 'post_status' ) );
 		  $new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">' . __( 'Upcoming Events', 'nonprofit-board-management' ) . '</a>';
     
-		//View past events
+    //View past events
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'past' ) ? 'current' : '';
     $past_query_string = remove_query_arg( 'post_status' );
 		  $past_query_string = add_query_arg( 'events', urlencode('past'), $past_query_string );
@@ -671,8 +695,15 @@ class WI_Board_Events {
      'attending' => __( 'Who\'s Coming?', 'nonprofit-board-management' ),
    );
    
-   //Only show the RSVP column if the user has that capability.
-   if( current_user_can( 'serve_on_board' ) ){
+   //Don't show who's attending for past events.
+   $events_type = $this->get_events_type();
+   if( $events_type == 'past' ){
+     unset( $columns['attending'] );
+   }
+   
+   //Only show the RSVP column if the user has that capability and we're not
+   //looking at past events.
+   if( current_user_can( 'serve_on_board' ) && $events_type != 'past' ){
      $columns['rsvp'] = __( 'RSVP' );
    }
 
