@@ -8,7 +8,7 @@
  *
  * @package Nonprofit Board Management
  *
- * @version beta1.1
+ * @version beta2.0
  * @author Wired Impact
  */
 class WI_Board_Events {
