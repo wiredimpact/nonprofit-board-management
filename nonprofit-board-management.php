@@ -805,3 +805,6 @@ if( is_admin() ){
   //Allow other plugins to run after our classes have been instantiated.
   do_action( 'winbm_init' );
 }
+
+//Add action to run outside of the admin
+do_action( 'winbm_init_public' );
