@@ -926,7 +926,7 @@ class WI_Board_Events {
   * @param bool $line_breaks Whether to include line breaks in string.
   * @return string Location of event with Google Maps link if possible.
   */
- private function get_event_location( $board_event_meta, $line_breaks = true ){
+ public function get_event_location( $board_event_meta, $line_breaks = true ){
   $event_location = ''; 
   
   //Add the Google Maps link if the area or street are not empty
