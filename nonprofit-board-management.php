@@ -42,26 +42,32 @@ class WI_Board_Management {
       
         register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
-        add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
         
-        //Setup top level menu
-        add_action( 'admin_menu', array( $this, 'create_menu' ), 10 ); 
-        
-        //Load CSS and JS
-        add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
-        add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
-        
-        //Add our board members dashboard widget
-        add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
-        
-        //Remove the help tabs for all board members
-        add_filter( 'contextual_help', array( $this, 'remove_help_tabs' ), 10, 3 );
-        
-        //Add notice to admin who can't serve on board in case they want to.
-        add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
+        if( is_admin() ){
+          add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
 
-        //Allow admin to click a button and start serving on the board.
-        add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
+          //Setup top level menu
+          add_action( 'admin_menu', array( $this, 'create_menu' ), 10 ); 
+
+          //Load CSS and JS
+          add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
+          add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
+
+          //Add our board members dashboard widget
+          add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
+
+          //Remove the help tabs for all board members
+          add_filter( 'contextual_help', array( $this, 'remove_help_tabs' ), 10, 3 );
+
+          //Add notice to admin who can't serve on board in case they want to.
+          add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
+
+          //Allow admin to click a button and start serving on the board.
+          add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
+        }
+        
+        //Redirect board members to dashboard on login.
+        add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
     }
     
     
@@ -758,53 +764,47 @@ class WI_Board_Management {
      echo '1';
 
      die();
-   }  
+   }
+   
+   
+   /*
+    * Redirect board members to the dashboard on login.
+    * 
+    * This happens outside of the class because the filter doesn't
+    * work inside of the is_admin function.
+    */
+   public function redirect_to_dashboard( $redirect_to, $request, $user ){
+      if( isset( $user->roles ) && is_array( $user->roles ) ) {
+          if( in_array( "board_member", $user->roles ) ) {
+              // redirect them to the dashboard
+              return admin_url('index.php');
+          }
+          else {
+              return $redirect_to;
+          }
+      }
+      else{
+        return $redirect_to;
+      }
+    }
 } //WI_Board_Management
 
 
-/*
- * Redirect board members to the dashboard on login.
- * 
- * This happens outside of the class because the filter doesn't
- * work inside of the is_admin function.
- */
-add_filter( 'login_redirect', 'winbm_redirect_to_dashboard', 10, 3 );
-function winbm_redirect_to_dashboard( $redirect_to, $request, $user ){
-  if( isset( $user->roles ) && is_array( $user->roles ) ) {
-      if( in_array( "board_member", $user->roles ) ) {
-          // redirect them to the dashboard
-          return admin_url('index.php');
-      }
-      else {
-          return $redirect_to;
-      }
-  }
-  else{
-    return $redirect_to;
-  }
-}
+//Setup some constants for us to more easily work with files
+define( "BOARD_MANAGEMENT_BASENAME", plugin_basename(__FILE__) );
+define( "BOARD_MANAGEMENT_PLUGINPATH", "/" . plugin_basename(dirname(__FILE__)) . "/" );
+define( "BOARD_MANAGEMENT_PLUGINFULLPATH", WP_PLUGIN_DIR . BOARD_MANAGEMENT_PLUGINPATH );
+define( "BOARD_MANAGEMENT_PLUGINFULLURL", WP_PLUGIN_URL . BOARD_MANAGEMENT_PLUGINPATH );
+define( "BOARD_MANAGEMENT_FILEFULLPATH", BOARD_MANAGEMENT_PLUGINFULLPATH . 'nonprofit-board-management.php' );
 
+//Add board events and committees classes
+require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
+require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-committees.php';
 
-if( is_admin() ){
-  //Setup some constants for us to more easily work with files
-  define( "BOARD_MANAGEMENT_BASENAME", plugin_basename(__FILE__) );
-  define( "BOARD_MANAGEMENT_PLUGINPATH", "/" . plugin_basename(dirname(__FILE__)) . "/" );
-  define( "BOARD_MANAGEMENT_PLUGINFULLPATH", WP_PLUGIN_DIR . BOARD_MANAGEMENT_PLUGINPATH );
-  define( "BOARD_MANAGEMENT_PLUGINFULLURL", WP_PLUGIN_URL . BOARD_MANAGEMENT_PLUGINPATH );
-  define( "BOARD_MANAGEMENT_FILEFULLPATH", BOARD_MANAGEMENT_PLUGINFULLPATH . 'nonprofit-board-management.php' );
+//Instantiate each of our classes.
+$wi_board_mgmt = new WI_Board_Management();
+$wi_board_events = new WI_Board_Events();
+$wi_board_committees = new WI_Board_Committees();
 
-  //Add board events and committees classes
-  require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-events.php';
-  require_once BOARD_MANAGEMENT_PLUGINFULLPATH . 'includes/class-board-committees.php';
-
-  //Instantiate each of our classes.
-  $wi_board_mgmt = new WI_Board_Management();
-  $wi_board_events = new WI_Board_Events();
-  $wi_board_committees = new WI_Board_Committees();
-  
-  //Allow other plugins to run after our classes have been instantiated.
-  do_action( 'winbm_init' );
-}
-
-//Add action to run outside of the admin
-do_action( 'winbm_init_public' );
+//Allow other plugins to run after our classes have been instantiated.
+do_action( 'winbm_init' );

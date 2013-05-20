@@ -38,51 +38,53 @@ class WI_Board_Events {
     //We must use a constant instead of __FILE__ because this file is loaded using require_once.
     register_activation_hook( BOARD_MANAGEMENT_FILEFULLPATH, array( $this, 'create_db_table' ) );
     
-    //Load CSS and JS
-    add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
-    add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
+    if( is_admin() ){
+      //Load CSS and JS
+      add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
+      add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
 
-    //Create our board events custom post type
-    add_action( 'init', array( $this, 'create_board_events_type' ) );
-    add_action( 'admin_init', array( $this, 'create_board_events_meta_boxes' ) );
-    add_action( 'load-post.php', array( $this, 'create_existing_event_meta_boxes' ) );
-    add_action( 'save_post', array( $this, 'save_board_events_meta' ), 10, 2 );
-    
-    //Handle meta capabilities for our board_events custom post type.
-    add_filter( 'map_meta_cap', array( $this, 'board_events_map_meta_cap' ), 10, 4 );
-    
-    //Remove the filter field from the board events list screen
-    add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
-    
-    //Remove visibility settings for events.
-    add_action( 'admin_head-post.php', array( $this, 'hide_visibility_options' ) );
-    add_action( 'admin_head-post-new.php', array( $this, 'hide_visibility_options' ) );
-    
-    //Remove quick edit from the table list of committees
-    add_filter( 'post_row_actions', array( $this, 'remove_quick_edit' ), 10, 2 );
-    
-    //Change post updated content.
-    add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
-    
-    //Adjust the columns and content shown when viewing the board events post type list.
-    add_filter( 'parse_query', array( $this, 'edit_board_events_query' ) );
-    add_filter( 'views_edit-board_events', array( $this, 'add_views_links' ) );
-    add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
-    add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
-    add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
-    add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
-    
-    //Add our board events dashboard widget
-    add_action('wp_dashboard_setup', array( $this, 'add_board_events_dashboard_widget' ) );
-    
-    //Get full event and committee descriptions via ajax
-    add_action( 'wp_ajax_get_full_description', array( $this, 'get_full_description' ) );
-    
-    //Save RSVPs for the events via ajax
-    add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
-    
-    //Show all event attendees via ajax
-    add_action( 'wp_ajax_show_all_attendees', array( $this, 'show_all_attendees' ) );
+      //Create our board events custom post type
+      add_action( 'init', array( $this, 'create_board_events_type' ) );
+      add_action( 'admin_init', array( $this, 'create_board_events_meta_boxes' ) );
+      add_action( 'load-post.php', array( $this, 'create_existing_event_meta_boxes' ) );
+      add_action( 'save_post', array( $this, 'save_board_events_meta' ), 10, 2 );
+
+      //Handle meta capabilities for our board_events custom post type.
+      add_filter( 'map_meta_cap', array( $this, 'board_events_map_meta_cap' ), 10, 4 );
+
+      //Remove the filter field from the board events list screen
+      add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
+
+      //Remove visibility settings for events.
+      add_action( 'admin_head-post.php', array( $this, 'hide_visibility_options' ) );
+      add_action( 'admin_head-post-new.php', array( $this, 'hide_visibility_options' ) );
+
+      //Remove quick edit from the table list of committees
+      add_filter( 'post_row_actions', array( $this, 'remove_quick_edit' ), 10, 2 );
+
+      //Change post updated content.
+      add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
+
+      //Adjust the columns and content shown when viewing the board events post type list.
+      add_filter( 'parse_query', array( $this, 'edit_board_events_query' ) );
+      add_filter( 'views_edit-board_events', array( $this, 'add_views_links' ) );
+      add_filter( 'manage_edit-board_events_columns', array( $this, 'edit_board_events_columns' ) );
+      add_action( 'manage_board_events_posts_custom_column', array( $this, 'show_board_event_columns' ), 10, 2 );
+      add_filter( 'manage_edit-board_events_sortable_columns', array( $this, 'make_board_events_sortable' ) );
+      add_action( 'load-edit.php', array( $this, 'edit_board_events_load' ) );
+
+      //Add our board events dashboard widget
+      add_action('wp_dashboard_setup', array( $this, 'add_board_events_dashboard_widget' ) );
+
+      //Get full event and committee descriptions via ajax
+      add_action( 'wp_ajax_get_full_description', array( $this, 'get_full_description' ) );
+
+      //Save RSVPs for the events via ajax
+      add_action( 'wp_ajax_rsvp', array( $this, 'rsvp' ) );
+
+      //Show all event attendees via ajax
+      add_action( 'wp_ajax_show_all_attendees', array( $this, 'show_all_attendees' ) );
+    }
   }
   
   
@@ -1028,7 +1030,7 @@ class WI_Board_Events {
   * 
   * @return bool|int False means hasn't RSVPed.  1 means going, 0 means not going.
   */
- private function rsvp_status( $post_id, $user_id ){
+ public function rsvp_status( $post_id, $user_id ){
   global $wpdb;
 
   //Check if this user has already RSVPed for this event.

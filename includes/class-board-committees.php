@@ -14,44 +14,46 @@
 class WI_Board_Committees {
   
   public function __construct() {
-    //Create our board committees custom post type
-    add_action( 'init', array( $this, 'create_board_committees_type' ) );
-    add_action( 'admin_init', array( $this, 'create_board_committee_meta_boxes' ) );
-    add_action( 'save_post', array( $this, 'save_board_committees_meta' ), 10, 2 );
-    
-    //Handle meta capabilities for our board_committees custom post type.
-    add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
-    
-    //Remove the filter field from the board committees list screen
-    add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
-    
-    //Remove visibility settings for committees.
-    add_action( 'admin_head-post.php', array( $this, 'hide_visibility_options' ) );
-    add_action( 'admin_head-post-new.php', array( $this, 'hide_visibility_options' ) );
-    
-    //Remove quick edit from the table list of committees
-    add_filter( 'post_row_actions', array( $this, 'remove_quick_edit' ), 10, 2 );
-    
-    //Change post updated content.
-    add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
-    
-    //Adjust the columns and content shown when viewing the board committees post type list.
-    add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
-    add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
-    
-    //Add filter for putting phone number on profile.
-    add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ), 10, 2 );
+    if( is_admin() ){
+      //Create our board committees custom post type
+      add_action( 'init', array( $this, 'create_board_committees_type' ) );
+      add_action( 'admin_init', array( $this, 'create_board_committee_meta_boxes' ) );
+      add_action( 'save_post', array( $this, 'save_board_committees_meta' ), 10, 2 );
 
-    //Add user fields for job and job title, along with committee info
-    add_action( 'show_user_profile', array( $this, 'display_profile_fields' ) );
-    add_action( 'edit_user_profile', array( $this, 'display_profile_fields' ) );
+      //Handle meta capabilities for our board_committees custom post type.
+      add_filter( 'map_meta_cap', array( $this, 'board_committees_map_meta_cap' ), 10, 4 );
 
-    //Save the added user fields
-    add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
-    add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
-    
-    //Add our board committees dashboard widget
-    add_action('wp_dashboard_setup', array( $this, 'add_board_committees_dashboard_widget' ) );
+      //Remove the filter field from the board committees list screen
+      add_action( 'admin_head', array( $this, 'remove_date_filter' ) );
+
+      //Remove visibility settings for committees.
+      add_action( 'admin_head-post.php', array( $this, 'hide_visibility_options' ) );
+      add_action( 'admin_head-post-new.php', array( $this, 'hide_visibility_options' ) );
+
+      //Remove quick edit from the table list of committees
+      add_filter( 'post_row_actions', array( $this, 'remove_quick_edit' ), 10, 2 );
+
+      //Change post updated content.
+      add_filter( 'post_updated_messages', array( $this, 'change_updated_messages' ) );
+
+      //Adjust the columns and content shown when viewing the board committees post type list.
+      add_filter( 'manage_edit-board_committees_columns', array( $this, 'edit_board_committees_columns' ) );
+      add_action( 'manage_board_committees_posts_custom_column', array( $this, 'show_board_committee_columns' ), 10, 2 );
+
+      //Add filter for putting phone number on profile.
+      add_filter( 'user_contactmethods', array( $this, 'add_phone_contactmethod' ), 10, 2 );
+
+      //Add user fields for job and job title, along with committee info
+      add_action( 'show_user_profile', array( $this, 'display_profile_fields' ) );
+      add_action( 'edit_user_profile', array( $this, 'display_profile_fields' ) );
+
+      //Save the added user fields
+      add_action( 'personal_options_update', array( $this, 'save_profile_fields' ) );
+      add_action( 'edit_user_profile_update', array( $this, 'save_profile_fields' ) );
+
+      //Add our board committees dashboard widget
+      add_action('wp_dashboard_setup', array( $this, 'add_board_committees_dashboard_widget' ) );
+    }
   }
 
  /*
