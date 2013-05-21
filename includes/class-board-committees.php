@@ -750,7 +750,7 @@ class WI_Board_Committees {
    * @param int $board_committee_id Post ID of the board committee to check against.
    * @return bool True if user on committee, false if not.
    */
-  private function is_user_on_committee( $user_committees, $board_committee_id ){
+  public function is_user_on_committee( $user_committees, $board_committee_id ){
     if( !empty( $user_committees) && $user_committees != '' ){
       foreach( $user_committees as $user_committee ){
         if( $user_committee == $board_committee_id ) return true;
