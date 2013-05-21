@@ -583,7 +583,7 @@ class WI_Board_Events {
     $events_type = $this->get_events_type();
     
     //On board events list show all future or currently happening events.
-    if( $pagenow == 'edit.php' && $_GET['post_type'] == 'board_events' ) {
+    if( $pagenow == 'edit.php' && isset( $_GET['post_type'] ) && $_GET['post_type'] == 'board_events' ) {
       
       //Determine if we want upcoming or past events.  Default to upcoming events.
       $events_to_show = '>';
