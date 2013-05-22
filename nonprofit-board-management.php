@@ -35,7 +35,7 @@ class WI_Board_Management {
   
     public function __construct(){
         //Load translations
-        load_plugin_textdomain( 'nonprofit-board-management', false, basename( dirname( __FILE__ ) ) . '/languages' );
+        add_action( 'init', array( $this, 'load_plugin_textdomain') );
       
         //Put all the user objects for every board member in a variable.
         $this->board_members = $this->get_users_who_serve();
@@ -69,6 +69,14 @@ class WI_Board_Management {
         //Redirect board members to dashboard on login.
         add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
     }
+    
+    
+    /*
+     * Internationalization
+     */
+    public function load_plugin_textdomain() {
+      load_plugin_textdomain( 'nonprofit-board-management', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+    } 
     
     
     /*

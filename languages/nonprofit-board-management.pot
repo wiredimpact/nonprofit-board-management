@@ -1,0 +1,615 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Nonprofit Board Management 1.0\n"
+"POT-Creation-Date: 2013-05-22 15:46-0600\n"
+"PO-Revision-Date: 2013-05-22 15:47-0600\n"
+"Last-Translator: \n"
+"Language-Team: Wired Impact <info@wiredimpact.com>\n"
+"Language: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../nonprofit-board-management.php:255
+msgid "Woops. We weren't able to allow you to RSVP.  Please try again."
+msgstr ""
+
+#: ../nonprofit-board-management.php:257
+msgid ""
+"Woops. We weren't able to show you the description.  Please contact support."
+msgstr ""
+
+#: ../nonprofit-board-management.php:260
+msgid ""
+"Woops. We weren't able to show you the attendees.  Please contact support."
+msgstr ""
+
+#: ../nonprofit-board-management.php:273
+msgid "Nonprofit Board Management"
+msgstr ""
+
+#: ../nonprofit-board-management.php:273
+msgid "Board Mgmt"
+msgstr ""
+
+#: ../nonprofit-board-management.php:276 ../nonprofit-board-management.php:606
+msgid "Board Members"
+msgstr ""
+
+#: ../nonprofit-board-management.php:282
+#: ../includes/class-board-events.php:167
+#: ../includes/class-board-events.php:179
+msgid "Board Events"
+msgstr ""
+
+#: ../nonprofit-board-management.php:288
+#: ../includes/class-board-committees.php:64
+#: ../includes/class-board-committees.php:76
+#: ../includes/class-board-committees.php:512
+msgid "Board Committees"
+msgstr ""
+
+#: ../nonprofit-board-management.php:294
+#: ../includes/class-board-events.php:170
+msgid "Add Board Event"
+msgstr ""
+
+#: ../nonprofit-board-management.php:295
+#: ../includes/class-board-committees.php:67
+msgid "Add Board Committee"
+msgstr ""
+
+#: ../nonprofit-board-management.php:301 ../nonprofit-board-management.php:426
+msgid "Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:303 ../nonprofit-board-management.php:482
+msgid "Edit Your Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:304 ../nonprofit-board-management.php:546
+msgid "Support"
+msgstr ""
+
+#: ../nonprofit-board-management.php:315
+msgid "Board Members "
+msgstr ""
+
+#: ../nonprofit-board-management.php:317
+msgid "&#43; Add New User"
+msgstr ""
+
+#: ../nonprofit-board-management.php:326 ../nonprofit-board-management.php:335
+#: ../nonprofit-board-management.php:629
+msgid "Name"
+msgstr ""
+
+#: ../nonprofit-board-management.php:327 ../nonprofit-board-management.php:336
+#: ../nonprofit-board-management.php:630
+msgid "Phone"
+msgstr ""
+
+#: ../nonprofit-board-management.php:328 ../nonprofit-board-management.php:337
+#: ../nonprofit-board-management.php:631
+msgid "Email"
+msgstr ""
+
+#: ../nonprofit-board-management.php:329 ../nonprofit-board-management.php:338
+msgid "Job"
+msgstr ""
+
+#: ../nonprofit-board-management.php:330 ../nonprofit-board-management.php:339
+msgid "Committees"
+msgstr ""
+
+#: ../nonprofit-board-management.php:351
+msgid ""
+"There aren't currently any members on your board (which could definitely "
+"limit its effectiveness).  \n"
+"                  Why don't you <a href=\"user-new.php\">add one now</a>? "
+"<br />Oh, and make sure to set the new user's role to \"Board Member\"."
+msgstr ""
+
+#: ../nonprofit-board-management.php:363
+msgid " at "
+msgstr ""
+
+#: ../nonprofit-board-management.php:373
+msgid "Edit"
+msgstr ""
+
+#: ../nonprofit-board-management.php:394
+msgid ""
+"<strong>Your Photo:</strong> You can set your photo by creating a <a href="
+"\"http://en.gravatar.com/\" target=\"_blank\">Gravatar account</a>\n"
+"            using the same email address you used here.<br />"
+msgstr ""
+
+#: ../nonprofit-board-management.php:396
+msgid ""
+"<strong>Your Name:</strong> You can adjust your name by changing the "
+"\"Display name publicly as\" dropdown in <a href=\"profile.php\">your "
+"profile</a>."
+msgstr ""
+
+#: ../nonprofit-board-management.php:427
+msgid ""
+"We've provided two resource sections.  \n"
+"          One for you to include your own resources and one for some "
+"resources we think are helpful."
+msgstr ""
+
+#: ../nonprofit-board-management.php:430
+msgid "Your Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:432
+msgid "Edit your board resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:439
+msgid "Some Other Helpful Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:441
+msgid "A shared task list for your board."
+msgstr ""
+
+#: ../nonprofit-board-management.php:442
+msgid "A collection of articles and tools on running a board."
+msgstr ""
+
+#: ../nonprofit-board-management.php:443
+msgid "Featured content dedicated to nonprofit boards."
+msgstr ""
+
+#: ../nonprofit-board-management.php:444
+msgid "An easy way to find a good time to meet."
+msgstr ""
+
+#: ../nonprofit-board-management.php:445
+msgid "A great way to share files."
+msgstr ""
+
+#: ../nonprofit-board-management.php:446
+msgid "A good way to share and collaborate on documents."
+msgstr ""
+
+#: ../nonprofit-board-management.php:447
+msgid "A tool to find great talent to join your board."
+msgstr ""
+
+#: ../nonprofit-board-management.php:448
+msgid ""
+"Library articles and blog posts on how nonprofits can use the web to do more "
+"good."
+msgstr ""
+
+#: ../nonprofit-board-management.php:470
+msgid "Your board resources have been updated."
+msgstr ""
+
+#: ../nonprofit-board-management.php:472
+msgid "View your board resources."
+msgstr ""
+
+#: ../nonprofit-board-management.php:483
+msgid "Edit the content in your board resources section."
+msgstr ""
+
+#: ../nonprofit-board-management.php:488
+msgid "Save Your Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:493
+msgid "Back to Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:547
+msgid ""
+"In case you need help here are some videos to help you navigate the board "
+"management plugin."
+msgstr ""
+
+#: ../nonprofit-board-management.php:549
+msgid "Getting Started with Nonprofit Board Management"
+msgstr ""
+
+#: ../nonprofit-board-management.php:556
+msgid "How to Add a Board Member"
+msgstr ""
+
+#: ../nonprofit-board-management.php:561
+msgid "How to Change Your Personal Information"
+msgstr ""
+
+#: ../nonprofit-board-management.php:566
+msgid "How to Serve on the Board as a WordPress Admin"
+msgstr ""
+
+#: ../nonprofit-board-management.php:571
+msgid "How to Add a Board Event"
+msgstr ""
+
+#: ../nonprofit-board-management.php:576
+msgid "How to RSVP to an Upcoming Event"
+msgstr ""
+
+#: ../nonprofit-board-management.php:583
+msgid "How to Create a Committee and Add Committee Members"
+msgstr ""
+
+#: ../nonprofit-board-management.php:588
+msgid "How to Edit Your Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:621
+msgid ""
+"You don't have any board members.  You should create some users and set "
+"their role to \"Board Member\"."
+msgstr ""
+
+#: ../nonprofit-board-management.php:651
+msgid "View more board member details"
+msgstr ""
+
+#: ../nonprofit-board-management.php:735
+msgid ""
+"You don't currently have the board member role, so you can't RSVP to board "
+"events,\n"
+"         join committees, or show up in the board member list."
+msgstr ""
+
+#: ../includes/class-board-committees.php:65
+msgid "Board Committee"
+msgstr ""
+
+#: ../includes/class-board-committees.php:66
+msgid "&#43; Add Board Committee"
+msgstr ""
+
+#: ../includes/class-board-committees.php:68
+msgid "Edit Board Committee"
+msgstr ""
+
+#: ../includes/class-board-committees.php:69
+msgid "New Board Committee"
+msgstr ""
+
+#: ../includes/class-board-committees.php:70
+msgid "All Board Committees"
+msgstr ""
+
+#: ../includes/class-board-committees.php:71
+msgid "View Board Committee"
+msgstr ""
+
+#: ../includes/class-board-committees.php:72
+msgid "Search Board Committees"
+msgstr ""
+
+#: ../includes/class-board-committees.php:73
+msgid "No board committees found"
+msgstr ""
+
+#: ../includes/class-board-committees.php:74
+msgid "No board committees found in trash"
+msgstr ""
+
+#: ../includes/class-board-committees.php:156
+msgid "Committee Description"
+msgstr ""
+
+#: ../includes/class-board-committees.php:163
+#: ../includes/class-board-committees.php:344
+msgid "Committee Members"
+msgstr ""
+
+#: ../includes/class-board-committees.php:316
+#: ../includes/class-board-committees.php:319
+#, php-format
+msgid "Committee updated. <a href=\"%s\">View all of your committees</a>."
+msgstr ""
+
+#: ../includes/class-board-committees.php:317
+#: ../includes/class-board-events.php:498
+msgid "Custom field updated."
+msgstr ""
+
+#: ../includes/class-board-committees.php:318
+#: ../includes/class-board-events.php:499
+msgid "Custom field deleted."
+msgstr ""
+
+#: ../includes/class-board-committees.php:321
+#, php-format
+msgid "Committee restored to revision from %s"
+msgstr ""
+
+#: ../includes/class-board-committees.php:322
+#, php-format
+msgid "Committee published. <a href=\"%s\">View all of your committees</a>."
+msgstr ""
+
+#: ../includes/class-board-committees.php:323
+msgid "Committee saved."
+msgstr ""
+
+#: ../includes/class-board-committees.php:324
+msgid "Committee submitted."
+msgstr ""
+
+#: ../includes/class-board-committees.php:325
+msgid "You should not be scheduling committees.  It just won't work."
+msgstr ""
+
+#: ../includes/class-board-committees.php:326
+msgid "Committee draft updated."
+msgstr ""
+
+#: ../includes/class-board-committees.php:342
+#: ../includes/class-board-events.php:693
+msgid "Title"
+msgstr ""
+
+#: ../includes/class-board-committees.php:343
+#: ../includes/class-board-events.php:696
+msgid "Description"
+msgstr ""
+
+#: ../includes/class-board-committees.php:389
+msgid "Phone Number"
+msgstr ""
+
+#: ../includes/class-board-committees.php:423
+msgid "Additional Info for the Board"
+msgstr ""
+
+#: ../includes/class-board-committees.php:430
+msgid "Current Employer"
+msgstr ""
+
+#: ../includes/class-board-committees.php:435
+msgid "Job Title"
+msgstr ""
+
+#: ../includes/class-board-committees.php:440
+msgid "Your Committees"
+msgstr ""
+
+#: ../includes/class-board-committees.php:450
+msgid "Serving on Board"
+msgstr ""
+
+#: ../includes/class-board-committees.php:452
+msgid ""
+"Uncheck this box and click the \"Update Profile\" button to no longer serve "
+"on the board."
+msgstr ""
+
+#: ../includes/class-board-committees.php:533
+#, php-format
+msgid ""
+"There are no board committees. <a href=\"%s\">Go ahead and add some.</a>"
+msgstr ""
+
+#: ../includes/class-board-committees.php:543
+msgid "View and edit the committees"
+msgstr ""
+
+#: ../includes/class-board-committees.php:681
+msgid ""
+"There aren't currently any members on your board so no one can join a "
+"committee."
+msgstr ""
+
+#: ../includes/class-board-committees.php:718
+msgid "No committees have been created yet."
+msgstr ""
+
+#: ../includes/class-board-events.php:156
+msgid "Woops.  We failed to RSVP for you.  Please try again."
+msgstr ""
+
+#: ../includes/class-board-events.php:168
+msgid "Board Event"
+msgstr ""
+
+#: ../includes/class-board-events.php:169
+msgid "&#43; Add Board Event"
+msgstr ""
+
+#: ../includes/class-board-events.php:171
+msgid "Edit Board Event"
+msgstr ""
+
+#: ../includes/class-board-events.php:172
+msgid "New Board Event"
+msgstr ""
+
+#: ../includes/class-board-events.php:173
+msgid "All Board Events"
+msgstr ""
+
+#: ../includes/class-board-events.php:174
+msgid "View Board Event"
+msgstr ""
+
+#: ../includes/class-board-events.php:175
+msgid "Search Board Events"
+msgstr ""
+
+#: ../includes/class-board-events.php:176
+msgid "No board events found"
+msgstr ""
+
+#: ../includes/class-board-events.php:177
+msgid "No board events found in trash"
+msgstr ""
+
+#: ../includes/class-board-events.php:263
+msgid "Board Event Details"
+msgstr ""
+
+#: ../includes/class-board-events.php:280
+msgid "RSVP List"
+msgstr ""
+
+#: ../includes/class-board-events.php:301
+msgid "Event Description"
+msgstr ""
+
+#: ../includes/class-board-events.php:306
+msgid "Location Name"
+msgstr ""
+
+#: ../includes/class-board-events.php:311
+msgid "Street Address"
+msgstr ""
+
+#: ../includes/class-board-events.php:316
+msgid "City, State Zip"
+msgstr ""
+
+#: ../includes/class-board-events.php:321
+msgid "Start Date & Time"
+msgstr ""
+
+#: ../includes/class-board-events.php:326
+msgid "End Date & Time"
+msgstr ""
+
+#: ../includes/class-board-events.php:329
+msgid "Woops, it looks like you set your event to end before it started."
+msgstr ""
+
+#: ../includes/class-board-events.php:422
+msgid "Going"
+msgstr ""
+
+#: ../includes/class-board-events.php:424
+msgid "Not Going"
+msgstr ""
+
+#: ../includes/class-board-events.php:426
+msgid "Not Responded"
+msgstr ""
+
+#: ../includes/class-board-events.php:429
+#, php-format
+msgid "*RSVP to upcoming events <a href=\"%s\">here</a>."
+msgstr ""
+
+#: ../includes/class-board-events.php:497
+#: ../includes/class-board-events.php:500
+#, php-format
+msgid "Event updated. <a href=\"%s\">View your upcoming events</a>."
+msgstr ""
+
+#: ../includes/class-board-events.php:502
+#, php-format
+msgid "Event restored to revision from %s"
+msgstr ""
+
+#: ../includes/class-board-events.php:503
+#, php-format
+msgid "Event published. <a href=\"%s\">View your upcoming events</a>."
+msgstr ""
+
+#: ../includes/class-board-events.php:504
+msgid "Event saved."
+msgstr ""
+
+#: ../includes/class-board-events.php:505
+msgid "Event submitted."
+msgstr ""
+
+#: ../includes/class-board-events.php:506
+msgid "You should not be scheduling events this way.  It just won't work."
+msgstr ""
+
+#: ../includes/class-board-events.php:507
+msgid "Event draft updated."
+msgstr ""
+
+#: ../includes/class-board-events.php:549
+msgid "D, F d, Y \\&#64; g:i a"
+msgstr ""
+
+#: ../includes/class-board-events.php:556
+msgid "D, F d, Y"
+msgstr ""
+
+#: ../includes/class-board-events.php:557
+#: ../includes/class-board-events.php:559
+msgid "g:i a"
+msgstr ""
+
+#: ../includes/class-board-events.php:563
+#: ../includes/class-board-events.php:565
+msgid "D, F d, Y g:i a"
+msgstr ""
+
+#: ../includes/class-board-events.php:664
+msgid "All Events"
+msgstr ""
+
+#: ../includes/class-board-events.php:669
+msgid "Upcoming Events"
+msgstr ""
+
+#: ../includes/class-board-events.php:675
+msgid "Past Events"
+msgstr ""
+
+#: ../includes/class-board-events.php:694
+msgid "Location"
+msgstr ""
+
+#: ../includes/class-board-events.php:695
+msgid "Date & Time"
+msgstr ""
+
+#: ../includes/class-board-events.php:697
+msgid "Who's Coming?"
+msgstr ""
+
+#: ../includes/class-board-events.php:709
+msgid "RSVP"
+msgstr ""
+
+#: ../includes/class-board-events.php:755
+#: ../includes/class-board-events.php:764
+msgid "Event must be published prior to accepting RSVPs."
+msgstr ""
+
+#: ../includes/class-board-events.php:779
+msgid "I'm Going"
+msgstr ""
+
+#: ../includes/class-board-events.php:786
+msgid "I'm Not Going"
+msgstr ""
+
+#: ../includes/class-board-events.php:872
+msgid "Upcoming Board Events"
+msgstr ""
+
+#: ../includes/class-board-events.php:903
+#, php-format
+msgid "There are no upcoming events. <a href=\"%s\">Go ahead and add some.</a>"
+msgstr ""
+
+#: ../includes/class-board-events.php:920
+msgid "View, edit and RSVP to events"
+msgstr ""
+
+#: ../includes/class-board-events.php:1165
+#, php-format
+msgid " and <a href=\"#\" class=\"get-names\" data-id=\"%d\">%s other</a>."
+msgstr ""
