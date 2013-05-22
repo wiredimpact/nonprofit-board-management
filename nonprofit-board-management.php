@@ -441,7 +441,7 @@ class WI_Board_Management {
           </a>
         </h3>
         <div class="custom-board-resources">
-          <?php echo apply_filters( 'the_content', stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
+          <?php echo wpautop( stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
         </div>
         
         <h3><?php _e( 'Some Other Helpful Resources', 'nonprofit-board-management' ); ?></h3>
