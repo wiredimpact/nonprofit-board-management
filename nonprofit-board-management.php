@@ -444,31 +444,45 @@ class WI_Board_Management {
       <div class="wrap board-resources">
         <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h2>
-        <p><?php _e( 'We\'ve provided two resource sections.  
-          One for you to include your own resources and one for some resources we think are helpful.', 'nonprofit-board-management' ); ?></p>
-        <h3>
-          <?php _e( 'Your Board Resources', 'nonprofit-board-management' ); ?>
-          <a class="button secondary-button" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources/edit' ); ?>">
-            <?php _e( 'Edit your board resources', 'nonprofit-board-management' ); ?>
-          </a>
-        </h3>
-        <div class="custom-board-resources">
-          <?php echo wpautop( stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
-        </div>
         
-        <h3><?php _e( 'Some Other Helpful Resources', 'nonprofit-board-management' ); ?></h3>
-        <div class="fixed-board-resources">
-          <p><a href="http://asana.com/" target="_blank">Asana</a> – <?php _e( 'A shared task list for your board.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="http://www.boardsource.org/" target="_blank">BoardSource</a> – <?php _e( 'A collection of articles and tools on running a board.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="http://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="http://doodle.com/" target="_blank">Doodle</a> – <?php _e( 'An easy way to find a good time to meet.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – <?php _e( 'A great way to share files.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
-          <p><a href="http://wiredimpact.com/" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
-          
-          <?php do_action( 'winbm_in_helpful_resources' ); ?>
-          
+        <div class="postbox-container winbm-resources-wrap">
+          <p><?php _e( 'We\'ve provided two resource sections.  
+            One for you to include your own resources and one for some resources we think are helpful.', 'nonprofit-board-management' ); ?></p>
+          <h3>
+            <?php _e( 'Your Board Resources', 'nonprofit-board-management' ); ?>
+            <a class="button secondary-button" href="<?php echo admin_url( 'admin.php?page=nonprofit-board/resources/edit' ); ?>">
+              <?php _e( 'Edit your board resources', 'nonprofit-board-management' ); ?>
+            </a>
+          </h3>
+          <div class="custom-board-resources">
+            <?php echo wpautop( stripslashes( get_option( 'board_resources_content', 'You haven\'t added any resources yet.  Use the edit button above to add some.' ) ) ); ?>
+          </div>
+
+          <h3><?php _e( 'Some Other Helpful Resources', 'nonprofit-board-management' ); ?></h3>
+          <div class="fixed-board-resources">
+            <p><a href="http://asana.com/" target="_blank">Asana</a> – <?php _e( 'A shared task list for your board.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="http://www.boardsource.org/" target="_blank">BoardSource</a> – <?php _e( 'A collection of articles and tools on running a board.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="http://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="http://doodle.com/" target="_blank">Doodle</a> – <?php _e( 'An easy way to find a good time to meet.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – <?php _e( 'A great way to share files.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="http://wiredimpact.com/" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
+
+            <?php do_action( 'winbm_in_helpful_resources' ); ?>
+
+          </div>
+        </div><!-- /winbm-resources-wrap -->
+        <div class="postbox-container winbm-ext-sidebar">
+          <a class="ext event-emails" href="http://wiredimpact.com/plugins/event-rsvp-reminder-emails-extension/" target="_blank">
+            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="241" height="221" />
+          </a>
+          <a class="ext" href="http://wiredimpact.com/plugins/event-attendance-tracking/" target="_blank">
+            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="241" height="221" />
+          </a>
+          <a class="ext" href="http://wiredimpact.com" target="_blank">
+            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="241" height="48" />
+          </a>
         </div>
       </div><!-- /wrap -->
       <?php
@@ -557,63 +571,77 @@ class WI_Board_Management {
     
     /*
      * Display the content for our support page.
-     * TODO Replace these videos with our support videos.
+     * 
+     * All support videos need to be embedded at 600px wide by 338px tall to fit within
+     * the wrapper.
      */
     public function display_support_page(){
       ?>
       <div class="wrap">
         <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Support', 'nonprofit-board-management' ); ?></h2>
-        <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
         
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'Getting Started with Nonprofit Board Management', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/j1EHA5T4rQA" frameborder="0" allowfullscreen></iframe>
+        <div class="postbox-container winbm-support-wrap">
+          <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'Getting Started with Nonprofit Board Management', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/j1EHA5T4rQA" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <?php do_action( 'winbm_at_support_early' ); ?>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Member', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/kCwsqWrwkaA" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Change Your Personal Information', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/GPwL7A-3d-M" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Serve on the Board as a WordPress Admin', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/ZYYaIFYtG88" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Event', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/TfQIeeIVyt8" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to RSVP to an Upcoming Event', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/Nk6blZ3Zopc" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <?php do_action( 'winbm_at_support_middle' ); ?>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Create a Committee and Add Committee Members', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/yInKtr36Y5s" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Edit Your Board Resources', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/XsXXEHAs9TU" frameborder="0" allowfullscreen></iframe>
+          </div>
+
+          <?php do_action( 'winbm_at_support_end' ); ?>
+        </div><!-- /winbm-support-wrap -->
+        <div class="postbox-container winbm-ext-sidebar">
+          <a class="ext event-emails" href="http://wiredimpact.com/plugins/event-rsvp-reminder-emails-extension/" target="_blank">
+            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="241" height="221" />
+          </a>
+          <a class="ext" href="http://wiredimpact.com/plugins/event-attendance-tracking/" target="_blank">
+            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="241" height="221" />
+          </a>
+          <a class="ext" href="http://wiredimpact.com" target="_blank">
+            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="241" height="48" />
+          </a>
         </div>
-        
-        <?php do_action( 'winbm_at_support_early' ); ?>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Member', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/kCwsqWrwkaA" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Change Your Personal Information', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/GPwL7A-3d-M" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Serve on the Board as a WordPress Admin', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/ZYYaIFYtG88" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Add a Board Event', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/TfQIeeIVyt8" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to RSVP to an Upcoming Event', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/Nk6blZ3Zopc" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <?php do_action( 'winbm_at_support_middle' ); ?>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Create a Committee and Add Committee Members', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/yInKtr36Y5s" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Edit Your Board Resources', 'nonprofit-board-management' ); ?></a></h3>
-        <div class="support-content hide">
-          <iframe width="640" height="360" src="https://www.youtube.com/embed/XsXXEHAs9TU" frameborder="0" allowfullscreen></iframe>
-        </div>
-        
-        <?php
-        //Add action to add support content at the end.
-        do_action( 'winbm_at_support_end' );
-        ?>
+      </div><!-- /wrap -->
       <?php     
     }
     
