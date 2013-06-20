@@ -113,6 +113,9 @@ body .ui-datepicker-calendar .ui-state-active {
 .winbm-ext-sidebar {
   width: 241px;
 }
+.winbm-ext-sidebar .upgrade-heading {
+  margin-bottom: 18px;
+}
 .winbm-ext-sidebar a.ext {
   display: block;
   margin-bottom: 10px;
@@ -139,6 +142,12 @@ body .ui-datepicker-calendar .ui-state-active {
 }
 .winbm-ext-sidebar a.ext.event-emails:hover:before {
   background: rgba(143,39,42, 0.3);  
+}
+.winbm-ext-sidebar a.wi {
+  margin-top: 15px;
+}
+.winbm-ext-sidebar a.ext.wi:hover:before {
+  background: none; 
 }
 
 /********************************
