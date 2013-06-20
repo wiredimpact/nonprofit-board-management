@@ -2,10 +2,10 @@
 /*
 Plugin Name: Nonprofit Board Management
 Plugin URI: http://wiredimpact.com
-Description: Manage your board of directors or young friends board directly from WordPress.
+Description: A simple, free way to manage your nonprofit’s board.
 Version: 1.0
 Author: Wired Impact
-Author URI: http://wiredimpact.com/
+Author URI: http://wiredimpact.com
 License: GPLv3
 
 ------------------------------------------------------------------------
@@ -686,7 +686,9 @@ class WI_Board_Management {
      */
     public function display_extensions_sidebar(){
       ?>
-      <div class="postbox-container winbm-ext-sidebar">       
+      <div class="postbox-container winbm-ext-sidebar">    
+        <h3>Board Management Upgrades</h3>
+        
         <?php do_action( 'winbm_at_sidebar_early' ); ?>
         
         <a class="ext event-emails" href="http://wiredimpact.com/plugins/event-rsvp-reminder-emails-extension/" target="_blank">
