@@ -473,17 +473,7 @@ class WI_Board_Management {
 
           </div>
         </div><!-- /winbm-resources-wrap -->
-        <div class="postbox-container winbm-ext-sidebar">
-          <a class="ext event-emails" href="http://wiredimpact.com/plugins/event-rsvp-reminder-emails-extension/" target="_blank">
-            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="241" height="221" />
-          </a>
-          <a class="ext" href="http://wiredimpact.com/plugins/event-attendance-tracking/" target="_blank">
-            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="241" height="221" />
-          </a>
-          <a class="ext" href="http://wiredimpact.com" target="_blank">
-            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="241" height="48" />
-          </a>
-        </div>
+        <?php $this->display_extensions_sidebar(); ?>
       </div><!-- /wrap -->
       <?php
     }
@@ -630,17 +620,7 @@ class WI_Board_Management {
 
           <?php do_action( 'winbm_at_support_end' ); ?>
         </div><!-- /winbm-support-wrap -->
-        <div class="postbox-container winbm-ext-sidebar">
-          <a class="ext event-emails" href="http://wiredimpact.com/plugins/event-rsvp-reminder-emails-extension/" target="_blank">
-            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="241" height="221" />
-          </a>
-          <a class="ext" href="http://wiredimpact.com/plugins/event-attendance-tracking/" target="_blank">
-            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="241" height="221" />
-          </a>
-          <a class="ext" href="http://wiredimpact.com" target="_blank">
-            <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="241" height="48" />
-          </a>
-        </div>
+        <?php $this->display_extensions_sidebar(); ?>
       </div><!-- /wrap -->
       <?php     
     }
@@ -697,6 +677,30 @@ class WI_Board_Management {
       ?>
       </tbody></table>
         <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>"><?php _e( 'View more board member details', 'nonprofit-board-management' ); ?></a></p>
+      <?php
+    }
+    
+    
+    /*
+     * Display the sidebar with links to premium extensions and info on Wired Impact.
+     */
+    public function display_extensions_sidebar(){
+      ?>
+      <div class="postbox-container winbm-ext-sidebar">       
+        <?php do_action( 'winbm_at_sidebar_early' ); ?>
+        
+        <a class="ext event-emails" href="http://wiredimpact.com/plugins/event-rsvp-reminder-emails-extension/" target="_blank">
+          <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="241" height="221" />
+        </a>
+        <a class="ext" href="http://wiredimpact.com/plugins/event-attendance-tracking/" target="_blank">
+          <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="241" height="221" />
+        </a>
+        <a class="ext" href="http://wiredimpact.com" target="_blank">
+          <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="241" height="48" />
+        </a>
+        
+        <?php do_action( 'winbm_at_sidebar_end' ); ?>
+      </div>
       <?php
     }
     
