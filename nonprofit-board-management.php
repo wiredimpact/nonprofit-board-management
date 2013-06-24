@@ -3,7 +3,7 @@
 Plugin Name: Nonprofit Board Management
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/ ‎
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.0
+Version: 1.0.2
 Author: Wired Impact
 Author URI: http://wiredimpact.com
 License: GPLv3
@@ -692,10 +692,10 @@ class WI_Board_Management {
         
         <?php do_action( 'winbm_at_sidebar_early' ); ?>
         
-        <a class="ext event-emails" href="http://wiredimpact.com/nonprofit-plugins/event-attendance-tracking/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
+        <a class="ext event-emails" href="http://wiredimpact.com/premium-plugins/event-rsvp-reminder-emails/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
           <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="241" height="221" />
         </a>
-        <a class="ext" href="http://wiredimpact.com/nonprofit-plugins/event-attendance-tracking/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
+        <a class="ext" href="http://wiredimpact.com/premium-plugins/event-attendance-tracking/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
           <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="241" height="221" />
         </a>
         <a class="ext wi" href="http://wiredimpact.com?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
