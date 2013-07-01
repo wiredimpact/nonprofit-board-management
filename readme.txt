@@ -34,7 +34,7 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 Of course you can.  Here you go.
 
-[youtube http://www.youtube.com/watch?v=j1EHA5T4rQA]
+[youtube http://www.youtube.com/watch?v=qvsaEuSNySE]
 
 
 == Installation ==
