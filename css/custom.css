@@ -79,7 +79,7 @@ body .ui-datepicker-calendar .ui-state-active {
 /********************************
 * Board Members List & Attendance Table
 ********************************/
-#board-members-table, #board-attendance-table {
+#board-attendance-table {
   margin-top: 20px;
 }
 #board-members-table .column-username,
