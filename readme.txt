@@ -113,6 +113,10 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.0.3 =
+* Now showing the total number of board members above the Board Members table.
+* Updated wiredimpact.com URL in the Board Resources Helpful Resources section.
+
 = 1.0.2 = 
 * Fixed premium extension URLs for sidebar on support and board resources pages.
 

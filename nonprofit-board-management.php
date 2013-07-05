@@ -3,7 +3,7 @@
 Plugin Name: Nonprofit Board Management
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/ ‎
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.0.2
+Version: 1.0.3
 Author: Wired Impact
 Author URI: http://wiredimpact.com
 License: GPLv3
