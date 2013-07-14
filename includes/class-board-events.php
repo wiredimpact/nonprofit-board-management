@@ -1091,6 +1091,9 @@ class WI_Board_Events {
     else {
       $rsvps['not_attending'][] = $rsvp_users[$i];
     }
+    
+    //Since $rsvp_users is a reference to $wi_board_mgmt->board_members we must unset RSVPs so they don't carry over to the next event.
+    unset( $rsvp_users[$i]->data->rsvp );
   }
    
    return apply_filters( 'winbm_event_rsvp_statuses', $rsvps, $post_id );
