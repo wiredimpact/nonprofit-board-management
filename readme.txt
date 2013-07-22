@@ -34,7 +34,7 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 Of course you can.  Here you go.
 
-[youtube http://www.youtube.com/watch?v=qvsaEuSNySE]
+[youtube http://www.youtube.com/watch?v=LF3LnqR1JMs]
 
 
 == Installation ==
@@ -112,6 +112,10 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 
 == Changelog ==
+
+= 1.0.4 =
+* Fixed bug that showed a board member's previous RSVP on the next event on the Board Events page.
+* Updated the demo video for the WordPress plugin repository.
 
 = 1.0.3 =
 * Now showing the total number of board members above the Board Members table.
