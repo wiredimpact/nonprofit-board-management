@@ -385,14 +385,14 @@ class WI_Board_Committees {
   public function add_phone_contactmethod( $user_contactmethods, $user ){
     
     //If the user serves on the board we need to add and remove certain fields.
-    if( isset( $user->allcaps['serve_on_board'] ) && $user->allcaps['serve_on_board'] == true ){
+    if( user_can( $user->ID, 'serve_on_board' ) ){
       $user_contactmethods['phone'] = __( 'Phone Number', 'nonprofit-board-management' );
       
       //If user serves and isn't an admin then remove all the fields we don't want.
-      if( !user_can( $user, 'manage_options' ) ){
-        unset($user_contactmethods['aim']);
-        unset($user_contactmethods['jabber']);
-        unset($user_contactmethods['yim']);
+      if( !user_can( $user->ID, 'manage_options' ) ){
+        unset( $user_contactmethods['aim'] );
+        unset( $user_contactmethods['jabber'] );
+        unset( $user_contactmethods['yim'] );
       }
     }
 

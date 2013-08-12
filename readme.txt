@@ -113,6 +113,9 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed bug causing phone numbers not to save for board members.
+
 = 1.0.4 =
 * Fixed bug that showed a board member's previous RSVP on the next event on the Board Events page.
 * Updated the demo video for the WordPress plugin repository.
