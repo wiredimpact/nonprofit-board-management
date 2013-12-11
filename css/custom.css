@@ -126,7 +126,14 @@ body .ui-datepicker-calendar .ui-state-active {
   background-position: -492px -5px;  
 }
 .winbm-ext-sidebar {
-  width: 241px;
+  width: 240px;
+  padding: 10px 0;
+  border: 1px solid #999;
+  background-color: rgb( 255, 255, 255 );
+  background-color: rgba( 255, 255, 255, .3 );
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
 }
 .winbm-ext-sidebar .upgrade-heading {
   margin-bottom: 18px;
