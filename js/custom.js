@@ -206,9 +206,7 @@ jQuery(document).ready(function(){
     jQuery( '#your-profile table:first' ).hide();
     jQuery( '#your-profile h3:first' ).hide();
     jQuery( '#your-profile #url' ).closest( 'tr' ).hide();
-    jQuery( '#your-profile #description' ).closest( 'tr' ).hide();
     jQuery( '#your-profile h3' ).hide();
   }
   
 });
-

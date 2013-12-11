@@ -88,6 +88,14 @@ Here are some frequently asked questions about how to use the plugin.
 
 [youtube http://www.youtube.com/watch?v=XsXXEHAs9TU]
 
+= How do we list our board members on a post or page? =
+
+You can list out your board members on a post or page by writing `[list_board_members]` directly within your content.
+This will automatically show the name, job title and employer of each board members along with a picture if they've set one using Gravatar.
+
+If you're comfortable working with code, you can also customize the information that displays by copying and editing the template 
+file located at `wp-content/plugins/nonprofit-board-management/templates/list-board-members.php` to your website's active theme.
+
 = How do you get more help? =
 
 If you have more questions you can always head over to http://wordpress.org/support/plugin/nonprofit-board-management and fill out a support request.
@@ -116,6 +124,7 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 = 1.1.0 = 
 * Added an updated menu icon for the new admin design.
 * Adjusted styles of Board Management Upgrades sidebar to match new admin design.
+* Added the ability to show a list of your board members by using the [list_board_members] shortcode.
 
 = 1.0.5 =
 * Fixed bug causing phone numbers not to save for board members.

@@ -80,6 +80,9 @@ class WI_Board_Management {
         
         //Redirect board members to dashboard on login.
         add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
+        
+        //Create shortcode to list board members on pages and posts
+        add_shortcode( 'list_board_members', array( $this, 'list_board_members_shortcode' ) );
     }
     
     
@@ -866,6 +869,77 @@ class WI_Board_Management {
       else{
         return $redirect_to;
       }
+    }
+    
+    
+    /*
+     * List the board members through the [list_board_members] shortcode.
+     * 
+     * Display list of board members on website posts or pages by using the
+     * [list_board_members] shortcode within the content.  The content displayed
+     * can be customized by copying templates/list-board-members.php to the active theme's
+     * folder and adjusting.
+     * 
+     * @return string HTML to display all the board information pulled from the template.
+     */
+    public function list_board_members_shortcode(){
+      $board_members = $this->get_users_who_serve();
+      
+      ob_start();
+      include( $this->get_template( 'list-board-members' ) );
+      $html = ob_get_clean();
+      
+      return apply_filters( 'winbm_list_members_shortcode', $html, $board_members ) ;
+    }
+    
+    
+    /*
+     * Load proper template from our templates folder or from the chosen theme directory.
+     * 
+     * We check if the chosen template exists within the active theme.  If yes, we load that
+     * template.  If not, we load the default template provided by our plugin.
+     * 
+     * @param string File name of template file we're looking for.
+     * @return string Template location either in plugin folder or in active theme folder.
+     */
+    private function get_template( $template ) {
+
+       //Get the template slug
+       $template_slug = rtrim( $template, '.php' );
+       $template = $template_slug . '.php';
+
+       //Check if a custom template exists in the theme folder, if not, load the plugin template file
+       if ( $theme_file = locate_template( array( $template ) ) ) {
+           $file = $theme_file;
+       }
+       else {
+           $file = BOARD_MANAGEMENT_PLUGINFULLPATH . '/templates/' . $template;
+       }
+
+       return apply_filters( 'winbm_template' . $template, $file );
+    }
+     
+    
+    /*
+     * Check if a valid gravatar exists so we don't have to show the default.
+     * 
+     * @param string The email address of the user.
+     * @return bool True if an avatar exists, false if not.
+     */
+    private function validate_gravatar( $user_email ) {
+      //Craft a potential url and test its headers
+      $hash = md5( strtolower( trim( $user_email ) ) );
+      $uri = 'http://www.gravatar.com/avatar/' . $hash . '?d=404';
+      $headers = @get_headers($uri);
+      
+      if (!preg_match("|200|", $headers[0])) {
+        $has_valid_avatar = FALSE;
+      }
+      else {
+        $has_valid_avatar = TRUE;
+      }
+      
+      return $has_valid_avatar;
     }
 } //WI_Board_Management
 
