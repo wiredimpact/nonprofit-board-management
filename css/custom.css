@@ -7,6 +7,7 @@
 .wrap #icon-edit.icon32-posts-board_committees {
   background: url('images/nonprofit-board-gavel.png') no-repeat 0 0;
 }
+/* menu icon for pre-3.8 WP installs */
 li.toplevel_page_nonprofit-board .wp-menu-image {
   overflow: hidden;
 }
@@ -18,6 +19,20 @@ li.toplevel_page_nonprofit-board .wp-menu-image {
 #adminmenu li.wp-has-current-submenu.toplevel_page_nonprofit-board img {
   padding-top: 0;
   margin-top: 0;
+}
+/* 3.8+ menu icon styles */
+/* set fallback dashicon, if browser does _not_ support SVG */
+.no-svg #toplevel_page_nonprofit-board div.wp-menu-image:before {
+  content: "\f307";
+}
+/* hide fallback dashicon, if browser does supports SVG and JavaScript */
+.svg.js #toplevel_page_nonprofit-board .wp-menu-image:before {
+  display: none;
+}
+.svg.js #toplevel_page_nonprofit-board .wp-menu-image {
+  background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE3LjAuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHdpZHRoPSIyMHB4IiBoZWlnaHQ9IjE4LjRweCIgdmlld0JveD0iMCAwIDIwIDE4LjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDIwIDE4LjQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDpub25lO3N0cm9rZTojMDBGRjAwO3N0cm9rZS13aWR0aDowLjI1O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDF7ZmlsbDojOTk5OTk5O30KCS5zdDJ7ZmlsbDojMkVBMkNDO30KCS5zdDN7ZmlsbDojRkZGRkZGO30KCS5zdDR7ZmlsbDojRkY3QkFDO30KCS5zdDV7ZmlsbDojRkY5MzFFO30KCS5zdDZ7ZmlsbDojN0FDOTQzO30KPC9zdHlsZT4KPHBhdGggY2xhc3M9InN0MSIgZD0iTTE3LjksMTcuOWMtMSwwLjYtMS4xLTAuNi0xLjEtMC42cy01LTMuOC01LjQtNC4xYy0xLjMsMC40LTEuMS0wLjktMS4xLTAuOVMxMC4yLDEyLjIsMTAsMTIKCWMwLDAtMS4yLDAuNi0xLjItMC43bDIuNi0yLjhsMC40LDBjMC45LDAuMiwwLjQsMS4zLDAuNCwxLjNzMC4yLDAuMiwwLjMsMC4zYzEuMy0wLjIsMS4xLDEsMS4xLDFzNS4zLDQsNS40LDQuMQoJYzEuMS0wLjMsMSwwLjYsMC45LDAuOUwxNy45LDE3Ljl6Ii8+CjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xMS4zLDYuNGMwLDAtMC42LDEuNi0xLjcsM2MtMC44LDEuMS0yLjgsMi41LTIuOCwyLjVMMi4xLDguMWMwLDAsMC42LTEuOCwxLjgtMy4zQzUuNiwzLDYuNiwyLjYsNi42LDIuNgoJTDExLjMsNi40eiIvPgo8cGF0aCBjbGFzcz0ic3QxIiBkPSJNNi4zLDEzLjhjLTAuMiwwLjMtMC42LDAuNC0wLjgsMC4yTDAuMyw5LjdDMC4xLDkuNSwwLjEsOS4yLDAuNCw4LjlsMC4yLTAuMmMwLjItMC4zLDAuNi0wLjQsMC44LTAuMmw1LjIsNC4zCgljMC4yLDAuMiwwLjIsMC41LTAuMSwwLjhMNi4zLDEzLjh6Ii8+CjxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xMy4xLDUuOGMtMC4yLDAuMy0wLjYsMC40LTAuOCwwLjJMNy4xLDEuOEM2LjksMS42LDYuOSwxLjMsNy4xLDFsMC4yLTAuMmMwLjItMC4zLDAuNi0wLjQsMC44LTAuMmw1LjMsNC4zCgljMC4yLDAuMiwwLjIsMC41LTAuMSwwLjhMMTMuMSw1Ljh6Ii8+Cjwvc3ZnPg==') !important;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 /********************************

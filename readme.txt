@@ -113,6 +113,9 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.1.0 = 
+* Added an updated menu icon for the new admin design.
+
 = 1.0.5 =
 * Fixed bug causing phone numbers not to save for board members.
 
