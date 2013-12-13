@@ -207,6 +207,9 @@ jQuery(document).ready(function(){
     jQuery( '#your-profile h3:first' ).hide();
     jQuery( '#your-profile #url' ).closest( 'tr' ).hide();
     jQuery( '#your-profile h3' ).hide();
+    
+    //Add extra text to bio field to tell board members their bio doesn't appear within the admin.
+    jQuery( '#your-profile #description' ).siblings( 'span' ).append( wi_board_mgmt.bio_frontend_message );
   }
   
 });

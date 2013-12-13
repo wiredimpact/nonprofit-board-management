@@ -3,7 +3,7 @@
 Plugin Name: Nonprofit Board Management
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.0.5
+Version: 1.1.0
 Author: Wired Impact
 Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package Nonprofit Board Management
  *
- * @version 1.0
+ * @version 1.1.0
  * @author Wired Impact
  */
 class WI_Board_Management {
@@ -282,7 +282,8 @@ class WI_Board_Management {
         'load_spinner_html' => '<span class="waiting spinner" style="display: none;"></span>',
         'error_see_attendees' => __( 'Woops. We weren\'t able to show you the attendees.  Please contact support.', 'nonprofit-board-management' ),
         'expand_board_menu' => $screen->expand_board_menu, //Send whether we should expand the board mgmt menu
-        'editing_board_member_profile' => $editing_board_member_profile
+        'editing_board_member_profile' => $editing_board_member_profile,
+        'bio_frontend_message' => __( ' You only need to fill this out if all board members will be listed on the public website.', 'nonprofit-board-management' )
         ), $screen )
        );
     }
@@ -534,6 +535,9 @@ class WI_Board_Management {
         <h2><?php _e( 'Edit Your Board Resources', 'nonprofit-board-management' ); ?></h2>
         <p><?php _e( 'Edit the content in your board resources section.', 'nonprofit-board-management' ); ?></p>
         <form method="post" action="">
+        <div id="edit-resources-editor">
+          <?php wp_editor( stripslashes( get_option( 'board_resources_content' ) ), 'board_resources', array( 'teeny' => true ) ); ?>
+        </div><!-- /edit-resources-editor -->
         <div id="poststuff">
           <div class="postbox">
             <h3 class="hndle">
@@ -547,9 +551,6 @@ class WI_Board_Management {
             </div>
           </div><!-- /postbox -->
         </div><!-- /poststuff -->
-        <div id="edit-resources-editor">
-          <?php wp_editor( stripslashes( get_option( 'board_resources_content' ) ), 'board_resources', array( 'teeny' => true ) ); ?>
-        </div><!-- /edit-resources-editor -->
         <?php $board_resources_nonce = wp_create_nonce( 'board_resources_nonce' ); ?>
         <input type="hidden" id="board_resources_nonce" name="board_resources_nonce" value="<?php echo $board_resources_nonce; ?>" />
         </form>
@@ -644,6 +645,11 @@ class WI_Board_Management {
           <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to Edit Your Board Resources', 'nonprofit-board-management' ); ?></a></h3>
           <div class="support-content hide">
             <iframe width="600" height="338" src="https://www.youtube.com/embed/XsXXEHAs9TU" frameborder="0" allowfullscreen></iframe>
+          </div>
+          
+          <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to List Your Board Members on Your Public Website', 'nonprofit-board-management' ); ?></a></h3>
+          <div class="support-content hide">
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>
           </div>
 
           <?php do_action( 'winbm_at_support_end' ); ?>

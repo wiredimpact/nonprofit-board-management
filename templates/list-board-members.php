@@ -12,6 +12,7 @@
 <style type='text/css'>
 .board-member { width: 85%; margin-bottom: 3%; }  
 .board-member img { float: left; display: block; margin: 0 2% 1% 0; }
+.board-member .job-employer { font-size: 70%; }
 </style>
 
 <div class="board-members">

@@ -209,12 +209,21 @@ body .ui-datepicker-calendar .ui-state-active {
   list-style: disc outside;
   margin-left: 2em;
 }
-#edit-resources-editor {
+.edit-board-resources {
+  min-width: 763px;
   margin-right: 300px;
+  padding-right: 20px;
+}
+#edit-resources-editor {
+  float: left;
+  min-width: 300px;
+  width: 100%;
 }
 .edit-board-resources #poststuff {
   float: right;
   width: 280px;
+  min-width: 280px;
+  margin-right: -300px;
 }
 .edit-board-resources .postbox .hndle {
   cursor: default;
