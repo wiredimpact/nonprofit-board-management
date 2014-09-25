@@ -2,7 +2,7 @@
 Contributors: wiredimpact 
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
-Tested up to: 3.9
+Tested up to: 4.0
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
@@ -120,11 +120,16 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.1.1 = 
+* Fixed bug that caused error when adding new board member users.
+* Removed the activity dashboard widget for all board members that aren't admins.
+* Tested up to WordPress 4.0.
+
 = 1.1.0 = 
 * Added an updated menu icon for the new admin design.
 * Adjusted styles of the Board Management Upgrades sidebar to match the new admin design.
 * Added the ability to show a list of your board members publicly by using the [list_board_members] shortcode.
-* Other compatibility changes for WordPress 3.8
+* Other compatibility changes for WordPress 3.8.
 
 = 1.0.5 =
 * Fixed bug causing phone numbers not to save for board members.

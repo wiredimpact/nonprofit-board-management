@@ -8,7 +8,7 @@
  *
  * @package Nonprofit Board Management
  *
- * @version 1.1.0
+ * @version 1.1.1
  * @author Wired Impact
  */
 class WI_Board_Committees {
@@ -385,7 +385,7 @@ class WI_Board_Committees {
   public function add_phone_contactmethod( $user_contactmethods, $user ){
     
     //If the user serves on the board we need to add and remove certain fields.
-    if( user_can( $user->ID, 'serve_on_board' ) ){
+    if( isset( $user->ID ) && user_can( $user->ID, 'serve_on_board' ) ){
       $user_contactmethods['phone'] = __( 'Phone Number', 'nonprofit-board-management' );
       
       //If user serves and isn't an admin then remove all the fields we don't want.

@@ -29,7 +29,7 @@
       $biography    = get_user_meta( $board_member->ID, 'description', true ); //Store biography
       $email        = $board_member->user_email; //Store email, not shown by default
       //$phone      = get_user_meta( $board_member->ID, 'phone', true ); //Store phone, not shown by default
-      //$committees = WI_Board_Committees::get_user_committees( $board_member->ID ); //Store committees, not show by default
+      //$committees = WI_Board_Committees::get_user_committees( $board_member->ID ); //Store committees, not shown by default
       ?>   
 
       <?php
