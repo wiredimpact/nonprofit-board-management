@@ -8,7 +8,7 @@
  *
  * @package Nonprofit Board Management
  *
- * @version 1.1.1
+ * @version 1.1.2
  * @author Wired Impact
  */
 class WI_Board_Committees {
