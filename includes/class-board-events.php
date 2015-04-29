@@ -659,19 +659,19 @@ class WI_Board_Events {
     
     //View all events
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'all' ) ? 'current' : '';
-    $all_query_string = remove_query_arg( 'post_status' );
-		  $all_query_string = add_query_arg( 'events', urlencode('all'), $all_query_string );    
+    $all_query_string = esc_url( remove_query_arg( 'post_status' ) );
+		$all_query_string = esc_url( add_query_arg( 'events', urlencode('all'), $all_query_string ) );    
     $new_views['all_board_events'] = '<a href="'. $all_query_string . '" class="' . $class . '">' . __( 'All Events', 'nonprofit-board-management' ) . '</a>';
     
     //View future events
     $class = ( !isset( $_GET['post_status'] ) && !isset( $_GET['events'] ) ) ? 'current' : '';
-		  $future_query_string = remove_query_arg( array( 'events', 'post_status' ) );
+		$future_query_string = esc_url( remove_query_arg( array( 'events', 'post_status' ) ) );
 		  $new_views['future_board_events'] = '<a href="'. $future_query_string . '" class="' . $class . '">' . __( 'Upcoming Events', 'nonprofit-board-management' ) . '</a>';
     
     //View past events
     $class = ( isset( $_GET['events'] ) && $_GET['events'] == 'past' ) ? 'current' : '';
-    $past_query_string = remove_query_arg( 'post_status' );
-		  $past_query_string = add_query_arg( 'events', urlencode('past'), $past_query_string );
+    $past_query_string = esc_url( remove_query_arg( 'post_status' ) );
+		$past_query_string = esc_url( add_query_arg( 'events', urlencode('past'), $past_query_string ) );
 		  $new_views['past_board_events'] = '<a href="'. $past_query_string . '" class="' . $class . '">' . __( 'Past Events', 'nonprofit-board-management' ) . '</a>';
     
     //Make the array have the order we want.
