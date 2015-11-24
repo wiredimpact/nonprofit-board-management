@@ -141,7 +141,7 @@ class WI_Board_Management {
       //Give admin access to view and edit all board content.
       //Initially they can't serve on the board, but can add that cap
       //through the UI.
-      $role =& get_role( 'administrator' );
+      $role = get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
         $role->add_cap( 'edit_board_content' );
@@ -189,7 +189,7 @@ class WI_Board_Management {
       }
            
       //Remove all the admin caps aside from serve_on_board.
-      $role =& get_role( 'administrator' );
+      $role = get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->remove_cap( 'view_board_content' );
         $role->remove_cap( 'edit_board_content' );
