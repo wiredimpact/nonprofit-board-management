@@ -120,6 +120,10 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.1.4 =
+* Remove the reference assignment on the object to prevent any strict warnings and broken headers on plugin activation/deactivation.
+* Tested up to WordPress 4.4.
+
 = 1.1.3 = 
 * Fixed XSS security vulnerability with add_query_arg() and remove_query_arg().
 * Tested up to WordPress 4.2.
