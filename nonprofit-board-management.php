@@ -1,6 +1,8 @@
 <?php
 /*
 Plugin Name: Nonprofit Board Management
+Text Domain: nonprofit-board-management
+Domain Path: /languages
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
 Version: 1.1.4
