@@ -1,268 +1,26 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Nonprofit Board Management 1.0\n"
-"POT-Creation-Date: 2013-05-22 15:46-0600\n"
+"POT-Creation-Date: 2015-12-15 11:29-0600\n"
 "PO-Revision-Date: 2013-05-22 15:47-0600\n"
 "Last-Translator: \n"
 "Language-Team: Wired Impact <info@wiredimpact.com>\n"
-"Language: English\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.8.6\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e;_n;_x\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../nonprofit-board-management.php:255
-msgid "Woops. We weren't able to allow you to RSVP.  Please try again."
-msgstr ""
-
-#: ../nonprofit-board-management.php:257
-msgid ""
-"Woops. We weren't able to show you the description.  Please contact support."
-msgstr ""
-
-#: ../nonprofit-board-management.php:260
-msgid ""
-"Woops. We weren't able to show you the attendees.  Please contact support."
-msgstr ""
-
-#: ../nonprofit-board-management.php:273
-msgid "Nonprofit Board Management"
-msgstr ""
-
-#: ../nonprofit-board-management.php:273
-msgid "Board Mgmt"
-msgstr ""
-
-#: ../nonprofit-board-management.php:276 ../nonprofit-board-management.php:606
-msgid "Board Members"
-msgstr ""
-
-#: ../nonprofit-board-management.php:282
-#: ../includes/class-board-events.php:167
-#: ../includes/class-board-events.php:179
-msgid "Board Events"
-msgstr ""
-
-#: ../nonprofit-board-management.php:288
 #: ../includes/class-board-committees.php:64
 #: ../includes/class-board-committees.php:76
 #: ../includes/class-board-committees.php:512
+#: ../nonprofit-board-management.php:322
 msgid "Board Committees"
-msgstr ""
-
-#: ../nonprofit-board-management.php:294
-#: ../includes/class-board-events.php:170
-msgid "Add Board Event"
-msgstr ""
-
-#: ../nonprofit-board-management.php:295
-#: ../includes/class-board-committees.php:67
-msgid "Add Board Committee"
-msgstr ""
-
-#: ../nonprofit-board-management.php:301 ../nonprofit-board-management.php:426
-msgid "Board Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:303 ../nonprofit-board-management.php:482
-msgid "Edit Your Board Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:304 ../nonprofit-board-management.php:546
-msgid "Support"
-msgstr ""
-
-#: ../nonprofit-board-management.php:315
-msgid "Board Members "
-msgstr ""
-
-#: ../nonprofit-board-management.php:317
-msgid "&#43; Add New User"
-msgstr ""
-
-#: ../nonprofit-board-management.php:326 ../nonprofit-board-management.php:335
-#: ../nonprofit-board-management.php:629
-msgid "Name"
-msgstr ""
-
-#: ../nonprofit-board-management.php:327 ../nonprofit-board-management.php:336
-#: ../nonprofit-board-management.php:630
-msgid "Phone"
-msgstr ""
-
-#: ../nonprofit-board-management.php:328 ../nonprofit-board-management.php:337
-#: ../nonprofit-board-management.php:631
-msgid "Email"
-msgstr ""
-
-#: ../nonprofit-board-management.php:329 ../nonprofit-board-management.php:338
-msgid "Job"
-msgstr ""
-
-#: ../nonprofit-board-management.php:330 ../nonprofit-board-management.php:339
-msgid "Committees"
-msgstr ""
-
-#: ../nonprofit-board-management.php:351
-msgid ""
-"There aren't currently any members on your board (which could definitely "
-"limit its effectiveness).  \n"
-"                  Why don't you <a href=\"user-new.php\">add one now</a>? "
-"<br />Oh, and make sure to set the new user's role to \"Board Member\"."
-msgstr ""
-
-#: ../nonprofit-board-management.php:363
-msgid " at "
-msgstr ""
-
-#: ../nonprofit-board-management.php:373
-msgid "Edit"
-msgstr ""
-
-#: ../nonprofit-board-management.php:394
-msgid ""
-"<strong>Your Photo:</strong> You can set your photo by creating a <a href="
-"\"http://en.gravatar.com/\" target=\"_blank\">Gravatar account</a>\n"
-"            using the same email address you used here.<br />"
-msgstr ""
-
-#: ../nonprofit-board-management.php:396
-msgid ""
-"<strong>Your Name:</strong> You can adjust your name by changing the "
-"\"Display name publicly as\" dropdown in <a href=\"profile.php\">your "
-"profile</a>."
-msgstr ""
-
-#: ../nonprofit-board-management.php:427
-msgid ""
-"We've provided two resource sections.  \n"
-"          One for you to include your own resources and one for some "
-"resources we think are helpful."
-msgstr ""
-
-#: ../nonprofit-board-management.php:430
-msgid "Your Board Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:432
-msgid "Edit your board resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:439
-msgid "Some Other Helpful Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:441
-msgid "A shared task list for your board."
-msgstr ""
-
-#: ../nonprofit-board-management.php:442
-msgid "A collection of articles and tools on running a board."
-msgstr ""
-
-#: ../nonprofit-board-management.php:443
-msgid "Featured content dedicated to nonprofit boards."
-msgstr ""
-
-#: ../nonprofit-board-management.php:444
-msgid "An easy way to find a good time to meet."
-msgstr ""
-
-#: ../nonprofit-board-management.php:445
-msgid "A great way to share files."
-msgstr ""
-
-#: ../nonprofit-board-management.php:446
-msgid "A good way to share and collaborate on documents."
-msgstr ""
-
-#: ../nonprofit-board-management.php:447
-msgid "A tool to find great talent to join your board."
-msgstr ""
-
-#: ../nonprofit-board-management.php:448
-msgid ""
-"Library articles and blog posts on how nonprofits can use the web to do more "
-"good."
-msgstr ""
-
-#: ../nonprofit-board-management.php:470
-msgid "Your board resources have been updated."
-msgstr ""
-
-#: ../nonprofit-board-management.php:472
-msgid "View your board resources."
-msgstr ""
-
-#: ../nonprofit-board-management.php:483
-msgid "Edit the content in your board resources section."
-msgstr ""
-
-#: ../nonprofit-board-management.php:488
-msgid "Save Your Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:493
-msgid "Back to Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:547
-msgid ""
-"In case you need help here are some videos to help you navigate the board "
-"management plugin."
-msgstr ""
-
-#: ../nonprofit-board-management.php:549
-msgid "Getting Started with Nonprofit Board Management"
-msgstr ""
-
-#: ../nonprofit-board-management.php:556
-msgid "How to Add a Board Member"
-msgstr ""
-
-#: ../nonprofit-board-management.php:561
-msgid "How to Change Your Personal Information"
-msgstr ""
-
-#: ../nonprofit-board-management.php:566
-msgid "How to Serve on the Board as a WordPress Admin"
-msgstr ""
-
-#: ../nonprofit-board-management.php:571
-msgid "How to Add a Board Event"
-msgstr ""
-
-#: ../nonprofit-board-management.php:576
-msgid "How to RSVP to an Upcoming Event"
-msgstr ""
-
-#: ../nonprofit-board-management.php:583
-msgid "How to Create a Committee and Add Committee Members"
-msgstr ""
-
-#: ../nonprofit-board-management.php:588
-msgid "How to Edit Your Board Resources"
-msgstr ""
-
-#: ../nonprofit-board-management.php:621
-msgid ""
-"You don't have any board members.  You should create some users and set "
-"their role to \"Board Member\"."
-msgstr ""
-
-#: ../nonprofit-board-management.php:651
-msgid "View more board member details"
-msgstr ""
-
-#: ../nonprofit-board-management.php:735
-msgid ""
-"You don't currently have the board member role, so you can't RSVP to board "
-"events,\n"
-"         join committees, or show up in the board member list."
 msgstr ""
 
 #: ../includes/class-board-committees.php:65
@@ -271,6 +29,11 @@ msgstr ""
 
 #: ../includes/class-board-committees.php:66
 msgid "&#43; Add Board Committee"
+msgstr ""
+
+#: ../includes/class-board-committees.php:67
+#: ../nonprofit-board-management.php:329
+msgid "Add Board Committee"
 msgstr ""
 
 #: ../includes/class-board-committees.php:68
@@ -416,12 +179,21 @@ msgstr ""
 msgid "Woops.  We failed to RSVP for you.  Please try again."
 msgstr ""
 
+#: ../includes/class-board-events.php:167
+#: ../includes/class-board-events.php:179 ../nonprofit-board-management.php:316
+msgid "Board Events"
+msgstr ""
+
 #: ../includes/class-board-events.php:168
 msgid "Board Event"
 msgstr ""
 
 #: ../includes/class-board-events.php:169
 msgid "&#43; Add Board Event"
+msgstr ""
+
+#: ../includes/class-board-events.php:170 ../nonprofit-board-management.php:328
+msgid "Add Board Event"
 msgstr ""
 
 #: ../includes/class-board-events.php:171
@@ -609,7 +381,248 @@ msgstr ""
 msgid "View, edit and RSVP to events"
 msgstr ""
 
-#: ../includes/class-board-events.php:1165
+#: ../includes/class-board-events.php:1168
 #, php-format
 msgid " and <a href=\"#\" class=\"get-names\" data-id=\"%d\">%s other</a>."
+msgstr ""
+
+#: ../nonprofit-board-management.php:281
+msgid "Woops. We weren't able to allow you to RSVP.  Please try again."
+msgstr ""
+
+#: ../nonprofit-board-management.php:283
+msgid ""
+"Woops. We weren't able to show you the description.  Please contact support."
+msgstr ""
+
+#: ../nonprofit-board-management.php:286
+msgid ""
+"Woops. We weren't able to show you the attendees.  Please contact support."
+msgstr ""
+
+#: ../nonprofit-board-management.php:289
+msgid ""
+" You only need to fill this out if all board members will be listed on the "
+"public website."
+msgstr ""
+
+#: ../nonprofit-board-management.php:307
+msgid "Nonprofit Board Management"
+msgstr ""
+
+#: ../nonprofit-board-management.php:307
+msgid "Board Mgmt"
+msgstr ""
+
+#: ../nonprofit-board-management.php:310 ../nonprofit-board-management.php:671
+msgid "Board Members"
+msgstr ""
+
+#: ../nonprofit-board-management.php:335 ../nonprofit-board-management.php:478
+msgid "Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:337 ../nonprofit-board-management.php:538
+msgid "Edit Your Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:338 ../nonprofit-board-management.php:604
+msgid "Support"
+msgstr ""
+
+#: ../nonprofit-board-management.php:349
+msgid "Board Members "
+msgstr ""
+
+#: ../nonprofit-board-management.php:351
+msgid "&#43; Add New User"
+msgstr ""
+
+#: ../nonprofit-board-management.php:361 ../nonprofit-board-management.php:370
+#: ../nonprofit-board-management.php:694
+msgid "Name"
+msgstr ""
+
+#: ../nonprofit-board-management.php:362 ../nonprofit-board-management.php:371
+#: ../nonprofit-board-management.php:695
+msgid "Phone"
+msgstr ""
+
+#: ../nonprofit-board-management.php:363 ../nonprofit-board-management.php:372
+#: ../nonprofit-board-management.php:696
+msgid "Email"
+msgstr ""
+
+#: ../nonprofit-board-management.php:364 ../nonprofit-board-management.php:373
+msgid "Job"
+msgstr ""
+
+#: ../nonprofit-board-management.php:365 ../nonprofit-board-management.php:374
+msgid "Committees"
+msgstr ""
+
+#: ../nonprofit-board-management.php:386
+msgid ""
+"There aren't currently any members on your board (which could definitely "
+"limit its effectiveness).  \n"
+"                  Why don't you <a href=\"user-new.php\">add one now</a>? "
+"<br />Oh, and make sure to set the new user's role to \"Board Member\"."
+msgstr ""
+
+#: ../nonprofit-board-management.php:398
+msgid " at "
+msgstr ""
+
+#: ../nonprofit-board-management.php:408
+msgid "Edit"
+msgstr ""
+
+#: ../nonprofit-board-management.php:429
+msgid ""
+"<strong>Your Photo:</strong> You can set your photo by creating a <a href="
+"\"http://en.gravatar.com/\" target=\"_blank\">Gravatar account</a>\n"
+"            using the same email address you used here.<br />"
+msgstr ""
+
+#: ../nonprofit-board-management.php:431
+msgid ""
+"<strong>Your Name:</strong> You can adjust your name by changing the "
+"\"Display name publicly as\" dropdown in <a href=\"profile.php\">your "
+"profile</a>."
+msgstr ""
+
+#: ../nonprofit-board-management.php:447
+msgid "1 Board Member"
+msgstr ""
+
+#: ../nonprofit-board-management.php:481
+msgid ""
+"We've provided two resource sections.  \n"
+"            One for you to include your own resources and one for some "
+"resources we think are helpful."
+msgstr ""
+
+#: ../nonprofit-board-management.php:484
+msgid "Your Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:486
+msgid "Edit your board resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:493
+msgid "Some Other Helpful Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:495
+msgid "A shared task list for your board."
+msgstr ""
+
+#: ../nonprofit-board-management.php:496
+msgid "A collection of articles and tools on running a board."
+msgstr ""
+
+#: ../nonprofit-board-management.php:497
+msgid "Featured content dedicated to nonprofit boards."
+msgstr ""
+
+#: ../nonprofit-board-management.php:498
+msgid "An easy way to find a good time to meet."
+msgstr ""
+
+#: ../nonprofit-board-management.php:499
+msgid "A great way to share files."
+msgstr ""
+
+#: ../nonprofit-board-management.php:500
+msgid "A good way to share and collaborate on documents."
+msgstr ""
+
+#: ../nonprofit-board-management.php:501
+msgid "A tool to find great talent to join your board."
+msgstr ""
+
+#: ../nonprofit-board-management.php:502
+msgid ""
+"Library articles and blog posts on how nonprofits can use the web to do more "
+"good."
+msgstr ""
+
+#: ../nonprofit-board-management.php:526
+msgid "Your board resources have been updated."
+msgstr ""
+
+#: ../nonprofit-board-management.php:528
+msgid "View your board resources."
+msgstr ""
+
+#: ../nonprofit-board-management.php:539
+msgid "Edit the content in your board resources section."
+msgstr ""
+
+#: ../nonprofit-board-management.php:547
+msgid "Save Your Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:552
+msgid "Back to Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:607
+msgid ""
+"In case you need help here are some videos to help you navigate the board "
+"management plugin."
+msgstr ""
+
+#: ../nonprofit-board-management.php:609
+msgid "Getting Started with Nonprofit Board Management"
+msgstr ""
+
+#: ../nonprofit-board-management.php:616
+msgid "How to Add a Board Member"
+msgstr ""
+
+#: ../nonprofit-board-management.php:621
+msgid "How to Change Your Personal Information"
+msgstr ""
+
+#: ../nonprofit-board-management.php:626
+msgid "How to Serve on the Board as a WordPress Admin"
+msgstr ""
+
+#: ../nonprofit-board-management.php:631
+msgid "How to Add a Board Event"
+msgstr ""
+
+#: ../nonprofit-board-management.php:636
+msgid "How to RSVP to an Upcoming Event"
+msgstr ""
+
+#: ../nonprofit-board-management.php:643
+msgid "How to Create a Committee and Add Committee Members"
+msgstr ""
+
+#: ../nonprofit-board-management.php:648
+msgid "How to Edit Your Board Resources"
+msgstr ""
+
+#: ../nonprofit-board-management.php:653
+msgid "How to List Your Board Members on Your Public Website"
+msgstr ""
+
+#: ../nonprofit-board-management.php:686
+msgid ""
+"You don't have any board members.  You should create some users and set "
+"their role to \"Board Member\"."
+msgstr ""
+
+#: ../nonprofit-board-management.php:716
+msgid "View more board member details"
+msgstr ""
+
+#: ../nonprofit-board-management.php:827
+msgid ""
+"You don't currently have the board member role, so you can't RSVP to board "
+"events,\n"
+"         join committees, or show up in the board member list."
 msgstr ""
