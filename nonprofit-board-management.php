@@ -49,7 +49,7 @@ class WI_Board_Management {
 
     public function __construct(){
         //Load translations
-        add_action( 'init', array( $this, 'load_plugin_textdomain') );
+        add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain') );
 
         //Put all the user objects for every board member in a variable.
         $this->board_members = $this->get_users_who_serve();
