@@ -752,7 +752,7 @@ class WI_Board_Events {
          echo $this->get_attending_rsvps( $post_id );
        }
        else{
-         _e( 'Event must be published prior to accepting RSVPs.' );
+         _e( 'Event must be published prior to accepting RSVPs.', 'nonprofit-board-management' );
        }
 
        break;
@@ -761,7 +761,7 @@ class WI_Board_Events {
        
        //Don't allow for an RSVP if board event hasn't been published.
        if( $board_event->post_status != 'publish' ){
-         _e( 'Event must be published prior to accepting RSVPs.' );
+         _e( 'Event must be published prior to accepting RSVPs.', 'nonprofit-board-management' );
          
          break;
        }

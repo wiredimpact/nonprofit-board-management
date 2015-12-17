@@ -1,16 +1,18 @@
 <?php
 /*
 Plugin Name: Nonprofit Board Management
+Text Domain: nonprofit-board-management
+Domain Path: /languages
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.4
+Version: 1.1.5
 Author: Wired Impact
 Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
 
 ------------------------------------------------------------------------
 Copyright 2013 Wired Impact, LLC
- 
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -32,34 +34,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package Nonprofit Board Management
  *
- * @version 1.1.0
+ * @version 1.1.5
  * @author Wired Impact
  */
 class WI_Board_Management {
-  
+
    /*
     * All of the board members' user objects.
-    * 
+    *
     * @var array
     */
     public $board_members;
-    
-  
+
+
     public function __construct(){
         //Load translations
         add_action( 'init', array( $this, 'load_plugin_textdomain') );
-      
+
         //Put all the user objects for every board member in a variable.
         $this->board_members = $this->get_users_who_serve();
-      
+
         register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
         register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
-        
+
         if( is_admin() ){
           add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
 
           //Setup top level menu
-          add_action( 'admin_menu', array( $this, 'create_menu' ), 10 ); 
+          add_action( 'admin_menu', array( $this, 'create_menu' ), 10 );
 
           //Load CSS and JS
           add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
@@ -77,39 +79,39 @@ class WI_Board_Management {
           //Allow admin to click a button and start serving on the board.
           add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
         }
-        
+
         //Redirect board members to dashboard on login.
         add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
-        
+
         //Create shortcode to list board members on pages and posts
         add_shortcode( 'list_board_members', array( $this, 'list_board_members_shortcode' ) );
     }
-    
-    
+
+
     /*
      * Internationalization
      */
     public function load_plugin_textdomain() {
       load_plugin_textdomain( 'nonprofit-board-management', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-    } 
-    
-    
+    }
+
+
     /*
      * Add the board roles when the plugin is first activated.
-     * 
+     *
      * Additional capabilities can be added at a later time or can be
      * added using the filter below.
      */
-    public function add_board_roles(){   
-      add_role( 
+    public function add_board_roles(){
+      add_role(
               'board_member',
-              'Board Member', 
-              apply_filters( 'winbm_board_member_caps', array( 
+              'Board Member',
+              apply_filters( 'winbm_board_member_caps', array(
                   'read' => true,
                   'view_board_content' => true,
                   'edit_board_content' => true,
                   'serve_on_board' => true,
-                  
+
                   //Board event caps
                   'rsvp_board_events' => true,
                   'edit_board_events' => true,
@@ -122,7 +124,7 @@ class WI_Board_Management {
                   'delete_others_board_events' => true,
                   'edit_private_board_events' => true,
                   'edit_published_board_events' => true,
-                  
+
                   //Board committee caps
                   'join_board_committee' => true,
                   'edit_board_committees' => true,
@@ -137,7 +139,7 @@ class WI_Board_Management {
                   'edit_published_board_committees' => true
                   ) )
               );
-      
+
       //Give admin access to view and edit all board content.
       //Initially they can't serve on the board, but can add that cap
       //through the UI.
@@ -145,7 +147,7 @@ class WI_Board_Management {
       if ( !empty( $role ) ){
         $role->add_cap( 'view_board_content' );
         $role->add_cap( 'edit_board_content' );
-        
+
         //Board event caps
         $role->add_cap( 'edit_board_events' );
         $role->add_cap( 'edit_others_board_events' );
@@ -156,8 +158,8 @@ class WI_Board_Management {
         $role->add_cap( 'delete_published_board_events' );
         $role->add_cap( 'delete_others_board_events' );
         $role->add_cap( 'edit_private_board_events' );
-        $role->add_cap( 'edit_published_board_events' ); 
-        
+        $role->add_cap( 'edit_published_board_events' );
+
         //Board committee caps
         $role->add_cap( 'edit_board_committees' );
         $role->add_cap( 'edit_others_board_committees' );
@@ -169,15 +171,15 @@ class WI_Board_Management {
         $role->add_cap( 'delete_others_board_committees' );
         $role->add_cap( 'edit_private_board_committees' );
         $role->add_cap( 'edit_published_board_committees' );
-        
+
         do_action( 'winbm_add_admin_caps', $role );
       }
     }
 
-    
+
     /*
      * Remove the board member role when the plugin is deactivated.
-     * 
+     *
      * We remove the board member role when the plugin is deactivated along with
      * the caps we gave to admins except for serve_on_board since that is an
      * opt-in capability that will be needed if the plugin is added again.
@@ -187,13 +189,13 @@ class WI_Board_Management {
       if( empty( $member_users ) ){
         remove_role( 'board_member' );
       }
-           
+
       //Remove all the admin caps aside from serve_on_board.
       $role = get_role( 'administrator' );
       if ( !empty( $role ) ){
         $role->remove_cap( 'view_board_content' );
         $role->remove_cap( 'edit_board_content' );
-        
+
         //Board event caps
         $role->remove_cap( 'edit_board_events' );
         $role->remove_cap( 'edit_others_board_events' );
@@ -204,8 +206,8 @@ class WI_Board_Management {
         $role->remove_cap( 'delete_published_board_events' );
         $role->remove_cap( 'delete_others_board_events' );
         $role->remove_cap( 'edit_private_board_events' );
-        $role->remove_cap( 'edit_published_board_events' ); 
-        
+        $role->remove_cap( 'edit_published_board_events' );
+
         //Board committee caps
         $role->remove_cap( 'edit_board_committees' );
         $role->remove_cap( 'edit_others_board_committees' );
@@ -217,42 +219,42 @@ class WI_Board_Management {
         $role->remove_cap( 'delete_others_board_committees' );
         $role->remove_cap( 'edit_private_board_committees' );
         $role->remove_cap( 'edit_published_board_committees' );
-        
+
         do_action( 'winbm_remove_admin_caps', $role );
       }
     }
-    
-    
+
+
     /*
      * Remove unnecessary dashboard widgets for board members.
-     * 
+     *
      * Checks to see if the user is role "board_member"
-     * and if so, then doesn't show the WordPress blog or 
+     * and if so, then doesn't show the WordPress blog or
      * WordPress news widgets.
      */
     public function remove_dashboard_widgets(){
       if( current_user_can( 'board_member' ) ){
-        remove_meta_box ( 'dashboard_primary', 'dashboard', 'side' ); 
+        remove_meta_box ( 'dashboard_primary', 'dashboard', 'side' );
         remove_meta_box ( 'dashboard_secondary', 'dashboard', 'side' );
         remove_meta_box ( 'dashboard_activity', 'dashboard', 'normal' );
-      }      
+      }
     }
-    
-    
+
+
     /*
      * Enqueue the necessary CSS.
      */
-    public function insert_css(){ 
+    public function insert_css(){
       wp_enqueue_style( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'css/custom.css' );
     }
 
-    
+
     /*
      * Enqueue the necessary JS.
      */
-    public function insert_js(){      
+    public function insert_js(){
       wp_enqueue_script( 'board-mgmt', BOARD_MANAGEMENT_PLUGINFULLURL . 'js/custom.js', 'jquery' );
-      
+
       //Send whether the current screen should expand the board mgmt menu.
       $current_user = wp_get_current_user();
       $screen = get_current_screen();
@@ -262,17 +264,17 @@ class WI_Board_Management {
           $screen->id == 'board_committees' ||
           $screen->id == 'admin_page_nonprofit-board/resources/edit' ||
           user_can( $current_user, 'board_member' ) ){
-        
+
         $screen->expand_board_menu = true;
       }
-        
+
       //Pass whether we are editing a profile of a board member
       global $profileuser;
-      $editing_board_member_profile = false;  
+      $editing_board_member_profile = false;
       if( isset( $profileuser->allcaps['serve_on_board'] ) && $profileuser->allcaps['serve_on_board'] == true && !user_can( $profileuser, 'manage_options' ) ){
             $editing_board_member_profile = true;
       }
-      
+
       //wp_localize_script allows us to send PHP info to JS
       wp_localize_script( 'board-mgmt', 'wi_board_mgmt', apply_filters( 'winbm_local_scripts', array(
         'allow_serve_nonce' => wp_create_nonce( 'allow_serve_nonce' ),
@@ -288,8 +290,8 @@ class WI_Board_Management {
         ), $screen )
        );
     }
-    
-    
+
+
     /*
      * Create each of the menu items we need for board management.
      */
@@ -303,40 +305,40 @@ class WI_Board_Management {
         $plugin_image = BOARD_MANAGEMENT_PLUGINFULLURL . 'css/images/nonprofit-board-gavel-menu.png'; //Load image for older WordPress versions
       }
       add_menu_page( __( 'Nonprofit Board Management', 'nonprofit-board-management' ), __( 'Board Mgmt', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board', '', $plugin_image );
-      
+
       //Create Board Members page
       add_submenu_page( 'nonprofit-board', __( 'Board Members', 'nonprofit-board-management' ), __( 'Board Members', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board', array( $this, 'display_members_page' ) );
-          
+
       //Add action to add new menu items after the board members page.
       do_action( 'winbm_add_page_after_members' );
 
       //Add Board Events page
       add_submenu_page( 'nonprofit-board', __( 'Board Events', 'nonprofit-board-management' ), __( 'Board Events', 'nonprofit-board-management' ), 'edit_board_events' , 'edit.php?post_type=board_events' );
-      
+
       //Add action to add new menu items after events.
       do_action( 'winbm_add_page_after_events' );
-      
+
       //Add Board Committees page
-      add_submenu_page( 'nonprofit-board', __( 'Board Committees', 'nonprofit-board-management' ), __( 'Board Committees', 'nonprofit-board-management' ), 'edit_board_committees' , 'edit.php?post_type=board_committees' ); 
-      
+      add_submenu_page( 'nonprofit-board', __( 'Board Committees', 'nonprofit-board-management' ), __( 'Board Committees', 'nonprofit-board-management' ), 'edit_board_committees' , 'edit.php?post_type=board_committees' );
+
       //Add action to add new menu items after committees.
       do_action( 'winbm_add_page_after_committees' );
-      
+
       //Add new board event and board committee pages
-      add_submenu_page( 'nonprofit-board', __( 'Add Board Event', 'nonprofit-board-management' ), __( 'Add Board Event', 'nonprofit-board-management' ), 'edit_board_events' , 'post-new.php?post_type=board_events' ); 
-      add_submenu_page( 'nonprofit-board', __( 'Add Board Committee', 'nonprofit-board-management' ), __( 'Add Board Committee', 'nonprofit-board-management' ), 'edit_board_committees' , 'post-new.php?post_type=board_committees' ); 
-      
+      add_submenu_page( 'nonprofit-board', __( 'Add Board Event', 'nonprofit-board-management' ), __( 'Add Board Event', 'nonprofit-board-management' ), 'edit_board_events' , 'post-new.php?post_type=board_events' );
+      add_submenu_page( 'nonprofit-board', __( 'Add Board Committee', 'nonprofit-board-management' ), __( 'Add Board Committee', 'nonprofit-board-management' ), 'edit_board_committees' , 'post-new.php?post_type=board_committees' );
+
       //Add action to add new menu items after add new events and new committees.
       do_action( 'winbm_add_page_after_add_new' );
-      
+
       //Add Resources and Support pages
       add_submenu_page( 'nonprofit-board', __( 'Board Resources', 'nonprofit-board-management' ), __( 'Board Resources', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/resources', array( $this, 'display_resources_page' ) );
       //Use options.php as the parent page so it doesn't show in any menu.
       add_submenu_page( 'options.php', __( 'Edit Your Board Resources', 'nonprofit-board-management' ), __( 'Edit Your Board Resources', 'nonprofit-board-management' ), 'edit_board_content', 'nonprofit-board/resources/edit', array( $this, 'edit_resources_page' ) );
       add_submenu_page( 'nonprofit-board', __( 'Support', 'nonprofit-board-management' ), __( 'Support', 'nonprofit-board-management' ), 'view_board_content', 'nonprofit-board/support', array( $this, 'display_support_page' ) );
     }
-    
-    
+
+
     /*
      * Display the list of board members with their contact info and current committees.
      */
@@ -349,10 +351,10 @@ class WI_Board_Management {
             <a href="user-new.php" class="add-new-h2"><?php _e( '&#43; Add New User', 'nonprofit-board-management' ); ?></a>
           <?php } ?>
         </h2>
-        
+
         <?php $this->display_num_board_members(); ?>
         <?php do_action( 'winbm_before_members_table' ); ?>
-        
+
         <table class="wp-list-table widefat fixed posts" id="board-members-table" cellspacing="0">
           <thead>
             <tr>
@@ -373,21 +375,21 @@ class WI_Board_Management {
             </tr>
           </tfoot>
           <tbody>
-        
+
         <?php
         $board_members = $this->board_members;
-        
+
         //If no board members were found then give them a message.
         if( empty( $board_members ) ){ ?>
             <tr class="no-items">
               <td class="colspanchange" colspan="5">
-                <?php _e( 'There aren\'t currently any members on your board (which could definitely limit its effectiveness).  
+                <?php _e( 'There aren\'t currently any members on your board (which could definitely limit its effectiveness).
                   Why don\'t you <a href="user-new.php">add one now</a>? <br />Oh, and make sure to set the new user\'s role to "Board Member".', 'nonprofit-board-management' ); ?>
               </td>
             </tr>
         <?php
         }
-        
+
         $alternate = 'alternate';
         foreach( $board_members as $board_member ){
          $board_member_meta = $this->get_board_member_meta( $board_member->ID );
@@ -415,15 +417,15 @@ class WI_Board_Management {
           </tr>
         <?php
         $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
-        }        
+        }
         ?>
-        
+
           </tbody>
         </table>
-        
+
         <?php do_action( 'winbm_after_members_table' ); ?>
-        
-        <p><?php 
+
+        <p><?php
           _e( '<strong>Your Photo:</strong> You can set your photo by creating a <a href="http://en.gravatar.com/" target="_blank">Gravatar account</a>
             using the same email address you used here.<br />', 'nonprofit-board-management' );
           _e( '<strong>Your Name:</strong> You can adjust your name by changing the "Display name publicly as" dropdown in <a href="profile.php">your profile</a>.', 'nonprofit-board-management' );
@@ -431,8 +433,8 @@ class WI_Board_Management {
         </p>
       </div>
     <?php }//display_members_page()
-    
-    
+
+
     /*
      * Display the number of board members to be used above a table.
      */
@@ -449,10 +451,10 @@ class WI_Board_Management {
       <?php
     }
 
-    
+
     /*
      * Get all the meta data for a board member.
-     * 
+     *
      * @param int $board_member_id User ID of the board member.
      * @return object Meta data for the provided board member.
      */
@@ -461,11 +463,11 @@ class WI_Board_Management {
       $board_member_meta->phone = get_user_meta( $board_member_id, 'phone', true );
       $board_member_meta->current_employer = get_user_meta( $board_member_id, 'current_employer', true );
       $board_member_meta->job_title = get_user_meta( $board_member_id, 'job_title', true );
-      
+
       return apply_filters( 'winbm_board_member_meta', $board_member_meta, $board_member_id );
     }
-   
-    
+
+
     /*
      * Display the content for the board resources page.
      */
@@ -474,9 +476,9 @@ class WI_Board_Management {
       <div class="wrap board-resources">
         <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h2>
-        
+
         <div class="postbox-container winbm-resources-wrap">
-          <p><?php _e( 'We\'ve provided two resource sections.  
+          <p><?php _e( 'We\'ve provided two resource sections.
             One for you to include your own resources and one for some resources we think are helpful.', 'nonprofit-board-management' ); ?></p>
           <h3>
             <?php _e( 'Your Board Resources', 'nonprofit-board-management' ); ?>
@@ -507,8 +509,8 @@ class WI_Board_Management {
       </div><!-- /wrap -->
       <?php
     }
-    
-    
+
+
     /*
      * Screen for editing the organization's board resources content.
      */
@@ -516,7 +518,7 @@ class WI_Board_Management {
       if( isset( $_POST['board_resources'] ) ){
         //Save our content if the user clicked update.
         $this->save_board_resources();
-        
+
         //We show a message to the user if we updated our content.
         ?>
         <div class="updated">
@@ -529,7 +531,7 @@ class WI_Board_Management {
         </div>
         <?php
       }
-      
+
       ?>
       <div class="wrap edit-board-resources">
         <?php screen_icon( 'board-mgmt' ); ?>
@@ -558,11 +560,11 @@ class WI_Board_Management {
       </div><!-- /wrap -->
       <?php
     }
-    
-    
+
+
     /*
      * Save the organization's board resources.
-     * 
+     *
      * @return bool True if the resources were updated, false otherwise.
      */
     private function save_board_resources(){
@@ -572,26 +574,26 @@ class WI_Board_Management {
       if ( !isset( $_POST['board_resources_nonce'] ) || !wp_verify_nonce( $_POST['board_resources_nonce'], 'board_resources_nonce' ) ){
         return false;
       }
-      
+
       //Sanitize the board resources content, then save or delete it.
       $clean_content = wp_kses_post( $_POST['board_resources'] );
-      
+
       do_action( 'winbm_save_board_resources', $clean_content );
-      
+
       if( $clean_content != '' ){
         $result = update_option( 'board_resources_content', $clean_content );
       }
       else{
         $result = delete_option( 'board_resources_content' );
       }
-      
+
       return $result;
     }
-    
-    
+
+
     /*
      * Display the content for our support page.
-     * 
+     *
      * All support videos need to be embedded at 600px wide by 338px tall to fit within
      * the wrapper.
      */
@@ -600,7 +602,7 @@ class WI_Board_Management {
       <div class="wrap">
         <?php screen_icon( 'board-mgmt' ); ?>
         <h2><?php _e( 'Support', 'nonprofit-board-management' ); ?></h2>
-        
+
         <div class="postbox-container winbm-support-wrap">
           <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
 
@@ -647,7 +649,7 @@ class WI_Board_Management {
           <div class="support-content hide">
             <iframe width="600" height="338" src="https://www.youtube.com/embed/XsXXEHAs9TU" frameborder="0" allowfullscreen></iframe>
           </div>
-          
+
           <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to List Your Board Members on Your Public Website', 'nonprofit-board-management' ); ?></a></h3>
           <div class="support-content hide">
             <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>
@@ -657,10 +659,10 @@ class WI_Board_Management {
         </div><!-- /winbm-support-wrap -->
         <?php $this->display_extensions_sidebar(); ?>
       </div><!-- /wrap -->
-      <?php     
+      <?php
     }
-    
-    
+
+
     /*
      * Add our members dashboard widget to the list of widgets.
      */
@@ -669,23 +671,23 @@ class WI_Board_Management {
         wp_add_dashboard_widget('board_members_db_widget', __( 'Board Members', 'nonprofit-board-management' ), array( $this, 'display_board_members_dashboard_widget' ) );
       }
     }
-    
-    
+
+
     /*
      * Display a dashboard widget for all of the board members.
-     * 
+     *
      * @see add_board_members_dashboard_widget()
      */
     public function display_board_members_dashboard_widget(){
       $board_members = $this->board_members;
-      
+
       //If we don't have any board members then the user needs a message.
       if( empty( $board_members ) ){
         _e( 'You don\'t have any board members.  You should create some users and set their role to "Board Member".', 'nonprofit-board-management' );
-        
+
         return;
       }
-      
+
       ?>
         <table class="widefat">
           <thead>
@@ -696,7 +698,7 @@ class WI_Board_Management {
           <tbody>
       <?php
       $alternate = 'alternate';
-      
+
       foreach( $board_members as $board_member ){
         $board_member_meta = $this->get_board_member_meta( $board_member->ID );
         ?>
@@ -706,27 +708,27 @@ class WI_Board_Management {
           <td><?php echo esc_html( $board_member->user_email ); ?></td>
         </tr>
         <?php
-      $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';  
+      $alternate = ( $alternate == 'alternate' ) ? '' : 'alternate';
       }
-      
+
       ?>
       </tbody></table>
         <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>"><?php _e( 'View more board member details', 'nonprofit-board-management' ); ?></a></p>
       <?php
     }
-    
-    
+
+
     /*
      * Display the sidebar with links to premium extensions and info on Wired Impact.
      */
     public function display_extensions_sidebar(){
       ?>
-      <div class="postbox-container winbm-ext-sidebar">    
-        
+      <div class="postbox-container winbm-ext-sidebar">
+
         <img class="upgrade-heading" src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/board-management-upgrades.png" width="240" height="50" />
-        
+
         <?php do_action( 'winbm_at_sidebar_early' ); ?>
-        
+
         <a class="ext event-emails" href="http://wiredimpact.com/premium-plugins/event-rsvp-reminder-emails/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
           <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="240" height="220" />
         </a>
@@ -736,18 +738,18 @@ class WI_Board_Management {
         <a class="ext wi" href="http://wiredimpact.com?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
           <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="240" height="74" />
         </a>
-        
+
         <?php do_action( 'winbm_at_sidebar_end' ); ?>
       </div>
       <?php
     }
-    
-    
+
+
     /*
      * Remove the help tab in the top right for all board members.
-     * 
+     *
      * We remove the help tab because we want them to use the support menu we created.
-     * 
+     *
      * @param string $contextual_help Help to display in tab that we leave blank.
      * @param string $screen_id ID of the current admin screen.
      * @param object $screen Information on the current screen you're viewing.
@@ -757,18 +759,18 @@ class WI_Board_Management {
       if( current_user_can( 'board_member' ) ){
         $screen->remove_help_tabs();
       }
-      
+
       return $contextual_help;
     }
 
-    
+
     /*
      * Get the users who serve on the board.
-     * 
+     *
      * The users who serve on the board includes all users
      * with the board member role and any admins who added the
      * serve_on_board capability.
-     * 
+     *
      * @return array User objects for users who can serve on the board.
      */
     private function get_users_who_serve(){
@@ -790,34 +792,34 @@ class WI_Board_Management {
 
       return apply_filters( 'winbm_users_serving', $users_serving );
     }
-    
-    
+
+
     /*
      * Sort users based on display name.
-     * 
+     *
      * @return int Info on which name should be ordered first.
      */
     private function sort_users( $user_one, $user_two ){
-      
+
       return strcmp( $user_one->display_name, $user_two->display_name );
     }
-    
-    
+
+
     /*
     * Show notice to admins allowing them to start serving on the board if they'd like.
-    * 
+    *
     * Show notice to admins that allows them to start serving on the board.  Handling
     * of the button click is done through ajax.  With this cap they're able to
     * RSVP to events, join committees and show in the board members list.
-    * 
+    *
     * @see allow_user_to_serve()
     */
    public function show_admins_notices(){
      $screen = get_current_screen();
-     
+
      //If the admin already has the serve capability then don't show the message.
      if( current_user_can( 'serve_on_board' ) ) return;
-     
+
      //If the admin is on the members, events, or committees list then show them message.
      if( $screen->id == 'edit-board_events' || $screen->id == 'toplevel_page_nonprofit-board' || $screen->id == 'edit-board_committees' ){
      ?>
@@ -834,12 +836,12 @@ class WI_Board_Management {
 
    /*
     * Allow the current user to serve on the board.
-    * 
-    * Via ajax allow the current user to serve on the board 
+    *
+    * Via ajax allow the current user to serve on the board
     * by giving them the capability.  Only admins have
     * the ability to use this method since the button used to activate
     * this method is only shown to that role.
-    * 
+    *
     * @see show_admin_notices()
     * @return string Echos '1' to show that the method has run.
     */
@@ -848,18 +850,18 @@ class WI_Board_Management {
 
      $current_user = wp_get_current_user();
      $current_user->add_cap( 'serve_on_board' );
-     
+
      do_action( 'winbm_allow_user_serve', $current_user );
 
      echo '1';
 
      die();
    }
-   
-   
+
+
    /*
     * Redirect board members to the dashboard on login.
-    * 
+    *
     * This happens outside of the class because the filter doesn't
     * work inside of the is_admin function.
     */
@@ -877,35 +879,35 @@ class WI_Board_Management {
         return $redirect_to;
       }
     }
-    
-    
+
+
     /*
      * List the board members through the [list_board_members] shortcode.
-     * 
+     *
      * Display list of board members on website posts or pages by using the
      * [list_board_members] shortcode within the content.  The content displayed
      * can be customized by copying templates/list-board-members.php to the active theme's
      * folder and adjusting.
-     * 
+     *
      * @return string HTML to display all the board information pulled from the template.
      */
     public function list_board_members_shortcode(){
       $board_members = $this->get_users_who_serve();
-      
+
       ob_start();
       include( $this->get_template( 'list-board-members' ) );
       $html = ob_get_clean();
-      
+
       return apply_filters( 'winbm_list_members_shortcode', $html, $board_members ) ;
     }
-    
-    
+
+
     /*
      * Load proper template from our templates folder or from the chosen theme directory.
-     * 
+     *
      * We check if the chosen template exists within the active theme.  If yes, we load that
      * template.  If not, we load the default template provided by our plugin.
-     * 
+     *
      * @param string File name of template file we're looking for.
      * @return string Template location either in plugin folder or in active theme folder.
      */
@@ -925,11 +927,11 @@ class WI_Board_Management {
 
        return apply_filters( 'winbm_template' . $template, $file );
     }
-     
-    
+
+
     /*
      * Check if a valid gravatar exists so we don't have to show the default.
-     * 
+     *
      * @param string The email address of the user.
      * @return bool True if an avatar exists, false if not.
      */
@@ -938,14 +940,14 @@ class WI_Board_Management {
       $hash = md5( strtolower( trim( $user_email ) ) );
       $uri = 'http://www.gravatar.com/avatar/' . $hash . '?d=404';
       $headers = @get_headers($uri);
-      
+
       if (!preg_match("|200|", $headers[0])) {
         $has_valid_avatar = FALSE;
       }
       else {
         $has_valid_avatar = TRUE;
       }
-      
+
       return $has_valid_avatar;
     }
 } //WI_Board_Management
