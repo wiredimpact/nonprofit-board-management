@@ -1,5 +1,5 @@
 === Nonprofit Board Management ===
-Contributors: wiredimpact 
+Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
 Tested up to: 4.4
@@ -45,7 +45,7 @@ The easiest way to install the Nonprofit Board Management plugin is to go to Plu
 
 1.	Download the Nonprofit Board Management plugin and unzip the files.
 1.	Upload the nonprofit-board-management folder to the /wp-content/plugins/ directory.
-1.	Activate the Nonprofit Board Management plugin through the "Plugins" menu in WordPress. 
+1.	Activate the Nonprofit Board Management plugin through the "Plugins" menu in WordPress.
 
 **How do you get started using Nonprofit Board Management?**
 
@@ -92,7 +92,7 @@ Here are some frequently asked questions about how to use the plugin.
 
 [youtube https://www.youtube.com/watch?v=kYdP0dtueEE]
 
-If you're comfortable working with code, you can customize the information that displays by copying and editing the template 
+If you're comfortable working with code, you can customize the information that displays by copying and editing the template
 file located at `wp-content/plugins/nonprofit-board-management/templates/list-board-members.php` to your website's active theme.
 
 = How do you get more help? =
@@ -120,23 +120,27 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.1.5 =
+* Updated plugin to allow for translation
+* Tested up to WordPress 4.4.
+
 = 1.1.4 =
 * Remove the reference assignment on the object to prevent any strict warnings and broken headers on plugin activation/deactivation.
 * Tested up to WordPress 4.4.
 
-= 1.1.3 = 
+= 1.1.3 =
 * Fixed XSS security vulnerability with add_query_arg() and remove_query_arg().
 * Tested up to WordPress 4.2.
 
-= 1.1.2 = 
+= 1.1.2 =
 * Tested up to WordPress 4.1.
 
-= 1.1.1 = 
+= 1.1.1 =
 * Fixed bug that caused error when adding new board member users.
 * Removed the activity dashboard widget for all board members that aren't admins.
 * Tested up to WordPress 4.0.
 
-= 1.1.0 = 
+= 1.1.0 =
 * Added an updated menu icon for the new admin design.
 * Adjusted styles of the Board Management Upgrades sidebar to match the new admin design.
 * Added the ability to show a list of your board members publicly by using the [list_board_members] shortcode.
@@ -153,7 +157,7 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 * Now showing the total number of board members above the Board Members table.
 * Updated wiredimpact.com URL in the Board Resources Helpful Resources section.
 
-= 1.0.2 = 
+= 1.0.2 =
 * Fixed premium extension URLs for sidebar on support and board resources pages.
 
 = 1.0.1 =
