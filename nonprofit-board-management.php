@@ -367,11 +367,11 @@ class WI_Board_Management {
           </thead>
           <tfoot>
             <tr>
-              <th scope="col" class="manage-column column-name"><?php _e( 'Name' ); ?></th>
-              <th scope="col" class="manage-column column-phone"><?php _e( 'Phone' ); ?></th>
-              <th scope="col" class="manage-column column-email"><?php _e( 'Email' ); ?></th>
-              <th scope="col" class="manage-column column-job"><?php _e( 'Job' ); ?></th>
-              <th scope="col" class="manage-column column-committees"><?php _e( 'Committees' ); ?></th>
+              <th scope="col" class="manage-column column-name"><?php _e( 'Name', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-phone"><?php _e( 'Phone', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-email"><?php _e( 'Email', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-job"><?php _e( 'Job', 'nonprofit-board-management' ); ?></th>
+              <th scope="col" class="manage-column column-committees"><?php _e( 'Committees', 'nonprofit-board-management' ); ?></th>
             </tr>
           </tfoot>
           <tbody>
@@ -544,7 +544,7 @@ class WI_Board_Management {
         <div id="poststuff">
           <div class="postbox">
             <h3 class="hndle">
-              <span><?php _e( 'Save Your Resources' ); ?></span>
+              <span><?php _e( 'Save Your Resources', 'nonprofit-board-management' ); ?></span>
             </h3>
             <div class="inside">
               <input type="submit" class="button button-primary button-large" value="Update" />

@@ -122,7 +122,6 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 = 1.1.5 =
 * Updated plugin to allow for translation
-* Tested up to WordPress 4.4.
 
 = 1.1.4 =
 * Remove the reference assignment on the object to prevent any strict warnings and broken headers on plugin activation/deactivation.
