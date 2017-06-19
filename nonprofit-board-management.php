@@ -5,7 +5,7 @@ Text Domain: nonprofit-board-management
 Domain Path: /languages
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.6
+Version: 1.1.7
 Author: Wired Impact
 Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -345,12 +345,12 @@ class WI_Board_Management {
     public function display_members_page(){ ?>
       <div class="wrap">
         <?php screen_icon( 'board-mgmt' ); ?>
-        <h2>
+        <h1>
           <?php _e( 'Board Members ', 'nonprofit-board-management' ); ?>
           <?php if( current_user_can( 'create_users' ) ){ ?>
             <a href="user-new.php" class="add-new-h2"><?php _e( '&#43; Add New User', 'nonprofit-board-management' ); ?></a>
           <?php } ?>
-        </h2>
+        </h1>
 
         <?php $this->display_num_board_members(); ?>
         <?php do_action( 'winbm_before_members_table' ); ?>
@@ -475,7 +475,7 @@ class WI_Board_Management {
       ?>
       <div class="wrap board-resources">
         <?php screen_icon( 'board-mgmt' ); ?>
-        <h2><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h2>
+        <h1><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h1>
 
         <div class="postbox-container winbm-resources-wrap">
           <p><?php _e( 'We\'ve provided two resource sections.
@@ -601,7 +601,7 @@ class WI_Board_Management {
       ?>
       <div class="wrap">
         <?php screen_icon( 'board-mgmt' ); ?>
-        <h2><?php _e( 'Support', 'nonprofit-board-management' ); ?></h2>
+        <h1><?php _e( 'Support', 'nonprofit-board-management' ); ?></h1>
 
         <div class="postbox-container winbm-support-wrap">
           <p><?php _e( 'In case you need help here are some videos to help you navigate the board management plugin.', 'nonprofit-board-management' ); ?></p>
