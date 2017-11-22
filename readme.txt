@@ -2,8 +2,8 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
-Tested up to: 4.8
-Stable tag: 1.1.7
+Tested up to: 4.9
+Stable tag: 1.1.8
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -119,6 +119,9 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 
 == Changelog ==
+
+= 1.1.8 =
+* Tested up to WordPress 4.9 and removed outdated code that's no longer used (deprecated) in WordPress.
 
 = 1.1.7 =
 * Tested up to WordPress 4.8 and made minor accessibility improvements.
