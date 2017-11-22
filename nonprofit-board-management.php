@@ -344,7 +344,6 @@ class WI_Board_Management {
      */
     public function display_members_page(){ ?>
       <div class="wrap">
-        <?php screen_icon( 'board-mgmt' ); ?>
         <h1>
           <?php _e( 'Board Members ', 'nonprofit-board-management' ); ?>
           <?php if( current_user_can( 'create_users' ) ){ ?>
@@ -474,7 +473,6 @@ class WI_Board_Management {
     public function display_resources_page(){
       ?>
       <div class="wrap board-resources">
-        <?php screen_icon( 'board-mgmt' ); ?>
         <h1><?php _e( 'Board Resources', 'nonprofit-board-management' ); ?></h1>
 
         <div class="postbox-container winbm-resources-wrap">
@@ -534,8 +532,7 @@ class WI_Board_Management {
 
       ?>
       <div class="wrap edit-board-resources">
-        <?php screen_icon( 'board-mgmt' ); ?>
-        <h2><?php _e( 'Edit Your Board Resources', 'nonprofit-board-management' ); ?></h2>
+        <h1><?php _e( 'Edit Your Board Resources', 'nonprofit-board-management' ); ?></h1>
         <p><?php _e( 'Edit the content in your board resources section.', 'nonprofit-board-management' ); ?></p>
         <form method="post" action="">
         <div id="edit-resources-editor">
@@ -600,7 +597,6 @@ class WI_Board_Management {
     public function display_support_page(){
       ?>
       <div class="wrap">
-        <?php screen_icon( 'board-mgmt' ); ?>
         <h1><?php _e( 'Support', 'nonprofit-board-management' ); ?></h1>
 
         <div class="postbox-container winbm-support-wrap">
