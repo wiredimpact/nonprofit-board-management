@@ -5,7 +5,7 @@ Text Domain: nonprofit-board-management
 Domain Path: /languages
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.8
+Version: 1.1.9
 Author: Wired Impact
 Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -649,6 +649,7 @@ class WI_Board_Management {
           <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to List Your Board Members on Your Public Website', 'nonprofit-board-management' ); ?></a></h3>
           <div class="support-content hide">
             <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>
+            <p>Note: If you're using WordPress 5.0 or later and the Gutenberg Editor you can use the Shortcode block and paste the shortcode into the block or use the Classic Editor block and paste the shortcode into the editor. Either way will work!</p>
           </div>
 
           <?php do_action( 'winbm_at_support_end' ); ?>
