@@ -648,8 +648,12 @@ class WI_Board_Management {
 
           <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to List Your Board Members on Your Public Website', 'nonprofit-board-management' ); ?></a></h3>
           <div class="support-content hide">
-            <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>
-            <p>Note: If you're using WordPress 5.0 or later and the Gutenberg Editor you can use the Shortcode block and paste the shortcode into the block or use the Classic Editor block and paste the shortcode into the editor. Either way will work!</p>
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>            
+              
+            <?php if( $this->is_block_editor_in_use() ) : // If the Block Editor is being used output instructions for using the Shortcode block ?>
+              <p><?php _e( 'Note: With the new WordPress editor you can use the Shortcode block and paste the shortcode "[list_board_members]" into the block to display your board members.', 'nonprofit-board-management' ); ?></p>
+            <?php endif; ?>
+
           </div>
 
           <?php do_action( 'winbm_at_support_end' ); ?>
@@ -947,6 +951,39 @@ class WI_Board_Management {
 
       return $has_valid_avatar;
     }
+
+    /**
+     * Check if the Block Editor is being used.
+     * 
+     * @return bool True if the Block Editor is being used, false if not.
+     */
+    private function is_block_editor_in_use() {
+
+      $use_block_editor = get_option( 'classic-editor-replace' ) === 'no-replace';
+
+      // Check if the Gutenberg plugin is installed and activated.
+      $gutenberg_plugin = ! ( false === has_filter( 'replace_editor', 'gutenberg_init' ) );
+
+      // Block editor is used by default since WordPress 5.0.
+      $block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' );
+
+      // If the Gutenberg plugin is not activated and the WordPress version is less than 5.0 we assume the Block Editor is not being used
+      if( ! $gutenberg_plugin && ! $block_editor ) {
+        return false;
+      }
+
+      // Check if the Classic Editor plugin is activated - the Classic Editor replaces the Block Editor
+      if( ! is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+        return true;
+      }
+
+      // Checks if the Classic Editor plugin is set to use the Block Editor but show a link to revert to the Classic Editor (Settings > Writing)
+      $use_block_editor = get_option( 'classic-editor-replace' ) === 'no-replace';
+
+      return $use_block_editor;
+
+    }
+
 } //WI_Board_Management
 
 
