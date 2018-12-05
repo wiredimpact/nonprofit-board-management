@@ -92,7 +92,7 @@ Here are some frequently asked questions about how to use the plugin.
 
 [youtube https://www.youtube.com/watch?v=kYdP0dtueEE]
 
-Note: With the new WordPress editor, which is used in 5.0 and above, you can use the Shortcode block and paste the shortcode "[list_board_members]" into the block to display your board members.
+Note: With the new WordPress editor, which is used in WordPress 5.0 and above, you can use the Shortcode block and paste the shortcode "[list_board_members]" into the block to display your board members.
 
 If you're comfortable working with code, you can customize the information that displays by copying and editing the template
 file located at `wp-content/plugins/nonprofit-board-management/templates/list-board-members.php` to your website's active theme.

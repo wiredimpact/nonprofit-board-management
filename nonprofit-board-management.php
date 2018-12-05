@@ -959,18 +959,10 @@ class WI_Board_Management {
      */
     private function is_block_editor_in_use() {
 
-      $use_block_editor = get_option( 'classic-editor-replace' ) === 'no-replace';
+      // If the WordPress version is greater than or equal to 5.0 we assume the Block Editor is being used
+      $block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>=' );
 
-      // Check if the Gutenberg plugin is installed and activated.
-      $gutenberg_plugin = ! ( false === has_filter( 'replace_editor', 'gutenberg_init' ) );
-
-      // Block editor is used by default since WordPress 5.0.
-      $block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' );
-
-      // If the Gutenberg plugin is not activated and the WordPress version is less than 5.0 we assume the Block Editor is not being used
-      if( ! $gutenberg_plugin && ! $block_editor ) {
-        return false;
-      }
+      return $block_editor;
 
       // Check if the Classic Editor plugin is activated - the Classic Editor replaces the Block Editor
       if( ! is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
