@@ -960,7 +960,7 @@ class WI_Board_Management {
     private function is_block_editor_in_use() {
 
       // If the WordPress version is greater than or equal to 5.0 we assume the Block Editor is being used
-      $block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>=' );
+      $block_editor = version_compare( $GLOBALS['wp_version'], '5.0', '>=' );
 
       if( ! $block_editor ) {
         return false;
