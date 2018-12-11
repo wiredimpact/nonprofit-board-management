@@ -122,6 +122,9 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 == Changelog ==
 
+= 1.1.9 =
+* Tested up to WordPress 5.0.
+
 = 1.1.8 =
 * Tested up to WordPress 4.9 and removed outdated code that's no longer used (deprecated) in WordPress.
 
