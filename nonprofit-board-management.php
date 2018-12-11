@@ -962,7 +962,9 @@ class WI_Board_Management {
       // If the WordPress version is greater than or equal to 5.0 we assume the Block Editor is being used
       $block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>=' );
 
-      return $block_editor;
+      if( ! $block_editor ) {
+        return false;
+      }
 
       // Check if the Classic Editor plugin is activated - the Classic Editor replaces the Block Editor
       if( ! is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
@@ -970,9 +972,10 @@ class WI_Board_Management {
       }
 
       // Checks if the Classic Editor plugin is set to use the Block Editor but show a link to revert to the Classic Editor (Settings > Writing)
-      $use_block_editor = get_option( 'classic-editor-replace' ) === 'no-replace';
+      $editor_option       = get_option( 'classic-editor-replace' );
+      $block_editor_active = array( 'no-replace', 'block' ); 
 
-      return $use_block_editor;
+      return in_array( $editor_option, $block_editor_active, true );
 
     }
 
