@@ -123,6 +123,7 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 == Changelog ==
 
 = 1.1.9 =
+* Updated the instructions for listing board members using the new WordPress editor.
 * Tested up to WordPress 5.0.
 
 = 1.1.8 =
