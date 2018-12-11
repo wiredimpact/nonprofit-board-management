@@ -2,8 +2,8 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
-Tested up to: 4.9
-Stable tag: 1.1.8
+Tested up to: 5.0
+Stable tag: 1.1.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -92,6 +92,8 @@ Here are some frequently asked questions about how to use the plugin.
 
 [youtube https://www.youtube.com/watch?v=kYdP0dtueEE]
 
+Note: With the new WordPress editor, which is used in WordPress 5.0 and above, you can use the Shortcode block and paste the shortcode "[list_board_members]" into the block to display your board members.
+
 If you're comfortable working with code, you can customize the information that displays by copying and editing the template
 file located at `wp-content/plugins/nonprofit-board-management/templates/list-board-members.php` to your website's active theme.
 
@@ -119,6 +121,10 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 
 == Changelog ==
+
+= 1.1.9 =
+* Updated the instructions for listing board members using the new WordPress editor.
+* Tested up to WordPress 5.0.
 
 = 1.1.8 =
 * Tested up to WordPress 4.9 and removed outdated code that's no longer used (deprecated) in WordPress.
