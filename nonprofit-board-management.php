@@ -71,7 +71,7 @@ class WI_Board_Management {
           add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
 
           //Remove the help tabs for all board members
-          add_filter( 'contextual_help', array( $this, 'remove_help_tabs' ), 10, 3 );
+          add_action( 'admin_head', array( $this, 'remove_help_tabs' ) );
 
           //Add notice to admin who can't serve on board in case they want to.
           add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
@@ -750,18 +750,12 @@ class WI_Board_Management {
      * Remove the help tab in the top right for all board members.
      *
      * We remove the help tab because we want them to use the support menu we created.
-     *
-     * @param string $contextual_help Help to display in tab that we leave blank.
-     * @param string $screen_id ID of the current admin screen.
-     * @param object $screen Information on the current screen you're viewing.
-     * @return $contextual_help We return an empty string since we don't use help tabs.
      */
-    public function remove_help_tabs( $contextual_help, $screen_id, $screen ){
+    public function remove_help_tabs(){
       if( current_user_can( 'board_member' ) ){
+		$screen = get_current_screen();
         $screen->remove_help_tabs();
       }
-
-      return $contextual_help;
     }
 
 
