@@ -123,7 +123,7 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 == Changelog ==
 
 = 1.1.12 =
-* Update the way the Help tab is removed for Board Members due to the 'contextual_help' filter being deprecated.
+* Updated the way the Help tab is removed for Board Members due to the 'contextual_help' filter being deprecated.
 * Tested up to WordPress 5.4.
 
 = 1.1.11 =

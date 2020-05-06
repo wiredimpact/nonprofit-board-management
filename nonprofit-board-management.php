@@ -71,7 +71,7 @@ class WI_Board_Management {
           add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
 
           //Remove the help tabs for all board members
-          add_action( 'admin_head', array( $this, 'remove_help_tabs' ) );
+          add_action( 'in_admin_header', array( $this, 'remove_help_tabs' ) );
 
           //Add notice to admin who can't serve on board in case they want to.
           add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
@@ -753,7 +753,7 @@ class WI_Board_Management {
      */
     public function remove_help_tabs(){
       if( current_user_can( 'board_member' ) ){
-		$screen = get_current_screen();
+        $screen = get_current_screen();
         $screen->remove_help_tabs();
       }
     }
