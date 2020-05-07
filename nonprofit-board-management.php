@@ -5,7 +5,7 @@ Text Domain: nonprofit-board-management
 Domain Path: /languages
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.11
+Version: 1.1.12
 Author: Wired Impact
 Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -71,7 +71,7 @@ class WI_Board_Management {
           add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
 
           //Remove the help tabs for all board members
-          add_filter( 'contextual_help', array( $this, 'remove_help_tabs' ), 10, 3 );
+          add_action( 'in_admin_header', array( $this, 'remove_help_tabs' ) );
 
           //Add notice to admin who can't serve on board in case they want to.
           add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
@@ -750,18 +750,12 @@ class WI_Board_Management {
      * Remove the help tab in the top right for all board members.
      *
      * We remove the help tab because we want them to use the support menu we created.
-     *
-     * @param string $contextual_help Help to display in tab that we leave blank.
-     * @param string $screen_id ID of the current admin screen.
-     * @param object $screen Information on the current screen you're viewing.
-     * @return $contextual_help We return an empty string since we don't use help tabs.
      */
-    public function remove_help_tabs( $contextual_help, $screen_id, $screen ){
+    public function remove_help_tabs(){
       if( current_user_can( 'board_member' ) ){
+        $screen = get_current_screen();
         $screen->remove_help_tabs();
       }
-
-      return $contextual_help;
     }
 
 
