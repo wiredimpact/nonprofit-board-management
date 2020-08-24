@@ -2,8 +2,8 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
-Tested up to: 5.4
-Stable tag: 1.1.12
+Tested up to: 5.5
+Stable tag: 1.1.13
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -121,6 +121,9 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 
 == Changelog ==
+
+= 1.1.13 =
+* Tested up to WordPress 5.5.
 
 = 1.1.12 =
 * Updated the way the Help tab is removed for Board Members due to the 'contextual_help' filter being deprecated.
