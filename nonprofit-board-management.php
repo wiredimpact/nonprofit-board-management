@@ -5,7 +5,7 @@ Text Domain: nonprofit-board-management
 Domain Path: /languages
 Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.14
+Version: 1.1.15
 Author: Wired Impact
 Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -503,7 +503,6 @@ class WI_Board_Management {
 
           </div>
         </div><!-- /winbm-resources-wrap -->
-        <?php $this->display_extensions_sidebar(); ?>
       </div><!-- /wrap -->
       <?php
     }
@@ -658,7 +657,6 @@ class WI_Board_Management {
 
           <?php do_action( 'winbm_at_support_end' ); ?>
         </div><!-- /winbm-support-wrap -->
-        <?php $this->display_extensions_sidebar(); ?>
       </div><!-- /wrap -->
       <?php
     }
@@ -717,34 +715,6 @@ class WI_Board_Management {
         <p class="note"><a href="<?php echo admin_url( 'admin.php?page=nonprofit-board' ); ?>"><?php _e( 'View more board member details', 'nonprofit-board-management' ); ?></a></p>
       <?php
     }
-
-
-    /*
-     * Display the sidebar with links to premium extensions and info on Wired Impact.
-     */
-    public function display_extensions_sidebar(){
-      ?>
-      <div class="postbox-container winbm-ext-sidebar">
-
-        <img class="upgrade-heading" src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/board-management-upgrades.png" width="240" height="50" />
-
-        <?php do_action( 'winbm_at_sidebar_early' ); ?>
-
-        <a class="ext event-emails" href="http://wiredimpact.com/premium-plugins/event-rsvp-reminder-emails/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
-          <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-emails-extension.jpg" width="240" height="220" />
-        </a>
-        <a class="ext" href="http://wiredimpact.com/premium-plugins/event-attendance-tracking/?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
-          <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/event-attendance-extension.jpg" width="240" height="220" />
-        </a>
-        <a class="ext wi" href="http://wiredimpact.com?utm_source=wordpress_admin&utm_medium=sidebar&utm_campaign=nonprofit_board_management" target="_blank">
-          <img src="<?php echo BOARD_MANAGEMENT_PLUGINFULLURL; ?>images/plugins-wired-impact.png" width="240" height="74" />
-        </a>
-
-        <?php do_action( 'winbm_at_sidebar_end' ); ?>
-      </div>
-      <?php
-    }
-
 
     /*
      * Remove the help tab in the top right for all board members.

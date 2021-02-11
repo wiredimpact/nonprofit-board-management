@@ -3,7 +3,7 @@ Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
 Tested up to: 5.6
-Stable tag: 1.1.14
+Stable tag: 1.1.15
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -20,15 +20,6 @@ It’s simple.  It’s free.  And it makes managing your board a whole lot easie
 * **Find Who’s On Each Committee -** You can see a complete list of every committee on the board and who serves on each committee.
 * **Access Important Board Resources -** A customizable section for board members to find links to documents such as meeting minutes or bylaws, notes for board members, or any other content you think is helpful.
 * **Get Support via Video –** We’ve included a variety of support videos that walk you through all the major features, making it easy to find help when you need it.
-
-**How can you add awesome features?**
-
-Along with the standard features included in the Nonprofit Board Management plugin, you can also add the following features through our premium extensions:
-
-* **[Automatic Event RSVP and Reminder Emails](http://wiredimpact.com/premium-plugins/event-rsvp-reminder-emails/) -** Automatically remind board members about upcoming events and allow them to RSVP directly from their email inbox
-* **[Event Attendance Tracking](http://wiredimpact.com/premium-plugins/event-attendance-tracking/) -** Track event attendance and see detailed reports of every board member’s attendance
-
-To see a list of all the premium extensions and learn more visit [http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/](http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/ "Nonprofit Board Management Webpage").
 
 **Can I see the plugin in action?**
 
@@ -101,15 +92,6 @@ file located at `wp-content/plugins/nonprofit-board-management/templates/list-bo
 
 If you have more questions you can always head over to http://wordpress.org/support/plugin/nonprofit-board-management and fill out a support request.
 
-= How can you add some other awesome features? =
-
-Along with the standard features included in Nonprofit Board Management, you can also add the following features through our premium extensions:
-
-* **[Automatic Event RSVP and Reminder Emails](http://wiredimpact.com/premium-plugins/event-rsvp-reminder-emails/) –** Automatically remind board members about upcoming events and allow them to RSVP directly from their email inbox
-* **[Event Attendance Tracking](http://wiredimpact.com/premium-plugins/event-attendance-tracking/) -** Track event attendance and see detailed reports of every board member’s attendance
-
-To see a list of all the premium extensions and learn more visit [http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/](http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/ "Nonprofit Board Management Webpage").
-
 
 == Screenshots ==
 
@@ -121,6 +103,9 @@ To see a list of all the premium extensions and learn more visit [http://wiredim
 
 
 == Changelog ==
+
+= 1.1.15 =
+* Removed all references to premium extensions.
 
 = 1.1.14 =
 * Tested up to WordPress 5.6.
