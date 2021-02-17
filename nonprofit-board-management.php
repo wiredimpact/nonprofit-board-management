@@ -3,11 +3,10 @@
 Plugin Name: Nonprofit Board Management
 Text Domain: nonprofit-board-management
 Domain Path: /languages
-Plugin URI: http://wiredimpact.com/nonprofit-plugins/nonprofit-board-management/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 Description: A simple, free way to manage your nonprofit’s board.
 Version: 1.1.15
 Author: Wired Impact
-Author URI: http://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
+Author URI: https://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
 
 ------------------------------------------------------------------------
@@ -24,7 +23,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 
@@ -425,7 +424,7 @@ class WI_Board_Management {
         <?php do_action( 'winbm_after_members_table' ); ?>
 
         <p><?php
-          _e( '<strong>Your Photo:</strong> You can set your photo by creating a <a href="http://en.gravatar.com/" target="_blank">Gravatar account</a>
+          _e( '<strong>Your Photo:</strong> You can set your photo by creating a <a href="https://en.gravatar.com/" target="_blank">Gravatar account</a>
             using the same email address you used here.<br />', 'nonprofit-board-management' );
           _e( '<strong>Your Name:</strong> You can adjust your name by changing the "Display name publicly as" dropdown in <a href="profile.php">your profile</a>.', 'nonprofit-board-management' );
           ?>
@@ -490,14 +489,14 @@ class WI_Board_Management {
 
           <h3><?php _e( 'Some Other Helpful Resources', 'nonprofit-board-management' ); ?></h3>
           <div class="fixed-board-resources">
-            <p><a href="http://asana.com/" target="_blank">Asana</a> – <?php _e( 'A shared task list for your board.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="http://www.boardsource.org/" target="_blank">BoardSource</a> – <?php _e( 'A collection of articles and tools on running a board.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="http://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="http://doodle.com/" target="_blank">Doodle</a> – <?php _e( 'An easy way to find a good time to meet.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://asana.com/" target="_blank">Asana</a> – <?php _e( 'A shared task list for your board.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://www.boardsource.org/" target="_blank">BoardSource</a> – <?php _e( 'A collection of articles and tools on running a board.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://doodle.com/" target="_blank">Doodle</a> – <?php _e( 'An easy way to find a good time to meet.', 'nonprofit-board-management' ); ?></p>
             <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – <?php _e( 'A great way to share files.', 'nonprofit-board-management' ); ?></p>
             <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="http://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="http://wiredimpact.com?utm_source=wordpress_admin&utm_medium=board_resources&utm_campaign=nonprofit_board_management" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://wiredimpact.com?utm_source=wordpress_admin&utm_medium=board_resources&utm_campaign=nonprofit_board_management" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
 
             <?php do_action( 'winbm_in_helpful_resources' ); ?>
 
@@ -903,7 +902,7 @@ class WI_Board_Management {
     private function validate_gravatar( $user_email ) {
       //Craft a potential url and test its headers
       $hash = md5( strtolower( trim( $user_email ) ) );
-      $uri = 'http://www.gravatar.com/avatar/' . $hash . '?d=404';
+      $uri = 'https://www.gravatar.com/avatar/' . $hash . '?d=404';
       $headers = @get_headers($uri);
 
       if (!preg_match("|200|", $headers[0])) {
