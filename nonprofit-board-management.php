@@ -53,8 +53,8 @@ class WI_Board_Management {
         //Put all the user objects for every board member in a variable.
         $this->board_members = $this->get_users_who_serve();
 
-        register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
+        register_activation_hook( __FILE__, array( $this, 'activate_plugin' ) );
+        register_deactivation_hook( __FILE__, array( $this, 'deactivate_plugin' ) );
 
         if( is_admin() ){
           add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
@@ -94,6 +94,32 @@ class WI_Board_Management {
       load_plugin_textdomain( 'nonprofit-board-management', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
     }
 
+	/**
+	 * Add the Board Member user role on plugin activation.
+	 *
+	 * @param boolean $network_wide If the plugin is network activated.
+	 */
+	public function activate_plugin( $network_wide ) {
+
+		/**
+		 * If the plugin is network activated we need to add the
+		 * Board Member role for each subsite.
+		 */
+		if ( is_multisite() && $network_wide ) {
+
+			global $wpdb;
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				$this->add_board_roles();
+				restore_current_blog();
+			}
+
+		} else {
+
+			$this->add_board_roles();
+		}
+	}
 
     /*
      * Add the board roles when the plugin is first activated.
@@ -175,6 +201,32 @@ class WI_Board_Management {
       }
     }
 
+	/**
+	 * Remove the Board Member user role on plugin deactivation.
+	 *
+	 * @param boolean $network_wide If the plugin is network activated.
+	 */
+	public function deactivate_plugin( $network_wide ) {
+
+		/**
+		 * If the plugin is network activated we need to remove the
+		 * Board Member role for each subsite.
+		 */
+		if ( is_multisite() && $network_wide ) {
+
+			global $wpdb;
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				$this->remove_board_roles();
+				restore_current_blog();
+			}
+
+		} else {
+
+			$this->remove_board_roles();
+		}
+	}
 
     /*
      * Remove the board member role when the plugin is deactivated.
