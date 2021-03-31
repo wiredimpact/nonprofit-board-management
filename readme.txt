@@ -3,7 +3,7 @@ Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
 Tested up to: 5.6
-Stable tag: 1.1.15
+Stable tag: 1.1.16
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -103,6 +103,10 @@ If you have more questions you can always head over to https://wordpress.org/sup
 
 
 == Changelog ==
+
+= 1.1.16 =
+* Fixed the Board Member role not being available on subsites of a multisite installation if the plugin was network activated.
+* Tested up to WordPress 5.7.
 
 = 1.1.15 =
 * Removed all references to premium extensions that will no longer be for sale.

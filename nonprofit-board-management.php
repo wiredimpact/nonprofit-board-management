@@ -4,7 +4,7 @@ Plugin Name: Nonprofit Board Management
 Text Domain: nonprofit-board-management
 Domain Path: /languages
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.15
+Version: 1.1.16
 Author: Wired Impact
 Author URI: https://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -53,8 +53,11 @@ class WI_Board_Management {
         //Put all the user objects for every board member in a variable.
         $this->board_members = $this->get_users_who_serve();
 
-        register_activation_hook( __FILE__, array( $this, 'add_board_roles' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'remove_board_roles' ) );
+        register_activation_hook( __FILE__, array( $this, 'activate_plugin' ) );
+        register_deactivation_hook( __FILE__, array( $this, 'deactivate_plugin' ) );
+
+		// Run the activation when a new multisite blog is created.
+		add_action( 'wp_initialize_site', array( $this, 'multisite_activate_plugin' ) );
 
         if( is_admin() ){
           add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
@@ -94,9 +97,56 @@ class WI_Board_Management {
       load_plugin_textdomain( 'nonprofit-board-management', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
     }
 
+	/**
+	 * Add the Board Member user role on plugin activation.
+	 *
+	 * @param boolean $network_wide If the plugin is network activated.
+	 */
+	public function activate_plugin( $network_wide ) {
+
+		/**
+		 * If the plugin is network activated we need to add the
+		 * Board Member role for each subsite.
+		 */
+		if ( is_multisite() && $network_wide ) {
+
+			global $wpdb;
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				$this->add_board_roles();
+				restore_current_blog();
+			}
+
+		} else {
+
+			$this->add_board_roles();
+		}
+	}
+
+	/**
+	 * Run the activation when a new multisite blog is created.
+	 *
+	 * This function is different than the general activation since it
+	 * only runs on the given subsite and only if the plugin is
+	 * already activated network-wide. In this case we need to run
+	 * the activation method since the plugin will never be enabled
+	 * through the admin.
+	 *
+	 * @param object $new_site New site object.
+	 */
+	public function multisite_activate_plugin( $new_site ){
+
+		if ( is_plugin_active_for_network( plugin_basename( __FILE__ ) ) ) {
+
+			switch_to_blog( $new_site->blog_id );
+			$this->add_board_roles();
+			restore_current_blog();
+		}
+	}
 
     /*
-     * Add the board roles when the plugin is first activated.
+     * Add the board roles.
      *
      * Additional capabilities can be added at a later time or can be
      * added using the filter below.
@@ -175,11 +225,37 @@ class WI_Board_Management {
       }
     }
 
+	/**
+	 * Remove the Board Member user role on plugin deactivation.
+	 *
+	 * @param boolean $network_wide If the plugin is network activated.
+	 */
+	public function deactivate_plugin( $network_wide ) {
+
+		/**
+		 * If the plugin is network activated we need to remove the
+		 * Board Member role for each subsite.
+		 */
+		if ( is_multisite() && $network_wide ) {
+
+			global $wpdb;
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				$this->remove_board_roles();
+				restore_current_blog();
+			}
+
+		} else {
+
+			$this->remove_board_roles();
+		}
+	}
 
     /*
-     * Remove the board member role when the plugin is deactivated.
+     * Remove the board member role.
      *
-     * We remove the board member role when the plugin is deactivated along with
+     * We remove the board member role along with
      * the caps we gave to admins except for serve_on_board since that is an
      * opt-in capability that will be needed if the plugin is added again.
      */
