@@ -105,7 +105,7 @@ If you have more questions you can always head over to https://wordpress.org/sup
 == Changelog ==
 
 = 1.1.16 =
-* Fixed the Board Member role not being available on subsites of a multisite if the plugin was network activated.
+* Fixed the Board Member role not being available on subsites of a multisite installation if the plugin was network activated.
 * Tested up to WordPress 5.7.
 
 = 1.1.15 =
