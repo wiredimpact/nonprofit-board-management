@@ -122,7 +122,7 @@ class WI_Board_Management {
 	}
 
     /*
-     * Add the board roles when the plugin is first activated.
+     * Add the board roles.
      *
      * Additional capabilities can be added at a later time or can be
      * added using the filter below.
@@ -229,9 +229,9 @@ class WI_Board_Management {
 	}
 
     /*
-     * Remove the board member role when the plugin is deactivated.
+     * Remove the board member role.
      *
-     * We remove the board member role when the plugin is deactivated along with
+     * We remove the board member role along with
      * the caps we gave to admins except for serve_on_board since that is an
      * opt-in capability that will be needed if the plugin is added again.
      */
