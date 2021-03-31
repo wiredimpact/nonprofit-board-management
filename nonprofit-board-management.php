@@ -56,6 +56,9 @@ class WI_Board_Management {
         register_activation_hook( __FILE__, array( $this, 'activate_plugin' ) );
         register_deactivation_hook( __FILE__, array( $this, 'deactivate_plugin' ) );
 
+		// Run the activation when a new multisite blog is created.
+		add_action( 'wp_initialize_site', array( $this, 'multisite_activate_plugin' ) );
+
         if( is_admin() ){
           add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
 
@@ -118,6 +121,27 @@ class WI_Board_Management {
 		} else {
 
 			$this->add_board_roles();
+		}
+	}
+
+	/**
+	 * Run the activation when a new multisite blog is created.
+	 *
+	 * This function is different than the general activation since it
+	 * only runs on the given subsite and only if the plugin is
+	 * already activated network-wide. In this case we need to run
+	 * the activation method since the plugin will never be enabled
+	 * through the admin.
+	 *
+	 * @param object $new_site New site object.
+	 */
+	public function multisite_activate_plugin( $new_site ){
+
+		if ( is_plugin_active_for_network( plugin_basename( __FILE__ ) ) ) {
+
+			switch_to_blog( $new_site->blog_id );
+			$this->add_board_roles();
+			restore_current_blog();
 		}
 	}
 
