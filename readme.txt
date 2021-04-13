@@ -2,7 +2,7 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
-Tested up to: 5.6
+Tested up to: 5.7
 Stable tag: 1.1.16
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
