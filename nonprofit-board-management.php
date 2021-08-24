@@ -59,28 +59,33 @@ class WI_Board_Management {
 		// Run the activation when a new multisite blog is created.
 		add_action( 'wp_initialize_site', array( $this, 'multisite_activate_plugin' ) );
 
-        if( is_admin() ){
-          add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
+		if ( is_admin() ) {
+			add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
 
-          //Setup top level menu
-          add_action( 'admin_menu', array( $this, 'create_menu' ), 10 );
+			// Setup top level menu.
+			add_action( 'admin_menu', array( $this, 'create_menu' ), 10 );
 
-          //Load CSS and JS
-          add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
-          add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
+			// Load CSS and JS.
+			add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
+			add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
 
-          //Add our board members dashboard widget
-          add_action('wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
+			// Add our board members dashboard widget.
+			add_action( 'wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
 
-          //Remove the help tabs for all board members
-          add_action( 'in_admin_header', array( $this, 'remove_help_tabs' ) );
+			// Remove the help tabs for all board members.
+			add_action( 'in_admin_header', array( $this, 'remove_help_tabs' ) );
 
-          //Add notice to admin who can't serve on board in case they want to.
-          add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
+			// Add notice to admin who can't serve on board in case they want to.
+			add_action( 'admin_notices', array( $this, 'show_admins_notices' ) );
 
-          //Allow admin to click a button and start serving on the board.
-          add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
-        }
+			// Allow admin to click a button and start serving on the board.
+			add_action( 'wp_ajax_allow_user_to_serve', array( $this, 'allow_user_to_serve' ) );
+
+			// Used to check if a multisite super admin specifically has the 'serve_on_board' capability.
+			if ( is_multisite() ) {
+				add_filter( 'map_meta_cap', array( $this, 'check_serve_on_board_capability' ), 10, 3 );
+			}
+		}
 
         //Redirect board members to dashboard on login.
         add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
@@ -872,6 +877,41 @@ class WI_Board_Management {
      <?php
      }//End if
    }
+
+   /**
+	* This function only runs on multisites and denies the 'serve_on_board' capability
+	* if the capability isn't set.
+	*
+	* This is needed because current_user_can() will always return true if the current
+	* user is a super admin, unless specifically denied.
+	*
+	* @param array  $caps Primitive capabilities required of the user.
+	* @param string $cap Capability being checked.
+	* @param int    $user_id The user ID.
+   	*
+	* @return array The filtered capabilities.
+	*/
+	public function check_serve_on_board_capability( $caps, $cap, $user_id ) {
+
+		// Only filter the 'serve_on_board' capability.
+		if ( 'serve_on_board' === $cap ) {
+	
+			$user      = get_userdata( $user_id );
+			$user_caps = $user->get_role_caps();
+	
+			/**
+			 * If the user does not have the capability, then add do_not_allow.
+			 * Without this, a super admin in a multisite has no way of adding
+			 * themselves as a Board Member.
+			 */
+			if ( empty( $user_caps[ $cap ] ) ) {
+	
+				$caps[] = 'do_not_allow';
+			}
+		}
+	
+		return $caps;
+	}
 
 
    /*
