@@ -4,7 +4,7 @@ Plugin Name: Nonprofit Board Management
 Text Domain: nonprofit-board-management
 Domain Path: /languages
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.18
+Version: 1.1.19
 Author: Wired Impact
 Author URI: https://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -38,36 +38,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 class WI_Board_Management {
 
-   /*
-    * All of the board members' user objects.
-    *
-    * @var array
-    */
-    public $board_members;
+	/**
+	 * All of the board members' user objects.
+	 *
+	 * @var array
+	 */
+	public $board_members;
 
+	/**
+	 * Add hooks and filters on initialization.
+	 */
+	public function __construct() {
 
-    public function __construct(){
-        //Load translations
-        add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain') );
+		// Load translations & store board members.
+		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain_store_board_members' ) );
 
-        //Put all the user objects for every board member in a variable.
-        $this->board_members = $this->get_users_who_serve();
-
-        register_activation_hook( __FILE__, array( $this, 'activate_plugin' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'deactivate_plugin' ) );
+		register_activation_hook( __FILE__, array( $this, 'activate_plugin' ) );
+		register_deactivation_hook( __FILE__, array( $this, 'deactivate_plugin' ) );
 
 		// Run the activation when a new multisite blog is created.
 		add_action( 'wp_initialize_site', array( $this, 'multisite_activate_plugin' ) );
 
 		if ( is_admin() ) {
+
 			add_action( 'wp_dashboard_setup', array( $this, 'remove_dashboard_widgets' ) );
 
 			// Setup top level menu.
 			add_action( 'admin_menu', array( $this, 'create_menu' ), 10 );
 
 			// Load CSS and JS.
-			add_action( 'admin_enqueue_scripts', array( $this, 'insert_css') );
-			add_action( 'admin_enqueue_scripts', array( $this, 'insert_js') );
+			add_action( 'admin_enqueue_scripts', array( $this, 'insert_css' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'insert_js' ) );
 
 			// Add our board members dashboard widget.
 			add_action( 'wp_dashboard_setup', array( $this, 'add_board_members_dashboard_widget' ) );
@@ -83,24 +84,28 @@ class WI_Board_Management {
 
 			// Used to check if a multisite super admin specifically has the 'serve_on_board' capability.
 			if ( is_multisite() ) {
+
 				add_filter( 'map_meta_cap', array( $this, 'check_serve_on_board_capability' ), 10, 3 );
 			}
 		}
 
-        //Redirect board members to dashboard on login.
-        add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
+		// Redirect board members to dashboard on login.
+		add_filter( 'login_redirect', array( $this, 'redirect_to_dashboard' ), 10, 3 );
 
-        //Create shortcode to list board members on pages and posts
-        add_shortcode( 'list_board_members', array( $this, 'list_board_members_shortcode' ) );
-    }
+		// Create shortcode to list board members on pages and posts.
+		add_shortcode( 'list_board_members', array( $this, 'list_board_members_shortcode' ) );
+	}
 
+	/**
+	 * Handle internationalization and store board members for future use.
+	 */
+	public function load_plugin_textdomain_store_board_members() {
 
-    /*
-     * Internationalization
-     */
-    public function load_plugin_textdomain() {
-      load_plugin_textdomain( 'nonprofit-board-management', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-    }
+		load_plugin_textdomain( 'nonprofit-board-management', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+
+		// Put all the user objects for every board member in a variable.
+		$this->board_members = $this->get_users_who_serve();
+	}
 
 	/**
 	 * Add the Board Member user role on plugin activation.
