@@ -2,8 +2,8 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non profits, non-profits, directors, 501c3, 501(c)3, board governance
 Requires at least: 3.0
-Tested up to: 6.0
-Stable tag: 1.1.18
+Tested up to: 6.1
+Stable tag: 1.1.19
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -103,6 +103,10 @@ If you have more questions you can always head over to https://wordpress.org/sup
 
 
 == Changelog ==
+
+= 1.1.19 =
+* Fixed critical error in WordPress 6.1 where the get_users() function was called before the cache_users() function was defined.
+* Tested up to WordPress 6.1.
 
 = 1.1.18 =
 * Tested up to WordPress 6.0.
