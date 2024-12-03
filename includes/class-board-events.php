@@ -706,7 +706,7 @@ class WI_Board_Events {
    //Only show the RSVP column if the user has that capability and we're not
    //looking at past events.
    if( current_user_can( 'serve_on_board' ) && $events_type != 'past' ){
-     $columns['rsvp'] = __( 'RSVP' );
+     $columns['rsvp'] = __( 'RSVP', 'nonprofit-board-management' );
    }
 
    return apply_filters( 'winbm_event_columns', $columns );
@@ -1165,7 +1165,7 @@ class WI_Board_Events {
         $attending_rsvps .= implode( ', ', array( $attending[0], $attending[1], $attending[2] ) );
         unset( $attending[0], $attending[1], $attending[2] );
         $and_x_others = count( $attending );
-        $attending_rsvps .= sprintf( _n( ' and <a href="#" class="get-names" data-id="%d">%s other</a>.', ' and <a href="#" class="get-names" data-id="%d">%s others</a>.', $and_x_others, 'nonprofit-board-managemant' ), $post_id, $and_x_others );
+        $attending_rsvps .= sprintf( _n( ' and <a href="#" class="get-names" data-id="%d">%s other</a>.', ' and <a href="#" class="get-names" data-id="%d">%s others</a>.', $and_x_others, 'nonprofit-board-management' ), $post_id, $and_x_others );
       }
       //If we want all the names
       else {
