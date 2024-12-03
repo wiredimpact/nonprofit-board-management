@@ -4,7 +4,7 @@ Plugin Name: Nonprofit Board Management
 Text Domain: nonprofit-board-management
 Domain Path: /languages
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.1.19
+Version: 1.2
 Author: Wired Impact
 Author URI: https://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -528,7 +528,7 @@ class WI_Board_Management {
       <div class="tablenav">
         <div class="tablenav-pages">
           <span class="displaying-num">
-            <?php printf( _n( '1 Board Member', '%s Board Members', $board_member_count, 'nonprofit-board-management' ), number_format_i18n( $board_member_count ) ); ?>
+            <?php printf( _n( '%s Board Member', '%s Board Members', $board_member_count, 'nonprofit-board-management' ), number_format_i18n( $board_member_count ) ); ?>
           </span>
         </div>
       </div>
@@ -577,12 +577,10 @@ class WI_Board_Management {
           <div class="fixed-board-resources">
             <p><a href="https://asana.com/" target="_blank">Asana</a> – <?php _e( 'A shared task list for your board.', 'nonprofit-board-management' ); ?></p>
             <p><a href="https://www.boardsource.org/" target="_blank">BoardSource</a> – <?php _e( 'A collection of articles and tools on running a board.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="https://www.bridgespan.org/Publications-and-Tools/Nonprofit-Boards.aspx" target="_blank">The Bridgespan Group: Nonprofit Boards</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://www.bridgespan.org/insights/nonprofit-board-resource-center" target="_blank">The Bridgespan Group: Nonprofit Board Resource Center</a> – <?php _e( 'Featured content dedicated to nonprofit boards.', 'nonprofit-board-management' ); ?></p>
             <p><a href="https://doodle.com/" target="_blank">Doodle</a> – <?php _e( 'An easy way to find a good time to meet.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="https://www.dropbox.com/" target="_blank">Dropbox</a> – <?php _e( 'A great way to share files.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="https://nonprofits.linkedin.com/" target="_blank">LinkedIn Board Member Connect</a> – <?php _e( 'A tool to find great talent to join your board.', 'nonprofit-board-management' ); ?></p>
-            <p><a href="https://wiredimpact.com?utm_source=wordpress_admin&utm_medium=board_resources&utm_campaign=nonprofit_board_management" target="_blank">Wired Impact</a> – <?php _e( 'Library articles and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://drive.google.com/" target="_blank">Google Drive</a> – <?php _e( 'A good way to share files and collaborate on documents.', 'nonprofit-board-management' ); ?></p>
+            <p><a href="https://wiredimpact.com?utm_source=wordpress_admin&utm_medium=board_resources&utm_campaign=nonprofit_board_management" target="_blank">Wired Impact</a> – <?php _e( 'Resources and blog posts on how nonprofits can use the web to do more good.', 'nonprofit-board-management' ); ?></p>
 
             <?php do_action( 'winbm_in_helpful_resources' ); ?>
 
