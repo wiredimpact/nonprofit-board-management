@@ -3,7 +3,7 @@ Contributors: wiredimpact
 Tags: nonprofits, boards, non-profits, directors, board governance
 Requires at least: 3.0
 Tested up to: 6.7
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -38,18 +38,10 @@ The easiest way to install the Nonprofit Board Management plugin is to go to Plu
 1.	Upload the nonprofit-board-management folder to the /wp-content/plugins/ directory.
 1.	Activate the Nonprofit Board Management plugin through the "Plugins" menu in WordPress.
 
-**How do you get started using Nonprofit Board Management?**
-
-[youtube https://www.youtube.com/watch?v=j1EHA5T4rQA]
-
 
 == Frequently Asked Questions ==
 
 Here are some frequently asked questions about how to use the plugin.
-
-= How do you get started with Nonprofit Board Management? =
-
-[youtube https://www.youtube.com/watch?v=j1EHA5T4rQA]
 
 = How do you add a board member? =
 
@@ -103,6 +95,9 @@ If you have more questions you can always head over to https://wordpress.org/sup
 
 
 == Changelog ==
+
+= 1.2.1 =
+* Removed the YouTube video titled *Nonprofit Board Management: Getting Started* since it's no longer available online.
 
 = 1.2 =
 * Updated links to point correctly to external websites.
