@@ -1,15 +1,15 @@
-# Copyright (C) 2024 Wired Impact
+# Copyright (C) 2025 Wired Impact
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Nonprofit Board Management 1.2\n"
+"Project-Id-Version: Nonprofit Board Management 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/nonprofit-board-management\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-12-03T14:16:43+00:00\n"
+"POT-Creation-Date: 2025-02-03T20:15:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: nonprofit-board-management\n"
@@ -413,7 +413,7 @@ msgid "Board Mgmt"
 msgstr ""
 
 #: nonprofit-board-management.php:395
-#: nonprofit-board-management.php:753
+#: nonprofit-board-management.php:748
 msgid "Board Members"
 msgstr ""
 
@@ -442,19 +442,19 @@ msgstr ""
 
 #: nonprofit-board-management.php:445
 #: nonprofit-board-management.php:454
-#: nonprofit-board-management.php:776
+#: nonprofit-board-management.php:771
 msgid "Name"
 msgstr ""
 
 #: nonprofit-board-management.php:446
 #: nonprofit-board-management.php:455
-#: nonprofit-board-management.php:777
+#: nonprofit-board-management.php:772
 msgid "Phone"
 msgstr ""
 
 #: nonprofit-board-management.php:447
 #: nonprofit-board-management.php:456
-#: nonprofit-board-management.php:778
+#: nonprofit-board-management.php:773
 msgid "Email"
 msgstr ""
 
@@ -564,55 +564,51 @@ msgstr ""
 msgid "In case you need help here are some videos to help you navigate the board management plugin."
 msgstr ""
 
-#: nonprofit-board-management.php:687
-msgid "Getting Started with Nonprofit Board Management"
-msgstr ""
-
-#: nonprofit-board-management.php:694
+#: nonprofit-board-management.php:689
 msgid "How to Add a Board Member"
 msgstr ""
 
-#: nonprofit-board-management.php:699
+#: nonprofit-board-management.php:694
 msgid "How to Change Your Personal Information"
 msgstr ""
 
-#: nonprofit-board-management.php:704
+#: nonprofit-board-management.php:699
 msgid "How to Serve on the Board as a WordPress Admin"
 msgstr ""
 
-#: nonprofit-board-management.php:709
+#: nonprofit-board-management.php:704
 msgid "How to Add a Board Event"
 msgstr ""
 
-#: nonprofit-board-management.php:714
+#: nonprofit-board-management.php:709
 msgid "How to RSVP to an Upcoming Event"
 msgstr ""
 
-#: nonprofit-board-management.php:721
+#: nonprofit-board-management.php:716
 msgid "How to Create a Committee and Add Committee Members"
 msgstr ""
 
-#: nonprofit-board-management.php:726
+#: nonprofit-board-management.php:721
 msgid "How to Edit Your Board Resources"
 msgstr ""
 
-#: nonprofit-board-management.php:731
+#: nonprofit-board-management.php:726
 msgid "How to List Your Board Members on Your Public Website"
 msgstr ""
 
-#: nonprofit-board-management.php:736
+#: nonprofit-board-management.php:731
 msgid "Note: With the new WordPress editor you can use the Shortcode block and paste the shortcode \"[list_board_members]\" into the block to display your board members."
 msgstr ""
 
-#: nonprofit-board-management.php:768
+#: nonprofit-board-management.php:763
 msgid "You don't have any board members.  You should create some users and set their role to \"Board Member\"."
 msgstr ""
 
-#: nonprofit-board-management.php:798
+#: nonprofit-board-management.php:793
 msgid "View more board member details"
 msgstr ""
 
-#: nonprofit-board-management.php:875
+#: nonprofit-board-management.php:870
 msgid ""
 "You don't currently have the board member role, so you can't RSVP to board events,\n"
 "         join committees, or show up in the board member list."
