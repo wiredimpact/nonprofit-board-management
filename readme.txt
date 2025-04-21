@@ -2,8 +2,8 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non-profits, directors, board governance
 Requires at least: 3.0
-Tested up to: 6.7
-Stable tag: 1.2.1
+Tested up to: 6.8
+Stable tag: 1.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -95,6 +95,9 @@ If you have more questions you can always head over to https://wordpress.org/sup
 
 
 == Changelog ==
+
+= 1.3 =
+* Tested up to WordPress 6.8.
 
 = 1.2.1 =
 * Removed the YouTube video titled *Nonprofit Board Management: Getting Started* since it's no longer available online.
