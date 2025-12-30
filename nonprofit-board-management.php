@@ -4,7 +4,7 @@ Plugin Name: Nonprofit Board Management
 Text Domain: nonprofit-board-management
 Domain Path: /languages
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.3
+Version: 1.3.1
 Author: Wired Impact
 Author URI: https://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -725,8 +725,8 @@ class WI_Board_Management {
 
           <h3><a class="support-heading" href="#"><span>+ </span><?php _e( 'How to List Your Board Members on Your Public Website', 'nonprofit-board-management' ); ?></a></h3>
           <div class="support-content hide">
-            <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>            
-              
+            <iframe width="600" height="338" src="https://www.youtube.com/embed/kYdP0dtueEE" frameborder="0" allowfullscreen></iframe>
+
             <?php if( $this->is_block_editor_in_use() ) : // If the Block Editor is being used output instructions for using the Shortcode block ?>
               <p><?php _e( 'Note: With the new WordPress editor you can use the Shortcode block and paste the shortcode "[list_board_members]" into the block to display your board members.', 'nonprofit-board-management' ); ?></p>
             <?php endif; ?>
@@ -893,21 +893,21 @@ class WI_Board_Management {
 
 		// Only filter the 'serve_on_board' capability.
 		if ( 'serve_on_board' === $cap ) {
-	
+
 			$user      = get_userdata( $user_id );
 			$user_caps = $user->get_role_caps();
-	
+
 			/**
 			 * If the user does not have the capability, then add do_not_allow.
 			 * Without this, a super admin in a multisite has no way of adding
 			 * themselves as a Board Member.
 			 */
 			if ( empty( $user_caps[ $cap ] ) ) {
-	
+
 				$caps[] = 'do_not_allow';
 			}
 		}
-	
+
 		return $caps;
 	}
 
@@ -1031,7 +1031,7 @@ class WI_Board_Management {
 
     /**
      * Check if the Block Editor is being used.
-     * 
+     *
      * @return bool True if the Block Editor is being used, false if not.
      */
     private function is_block_editor_in_use() {
@@ -1050,7 +1050,7 @@ class WI_Board_Management {
 
       // Checks if the Classic Editor plugin is set to use the Block Editor but show a link to revert to the Classic Editor (Settings > Writing)
       $editor_option       = get_option( 'classic-editor-replace' );
-      $block_editor_active = array( 'no-replace', 'block' ); 
+      $block_editor_active = array( 'no-replace', 'block' );
 
       return in_array( $editor_option, $block_editor_active, true );
 
