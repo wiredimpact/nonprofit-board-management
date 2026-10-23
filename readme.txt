@@ -2,8 +2,8 @@
 Contributors: wiredimpact
 Tags: nonprofits, boards, non-profits, directors, board governance
 Requires at least: 3.0
-Tested up to: 6.9
-Stable tag: 1.3.1
+Tested up to: 7.1
+Stable tag: 1.3.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/lgpl-3.0.html
 
@@ -95,6 +95,11 @@ If you have more questions you can always head over to https://wordpress.org/sup
 
 
 == Changelog ==
+
+= 1.3.2 =
+* Security: Added missing capability checks to the plugin's AJAX endpoints so board content and actions are only available to authorized users.
+* Security: Escaped output across the board event and committee screens, the board member profile fields, and the board member list to prevent stored cross-site scripting.
+* Tested up to WordPress 7.1.
 
 = 1.3.1 =
 * Tested up to WordPress 6.9.
@@ -204,3 +209,6 @@ If you have more questions you can always head over to https://wordpress.org/sup
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Security release: fixes permission and cross-site scripting issues. Please update right away.

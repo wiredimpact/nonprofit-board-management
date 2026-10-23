@@ -40,21 +40,21 @@
       ?>
       
       <h3>
-        <?php echo $name; //Name ?><br />
+        <?php echo esc_html( $name ); //Name ?><br />
         <span class="job-employer">
           <?php
           //Job and employer
-          echo $job_title;
+          echo esc_html( $job_title );
           if( $job_title != '' && $employer != '' ){
             echo ', ';
           }
-          echo $employer;
+          echo esc_html( $employer );
           ?>
         </span>
       </h3>
-      
+
       <p>
-        <?php echo $biography; ?>
+        <?php echo wp_kses_post( $biography ); ?>
       </p>
     
     </div><!-- /.board-member -->
