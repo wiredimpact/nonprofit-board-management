@@ -362,7 +362,7 @@ class WI_Board_Committees {
       case 'description':
         
         echo '<span class="waiting spinner" style="display: none;"></span>'; 
-        echo wp_trim_words( $board_committee_meta['description'], 15, '&hellip;<br /><a href="#" data-id="' . $board_committee_id . '" class="more-desc">Read full description</a>' );
+        echo wp_trim_words( esc_html( $board_committee_meta['description'] ), 15, '&hellip;<br /><a href="#" data-id="' . $board_committee_id . '" class="more-desc">Read full description</a>' );
 
         break;
 
@@ -428,12 +428,12 @@ class WI_Board_Committees {
       
       <tr>
         <th><label for="current-employer"><?php _e( 'Current Employer', 'nonprofit-board-management' ); ?></label></th>
-        <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo sanitize_text_field( $current_employer ); ?>" /></td>
+        <td><input type="text" id="current-employer" name="current-employer" class="regular-text" value="<?php echo esc_attr( $current_employer ); ?>" /></td>
       </tr>
 
       <tr>
         <th><label for="job-title"><?php _e( 'Job Title', 'nonprofit-board-management' ); ?></label></th>
-        <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo sanitize_text_field( $job_title ); ?>" /></td>
+        <td><input type="text" id="job-title" name="job-title" class="regular-text" value="<?php echo esc_attr( $job_title ); ?>" /></td>
       </tr>
 
       <tr>

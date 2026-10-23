@@ -4,7 +4,7 @@ Plugin Name: Nonprofit Board Management
 Text Domain: nonprofit-board-management
 Domain Path: /languages
 Description: A simple, free way to manage your nonprofit’s board.
-Version: 1.3.1
+Version: 1.3.2
 Author: Wired Impact
 Author URI: https://wiredimpact.com/?utm_source=wordpress_admin&utm_medium=plugins_page&utm_campaign=nonprofit_board_management
 License: GPLv3
@@ -485,7 +485,7 @@ class WI_Board_Management {
          ?>
           <tr class="<?php echo $alternate; ?>">
             <td class="name column-username">
-              <?php echo get_avatar( $board_member->ID, '44' ); echo '<strong>' . $board_member->display_name . '</strong>'; ?>
+              <?php echo get_avatar( $board_member->ID, '44' ); echo '<strong>' . esc_html( $board_member->display_name ) . '</strong>'; ?>
               <?php if( current_user_can( 'edit_user', $board_member->ID ) ){ ?>
               <div class="row-actions">
                 <span class="edit">
@@ -863,6 +863,10 @@ class WI_Board_Management {
      //If the admin already has the serve capability then don't show the message.
      if( current_user_can( 'serve_on_board' ) ) return;
 
+     //Only admins can add themselves to the board, so don't show the button to anyone else.
+     //@see allow_user_to_serve()
+     if( !current_user_can( 'manage_options' ) ) return;
+
      //If the admin is on the members, events, or committees list then show them message.
      if( $screen->id == 'edit-board_events' || $screen->id == 'toplevel_page_nonprofit-board' || $screen->id == 'edit-board_committees' ){
      ?>
@@ -925,6 +929,14 @@ class WI_Board_Management {
     */
    public function allow_user_to_serve(){
      check_ajax_referer( 'allow_serve_nonce', 'security' );
+
+     //Only admins may grant themselves the serve_on_board capability.  The
+     //button that triggers this is only shown to admins, but the handler must
+     //enforce it too.  We echo '1' on success, so anything else is treated as
+     //an error by js/custom.js; send back -1 the way check_ajax_referer() does.
+     if( !current_user_can( 'manage_options' ) ){
+       wp_die( '-1', '', 403 );
+     }
 
      $current_user = wp_get_current_user();
      $current_user->add_cap( 'serve_on_board' );

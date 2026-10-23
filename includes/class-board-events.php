@@ -299,22 +299,22 @@ class WI_Board_Events {
       <?php do_action( 'winbm_before_event_meta_fields', $board_event ); ?>
       <tr>
         <td><label for="event-description"><?php _e( 'Event Description', 'nonprofit-board-management' ); ?></label></td>
-        <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo sanitize_text_field( $board_event_meta['event_description'] ); ?></textarea></td>
+        <td><textarea id="event-description" rows="4" name="event-description" tabindex="10"><?php echo esc_textarea( $board_event_meta['event_description'] ); ?></textarea></td>
       </tr>
       
       <tr>
         <td><label for="location"><?php _e( 'Location Name', 'nonprofit-board-management' ); ?></label></td>
-        <td><input type="text" id="location" name="location" tabindex="20" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['location'] ); ?>" /></td>
+        <td><input type="text" id="location" name="location" tabindex="20" class="regular-text" value="<?php echo esc_attr( $board_event_meta['location'] ); ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="street"><?php _e( 'Street Address', 'nonprofit-board-management' ); ?></label></td>
-        <td><input type="text" id="street" name="street" tabindex="30" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['street'] ); ?>" /></td>
+        <td><input type="text" id="street" name="street" tabindex="30" class="regular-text" value="<?php echo esc_attr( $board_event_meta['street'] ); ?>" /></td>
       </tr>
       
       <tr>
         <td><label for="area"><?php _e( 'City, State Zip', 'nonprofit-board-management' ); ?></label></td>
-        <td><input type="text" id="area" name="area" tabindex="40" class="regular-text" value="<?php echo sanitize_text_field( $board_event_meta['area'] ); ?>" /></td>
+        <td><input type="text" id="area" name="area" tabindex="40" class="regular-text" value="<?php echo esc_attr( $board_event_meta['area'] ); ?>" /></td>
       </tr>
       
       <tr>
@@ -848,10 +848,23 @@ class WI_Board_Events {
     //Use nonce passed through wp_localize_script for added security.
     //Sends back -1 if fails.
     check_ajax_referer( 'get_description_nonce', 'security' );
-    
+
+    //Only users who can view board content may read descriptions.
+    //We send back -1 the same way check_ajax_referer() does on failure
+    //since js/custom.js treats these responses as raw strings, not JSON.
+    if( !current_user_can( 'view_board_content' ) ){
+      wp_die( '-1', '', 403 );
+    }
+
     //Put data in variables and get post type
     $post_id = intval( $_POST['post_id'] );
     $post_type = get_post_type( $post_id );
+
+    //Only board events and committees have descriptions to show.  Without this
+    //check any other post ID would fall through to the committee description.
+    if( $post_type != 'board_events' && $post_type != 'board_committees' ){
+      wp_die( '-1', '', 403 );
+    }
 
     //Get the meta description based on the post type.
     $meta_key = ( $post_type == 'board_events' ) ? '_event_description' : '_committee_description';
@@ -933,10 +946,9 @@ class WI_Board_Events {
   
   //Add the Google Maps link if the area or street are not empty
   if( $board_event_meta['area'] != '' || $board_event_meta['street'] != '' ){
-    $google_maps_string = str_replace( ' ', '+', $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
-    $google_maps_address = 'https://maps.google.com/maps?q=' . $google_maps_string;
+    $google_maps_address = 'https://maps.google.com/maps?q=' . urlencode( $board_event_meta['street'] . ' ' . $board_event_meta['area'] );
 
-    $event_location .= '<a href="' . $google_maps_address . '" title="Map this location on Google Maps" target="_blank">';
+    $event_location .= '<a href="' . esc_url( $google_maps_address ) . '" title="Map this location on Google Maps" target="_blank">';
   }
   
   //Add location name
@@ -982,7 +994,14 @@ class WI_Board_Events {
  public function rsvp(){
   //Use nonce passed through wp_localize_script for added security.
   check_ajax_referer( 'save_rsvp_nonce', 'security' );
-   
+
+  //Only users who serve on the board may RSVP.  We send back -1 the same way
+  //check_ajax_referer() does on failure since js/custom.js treats these
+  //responses as raw strings, not JSON.
+  if( !current_user_can( 'serve_on_board' ) ){
+    wp_die( '-1', '', 403 );
+  }
+
   //Put data in variables
   $post_id = intval( $_POST['post_id'] );
   $rsvp = intval( $_POST['rsvp'] );
@@ -1151,11 +1170,11 @@ class WI_Board_Events {
       foreach( $rsvps['attending'] as $event_rsvp ){
         //If the user isn't the current user, then add to the end
         if( $event_rsvp->ID != $current_user->ID ){
-          $attending[] = $event_rsvp->display_name;
+          $attending[] = esc_html( $event_rsvp->display_name );
         }
         //If current user put at front of the list
         else{
-          array_unshift( $attending, $event_rsvp->display_name );
+          array_unshift( $attending, esc_html( $event_rsvp->display_name ) );
         }
       }
       
@@ -1187,7 +1206,14 @@ class WI_Board_Events {
  public function show_all_attendees(){
    //Use nonce passed through wp_localize_script for added security.
    check_ajax_referer( 'see_attendees_nonce', 'security' );
-   
+
+   //Only users who can view board content may see the attendee list.  We send
+   //back -1 the same way check_ajax_referer() does on failure since
+   //js/custom.js treats these responses as raw strings, not JSON.
+   if( !current_user_can( 'view_board_content' ) ){
+     wp_die( '-1', '', 403 );
+   }
+
    //Put data in variables
    $post_id = intval( $_POST['post_id'] );
    
@@ -1212,7 +1238,9 @@ class WI_Board_Events {
   global $wpdb;
 
   $rsvps_table = $this->table_name;
-  $usermeta_table = $this->get_table_prefix() . 'usermeta';
+  //The usermeta table is shared by every site in a multisite network, so it
+  //never takes the individual site's table prefix.
+  $usermeta_table = $wpdb->usermeta;
   $num_attending_rsvps = $wpdb->get_var(
           "
             SELECT COUNT( {$rsvps_table}.rsvp )
