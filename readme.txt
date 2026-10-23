@@ -97,8 +97,9 @@ If you have more questions you can always head over to https://wordpress.org/sup
 == Changelog ==
 
 = 1.3.2 =
-* Security: Added missing capability checks to the plugin's AJAX endpoints so board content and actions are only available to authorized users.
-* Security: Escaped output across the board event and committee screens, the board member profile fields, and the board member list to prevent stored cross-site scripting.
+* Fixed a security vulnerability where users without the right permissions could view board content, RSVP to events and add themselves as board members.
+* Fixed XSS security vulnerabilities by escaping board event, committee and board member information before it's displayed.
+* Fixed the number of attendees shown for board events on subsites of a multisite installation.
 * Tested up to WordPress 7.1.
 
 = 1.3.1 =
